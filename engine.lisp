@@ -361,7 +361,7 @@
            (tursas-cmd "Can't calculate perft from empty game-state!"
                        #'display-perft arg)))
         ((ppcre:scan "^xboard$" cmd) (set-protocol! :cecp))
-        ((ppcre:scan "^quit$" (quit)))
+        ((ppcre:scan "^quit$" cmd) (quit))
         (t (if (eq (get-protocol) :cecp)
                (process-cecp-command cmd)
                (concatenate 'string "Error (Invalid command): " cmd)))))
