@@ -1,0 +1,162 @@
+(in-package :tursas.state0x88)
+
+(defconstant +pawn-value+ 10)
+(defconstant +bishop-value+ 30)
+(defconstant +knight-value+ 30)
+(defconstant +rook-value+ 50)
+(defconstant +queen-value+ 90)
+(defconstant +king-value+ 99999)
+
+(defmacro group (list n)
+  "Group items in list to lists of n length."
+  (when (zerop n) (error "Groups fo zero are no fun"))
+  `(labels ((rec (list acc)
+              (let ((rest (nthcdr ,n list)))
+                (if (consp rest)
+                    (rec rest (cons (subseq list 0 ,n) acc))
+                    (nreverse (cons list acc))))))
+    (when ,list (rec ,list nil))))
+
+(defmacro make-table-scores (name board)
+  "Utility to make white and black score table based on initial board."
+  `(progn
+     (defconstant ,(intern (concatenate 'string "+WHITE-" (string name) "-TABLE+"))
+       (make-table ,board))
+     (defconstant ,(intern (concatenate 'string "+BLACK-" (string name) "-TABLE+"))
+       (make-table (reverse ,board)))))
+
+(defmacro make-table (score-list)
+  "Utility to make full 0x88 vector board out of score list"
+  `(apply #'vector
+          (apply #'append
+                 (mapcar (lambda (list)
+                           (append list (make-list 8 :initial-element 0)))
+                         (group ,score-list 8)))))
+
+(make-table-scores pawn
+                   '(0   0   0   0   0   0   0   0
+                     5   5   5   0   0   5   5   5
+                     0   0   5  15  15   5   0   0
+                     5   5  10  15  15  10   5   5
+                     0   0   5  10  10   5   0   0
+                     0   0   0   0   0   0   0   0
+                     0   0   0   0   0   0   0   0
+                     0   0   0   0   0   0   0   0))
+
+(make-table-scores rook
+                   '(5  0  5  0  0  5  0  5
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0 ))
+
+(make-table-scores rook-end
+                   '(0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0
+                     0  0  0  0  0  0  0  0 ))
+
+(make-table-scores knight
+                   '(-10 -5 -5  -5  -5  -5  -5 -10
+                     -5  -5  0   5   5   0  -5 -5
+                     -5   5  5   10  10  5   5 -5
+                     -5   0  10  10  10  10  0 -5
+                     -5   0  10  10  10  10  0 -5
+                     -5   5  5   10  10  10  5 -5
+                     -5  -5  0   5   5   0  -5 -5
+                     -10 -5  -5  -5  -5  -5 -5 -10))
+
+(make-table-scores bishop
+                   '(-15 -10 -10 -10 -10 -10 -10 -15
+                     -10   0   0   0   0   0   0 -10
+                     -10   0   5  10  10   5   0 -10
+                     -10   5   5  10  10   5   5 -10
+                     -10   0  10  10  10  10   0 -10
+                     -10  10  10  10  10  10  10 -10
+                     -10   5   0   0   0   0   5 -10
+                     -15 -10 -10 -10 -10 -10 -10 -15))
+
+(make-table-scores king
+                   '(  0  -5   5   0   0  -5   5   0
+                     -10 -10 -10 -10 -10 -10 -10 -10
+                     -10 -10 -10 -10 -10 -10 -10 -10
+                     -10 -10 -10 -10 -10 -10 -10 -10
+                     -10 -10 -10 -10 -10 -10 -10 -10
+                     -10 -10 -10 -10 -10 -10 -10 -10
+                     -10 -10 -10 -10 -10 -10 -10 -10
+                     -10 -10 -10 -10 -10 -10 -10 -10))
+
+(make-table-scores king-end-game
+                   '(-15 -10 -10 -10 -10 -10 -10 -15
+                     -10 -10  -5   0   0  -5 -10 -10
+                     -10  -5   5  10  10   5  -5 -10
+                     -10  -5  10  15  15  10  -5 -10
+                     -10  -5  10  15  15  10  -5 -10
+                     -10  -5   5  10  10   5  -5 -10
+                     -10 -10  -5   0   0  -5 -10 -10
+                     -15 -10 -10 -10 -10 -10 -10 -15))
+
+(defun material-value (piece)
+  "Gives material value for given piece."
+  (cond ((= piece +white-pawn+) +pawn-value+)
+        ((= piece +white-knight+) +knight-value+)
+        ((= piece +white-bishop+) +bishop-value+)
+        ((= piece +white-rook+) +rook-value+)
+        ((= piece +white-queen+) +queen-value+)
+        ((= piece +white-king+) +king-value+)
+        ((= piece +black-pawn+) +pawn-value+)
+        ((= piece +black-knight+) +knight-value+)
+        ((= piece +black-bishop+) +bishop-value+)
+        ((= piece +black-rook+) +rook-value+)
+        ((= piece +black-queen+) +queen-value+)
+        ((= piece +black-king+) +king-value+)
+        (t 0)))
+
+(defun index-score (piece index game-situation)
+  "Checks piece-specific index score"
+  (cond ((= piece +white-pawn+) (board-ref +white-pawn-table+ index))
+        ((= piece +black-pawn+) (board-ref +black-pawn-table+ index))
+        ((= piece +white-knight+) (board-ref +white-knight-table+ index))
+        ((= piece +black-knight+) (board-ref +black-knight-table+ index))
+        ((= piece +white-bishop+) (board-ref +white-bishop-table+ index))
+        ((= piece +black-bishop+) (board-ref +black-bishop-table+ index))
+        ((= piece +white-rook+) (board-ref +white-rook-table+ index))
+        ((= piece +black-rook+) (board-ref +black-rook-table+ index))
+        ((= piece +white-king+) (if (= game-situation +end-game+)
+                                  (board-ref +white-king-end-game-table+ index)
+                                  (board-ref +white-king-table+ index)))
+        ((= piece +black-king+) (if (= game-situation +end-game+)
+                                  (board-ref +black-king-end-game-table+ index)
+                                  (board-ref +black-king-table+ index)))
+        (t 0)))
+
+(defun score (pieces situation)
+  "Calculates score for side."
+  (reduce (lambda (score pair)
+            (destructuring-bind (index piece)
+                pair
+              (+ score
+                 (material-value piece)
+                 (index-score piece index situation))))
+          pieces))
+
+(defun heuristic-value (player whites blacks situation)
+  "Calculates heuristic value for given state."
+  (let ((pieces (if (= player +white+)
+                    (list whites blacks)
+                    (list blacks whites))))
+    (+ (score (first pieces) situation)
+       (- (score (second pieces) situation)))))
+
+(defun end-score (state)
+  "Return the final score of given state."
+  (if (matep state)
+      (- +king-value+)
+      0))
