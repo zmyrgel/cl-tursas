@@ -25,23 +25,22 @@
                 result))
           +castling-values+ :initial-value 0))
 
-(defun find-king-index (state player)
+(defun seek-king-index (state player)
   "Seeks king's index from piece-map.
    This is only used when generating state from a fen.
    Otherwise the king index can be queried from the board directly."
-  (let ((piece-map (if (= player +white+)
-                       (State0x88-white-pieces state)
-                       (State0x88-black-pieces state)))
-        (king (if (= player +white+)
+  (let ((king (if (= player +white+)
                   +white-king+
                   +black-king+)))
     (labels ((seek (alist)
-               (destructuring-bind (index piece)
+               (destructuring-bind (index . piece)
                    (first alist)
                  (if (= piece king)
                      index
                      (seek (rest alist))))))
-      (seek (alexandria:hash-table-alist piece-map)))))
+      (seek (alexandria:hash-table-alist (if (= player +white+)
+                                             (State0x88-white-pieces state)
+                                             (State0x88-black-pieces state)))))))
 
 (defun expand-digits (s chr)
   "Expands digits in given string by that many of given chars."
