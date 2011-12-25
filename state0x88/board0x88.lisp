@@ -121,17 +121,17 @@
    and places chess piece representation to it."
   (make-array 128 :initial-element 0 :element-type :byte))
 
-(defmacro board-ref (board index)
+(defun board-ref (board index)
   "Getter for board"
-  `(svref ,board ,index))
+  (svref board index))
 
-(defmacro fill-square! (board index value)
+(defun fill-square! (board index value)
   "Return new board with given value added to given board's index."
-  `(setf (board-ref ,board ,index) ,value))
+  (setf (svref board index) value)) ;; XXX: use board-ref
 
-(defmacro clear-square! (board index)
+(defun clear-square! (board index)
   "Clears the given square index on the game board."
-  `(fill-square! ,board ,index +empty-square+))
+  (fill-square! board index +empty-square+))
 
 (defun king-index (board player)
   "Returns the players king's index on the board."
