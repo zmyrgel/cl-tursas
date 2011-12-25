@@ -113,16 +113,18 @@
   "Parses information from given FEN and applies it to given state."
   (destructuring-bind (board turn cast en-pass half full)
       (cl-utilities:split-sequence #\space s)
-    (fen-board->0x88board board)
-    (fill-square! board +turn-store+ (if (string= turn "w") +white+ +black+))
-    (fill-square! board +castling-store+ (castling->value cast))
-    (fill-square! board +en-passant-store+ (if (string= en-pass "-")
-                                             -1
-                                             (coord->index en-pass)))
-    (fill-square! board +half-move-store+ (parse-integer half))
-    (add-full-moves board (parse-integer full))
-    (add-pieces state)
-    (add-king-indexes state)))
+    (let ((game-board (fen-board->0x88board board)))
+      (fill-square! game-board +turn-store+ (if (string= turn "w") +white+ +black+))
+      (fill-square! game-board +castling-store+ (castling->value cast))
+      (fill-square! game-board +en-passant-store+ (if (string= en-pass "-")
+                                                 -1
+                                                 (coord->index en-pass)))
+      (fill-square! game-board +half-move-store+ (parse-integer half))
+      (add-full-moves game-board (parse-integer full))
+      (setf (State0x88-board state) game-board)
+      (add-pieces state)
+      (add-king-indexes state)
+      state)))
 
 (defun parse-state (state)
   "Returns FEN representation of given game state."
