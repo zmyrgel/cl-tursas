@@ -139,8 +139,8 @@
   "Can piece in index be captured by opponents pieces."
   (some (lambda (place)
           (= (board-ref board place) piece))
-        (remove-if #'board-index-p
-                   (mapcar (alexandria:curry #'+ index) places))))
+        (remove-if-not #'board-index-p
+                       (mapcar (alexandria:curry #'+ index) places))))
 
 (defun threaten-by-slider-p (board index opponent pieces directions)
   "Can the piece in index of board be captured
