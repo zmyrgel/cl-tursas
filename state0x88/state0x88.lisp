@@ -119,7 +119,8 @@
     (let ((board (State0x88-board state)))
       (fill-square! board +prev-move-from+ (Move0x88-from move))
       (fill-square! board +prev-move-to+ (Move0x88-to move))
-      (fill-square! board +prev-piece+ (board-ref board (Move0x88-from move))))))
+      (fill-square! board +prev-piece+ (board-ref board (Move0x88-from move)))
+      state)))
 
 (defun pawn-or-capture-move-p (board move)
   "Predicate to see if move was pawn move or a capture"
@@ -135,7 +136,8 @@
       (fill-square! board +half-move-store+
                     (if (pawn-or-capture-move-p board move)
                         0
-                        (1+ (board-ref board +half-move-store+))))))) ;; XXX: needless fill
+                        (1+ (board-ref board +half-move-store+))))
+      state)))
 
 (defun update-board (state move)
   "Returns state with new board after applying move to state."
@@ -156,7 +158,8 @@
                                (if (= player +white+)
                                    +south+
                                    +north+))))
-            (t (move-piece! state move))))))
+            (t (move-piece! state move)))
+      state)))
 
 (defun update-player-check (state)
   "Checks that players move won't leave the players king in check."
@@ -173,9 +176,10 @@
            (castling (board-ref board +castling-store+)))
       (if (zerop castling)
           state
-          (fill-square! board +castling-store+ (if (= (board-ref board +turn-store+) +white+)
-                                                   (calculate-white-castling castling move)
-                                                   (calculate-black-castling castling move)))))))
+          (progn (fill-square! board +castling-store+ (if (= (board-ref board +turn-store+) +white+)
+                                                          (calculate-white-castling castling move)
+                                                          (calculate-black-castling castling move)))
+                 state)))))
 
 (defun update-en-passant (state move)
   "Associates new en-passant value with given state based on the move."
@@ -186,15 +190,16 @@
                                           (board-ref board (Move0x88-to move))
                                           (board-ref board (+ (Move0x88-to move) +west+))
                                           (board-ref board (+ (Move0x88-to move) +east+))
-                                          move)))))
+                                          move))
+      state)))
 
 (defun update-full-moves (state)
   "Updates full move count on board."
   (when (not (null state))
     (let ((board (State0x88-board state)))
-      (if (= (board-ref board +turn-store+) +black+)
-          (inc-full-moves! board)
-          state))))
+      (when (= (board-ref board +turn-store+) +black+)
+        (inc-full-moves! board))
+      state)))
 
 (defun update-opponent-check (state)
   "Updates opponents check status bit on the state.
@@ -207,13 +212,15 @@
                                      (king-index board (opponent player))
                                      player)
                         1
-                        0)))))
+                        0))
+      state)))
 
 (defun update-turn (state)
   "Updates player turn value on board."
   (when (not (null state))
     (let ((board (State0x88-board state)))
-      (fill-square! board +turn-store+ (opponent (board-ref board +turn-store+))))))
+      (fill-square! board +turn-store+ (opponent (board-ref board +turn-store+)))
+      state)))
 
 (defun update-state (state move)
   "Updates game state to reflect changes from move.
