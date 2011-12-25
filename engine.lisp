@@ -265,7 +265,7 @@
 
 (defun user-move-p (s)
   "Predicate to check if given string S represents user move."
-  (ppcre:scan "^[a-h]{1}[1-8]{1}[a-h]{1}[1-8]{1}[rnbq]?+$" cmd))
+  (ppcre:scan "^[a-h]{1}[1-8]{1}[a-h]{1}[1-8]{1}[rnbq]?$" s))
 
 (defun process-cecp-command (cmd)
   "Processes command in cecp mode."
@@ -293,7 +293,7 @@
         ((ppcre:scan "^time\\s\\d+$" cmd) (unsupported-command cmd))
         ((ppcre:scan "^otim\\s\\d+$" cmd) (unsupported-command cmd))
         ((ppcre:register-groups-bind (arg)
-             ("^usermove\\s([a-h]{1}[1-8]{1}[a-h]{1}[1-8]{1}[rnbq]?+)$" cmd)
+             ("^usermove\\s([a-h]{1}[1-8]{1}[a-h]{1}[1-8]{1}[rnbq]?)$" cmd)
            (tursas-cmd "Can't make move in a empty board!" #'user-move arg)))
         ((user-move-p cmd) (tursas-cmd "Can't make move in a empty board!" #'user-move cmd))
         ((ppcre:scan "^\\?$" cmd) (unsupported-command cmd))
@@ -301,7 +301,7 @@
              ("^ping\\s(\\d+)$" cmd)
            (concatenate 'string "pong " arg)))
         ((ppcre:scan "^draw$" cmd) (tursas-cmd "Can't offer draw to empty board!" #'cecp-draw))
-        ((ppcre:scan "^result\\s(1/2-1/2\\s\{.+\}|1-0\\s\{.+\}|0-1\\s\{.+\}|\*)$" cmd) nil)
+        ((ppcre:scan "^result\\s(1/2-1/2\\s\{.+\}|1-0\\s\{.+\}|0-1\\s\{.+\}|\\*)$" cmd) nil)
         ((ppcre:register-groups-bind (arg)
              ("^setboard\\s(.+)$" cmd)
            (set-game! arg)))
@@ -326,7 +326,7 @@
         ((ppcre:scan "^cores\\s\\d+$" cmd) (unsupported-command cmd))
         ((ppcre:scan "^egtpath\\s[\\w\\/]+$" cmd) (unsupported-command cmd))
         ((ppcre:register-groups-bind (args)
-             ("^option\\s\\w=\\".+\\"|\\d+$" cmd)
+             ("^option\\s\\w=\".+\"|\\d+$" cmd)
            (cecp-parse-option args)))
         (t (concatenate 'string "Error (Invalid command): " cmd))))
 
