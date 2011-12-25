@@ -45,44 +45,6 @@
   (or (coordinate-string-p s)
       (san-string-p s)))
 
-;; (defun expand-digits (s chr)
-;;   "Expands digits in given string by that many of given chars."
-;;   (labels ((expander (acc i)
-;;              (if (= i (length s))
-;;                  acc
-;;                  (let* ((e (string (aref s i)))
-;;                         (n (parse-integer e :junk-allowed t)))
-;;                    (if n
-;;                        (expander (concatenate 'string acc (make-string n :initial-element chr)) (1+ i))
-;;                        (expander (concatenate 'string acc e) (1+ i)))))))
-;;     (expander "" 0)))
-
-;; (defun pad (s) ;; XXX: not done
-;;   "Pads each character with space in given string."
-;;   (ppcre:regex-replace "[a-z-]" s (lambda (chr)
-;;                                     (concatenate 'string " " (string chr)))))
-
-;; (defun pad-digits (chr s) ;; not done
-;;   "Returns a new string with each digit replaced by that many characters of chr."
-;;   (ppcre:regex-replace "\\d" (lambda (c)
-;;                                (make-string (parse-integer (string c)) chr)) s))
-
-;; (defun padder (s chr)
-;;   "Pads string with chr"
-;;   (let ((string-length (length s)))
-;;     (labels ((seek (prevend)
-;;                (multiple-value-bind (start end)
-;;                    (ppcre:scan regex s :start prevend)
-;;                  (if start
-;;                      (cons (subseq s prevend start)
-;;                            (cons (subseq s start end)
-;;                                  (seek end)))
-;;                      (when (< prevend string-length)
-;;                        (list (subseq s prevend string-length)))))))
-;;       (seek 0))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun group (list n)
   "Group items in list to lists of n length."
   (when (zerop n) (error "Groups fo zero are no fun"))
