@@ -238,7 +238,9 @@
           (t +opening-game+))))
 
 (defstruct State0x88
-  board black-pieces white-pieces)
+  (board (init-game-board) :type simple-vector)
+  (black-pieces (make-hash-table) :type hash-table)
+  (white-pieces (make-hash-table) :type hash-table))
 
 (defmethod allowedp ((state State0x88) move)
   (allowed-move-p state move))
