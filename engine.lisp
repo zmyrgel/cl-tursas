@@ -259,9 +259,13 @@
   (concatenate 'string "Error (Unsupported command): " cmd))
 
 (defun set-variant (variant)
-  (if (eq variant "normal")
+  (if (string= variant "normal")
       (set-option! :variant "normal")
       (concatenate 'string "Error (unsupported variant given): " variant)))
+
+(defun user-move-p (s)
+  "Predicate to check if given string S represents user move."
+  (ppcre:scan "^[a-h]{1}[1-8]{1}[a-h]{1}[1-8]{1}[rnbq]?+$" cmd))
 
 (defun process-cecp-command (cmd)
   "Processes command in cecp mode."
