@@ -96,8 +96,8 @@
 
 (defun add-king-indexes (state)
   "Adds king indexes to state."
-  (let ((black-king (find-king-index state +black+))
-        (white-king (find-king-index state +white+))
+  (let ((black-king (seek-king-index state +black+))
+        (white-king (seek-king-index state +white+))
         (board (State0x88-board state)))
     (update-king-index! board black-king +black+)
     (update-king-index! board white-king +white+)))
