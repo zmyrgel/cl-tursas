@@ -54,25 +54,27 @@
                        (expander (concatenate 'string acc e) (1+ i)))))))
     (expander "" 0)))
 
-;;; use string-indexed from utils
+(defun string-indexed (s)
+  "Return an alist of offset / character pairs for string S."
+  (mapcar #'cons
+          (loop for n below (length s) collect n)
+          (map 'list (lambda (c) (coerce c 'character)) s)))
+
 (defun fen-board->0x88board (s)
   "Converts string given in FEN notation to 0x88 board representation."
-  (reduce (lambda (board location-pair)
-            (fill-square! board (car location-pair) (piece-value (cdr location-pair))))
-          (string-indexed
-           (mapcar (lambda (x) (concatenate 'string x "EEEEEEEE"))
-                   (reverse (cl-utilities:split-sequence #\/ (expand-digits s #\E)))))
-          :initial-value (init-game-board)))
+  (let ((board (init-game-board)))
+    (dolist (pair (string-indexed (apply (alexandria:curry #'concatenate 'string)
+                                         (mapcar (lambda (row) (concatenate 'string row "EEEEEEEE"))
+                                                 (reverse (cl-utilities:split-sequence #\/ (expand-digits s #\E)))))))
+      (fill-square! board (car pair) (piece-value (cdr pair))))
+    board))
 
 ;; use string-partition
 (defun make-fen-row (board row)
   "Builds single fen row from given board and row index."
   (compact-item #\E (mapcar (lambda (n)
-                            (piece-name (board-ref (+ row n))))
+                            (piece-name (board-ref board (+ row n))))
                           (alexandria:iota 8))))
-;; (map 'string (lambda (x) (if (eql (aref x 0) #\E) (write-to-string (length x)) x))
-;;      (string-partition "E+" (map 'string (lambda (i) (piece-name (board-ref board (+ row i))))
-;;                                  (alexandria:iota 8))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
