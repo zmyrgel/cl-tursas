@@ -69,12 +69,12 @@
 
 (defparameter *protocol* 'general)
 (defparameter *game-state* nil)
-(defparameter *game-options* '((depth-limit . 4)
-                               (ai-mode . nil)
-                               (cecp-protocol-version . 2)
-                               (debug . nil)
-                               (ponder . nil)
-                               (ponder-output . nil)))
+(defparameter *game-options* (alexandria:alist-hash-table '((:depth-limit . 4)
+                                                            (:ai-mode . nil)
+                                                            (:cecp-protocol-version . 2)
+                                                            (:debug . nil)
+                                                            (:ponder . nil)
+                                                            (:ponder-output . nil))))
 
 (defparameter *allowed-commands*
   '(protover accepther rejected new
@@ -93,18 +93,18 @@
 
 (defun set-option! (key value)
   "Sets game option of given key to value."
-  (rplacd (assoc key *game-options*) value))
+  (setf (gethash key *game-options*) value))
 
 (defun get-option (option)
   "Returns value of given game option"
-  (rest (assoc option *game-options*)))
+  (gethash option *game-options*))
 
 (defun save-game ()
   "Saves the current game by writing game-state to file."
   (with-open-file (s "saved-game.txt" :direction :output)
     (princ *game-state* s)))
 
-(defparameter *search-fn* (alexandria:curry #'alpha-beta (get-option 'depth-limit) #'evaluate))
+(defparameter *search-fn* (alexandria:curry #'alpha-beta (get-option :depth-limit) #'evaluate))
 (defparameter *shallow-search-fn* (alexandria:curry #'alpha-beta 2 #'evaluate))
 
 (defun load-game ()
