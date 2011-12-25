@@ -18,7 +18,7 @@
                              (:file "move0x88" :depends-on ("package" "common0x88"))
                              (:file "movegen0x88" :depends-on ("package" "common0x88"))
                              (:file "board0x88" :depends-on ("package" "common0x88" "eval0x88"))
-                             (:file "fen0x88" :depends-on ("package" "common0x88"))
+                             (:file "fen0x88" :depends-on ("package" "common0x88" "board0x88"))
                              (:file "state0x88" :depends-on ("package" "common0x88" "board0x88" "move0x88" "fen0x88" "eval0x88"))))
                (:file "package")
                (:file "util" :depends-on ("package"))
