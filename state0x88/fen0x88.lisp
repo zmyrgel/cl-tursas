@@ -69,19 +69,37 @@
       (fill-square! board (car pair) (piece-value (cdr pair))))
     board))
 
-;; use string-partition
+;; XXX: move this
+(defun compact-item (x list)
+  "Returns a list where each X in LIST is replaced by digit
+   character indicating their amount."
+  (labels ((f (result items found)
+             (cond ((null items) (if (plusp found)
+                                     (nreverse (cons found result))
+                                     (nreverse result)))
+                   ((equalp (first items) x) (f result (rest items) (1+ found)))
+                   (t (if (plusp found)
+                          (f (cons (digit-char found) result) items 0)
+                          (f (cons (first items) result) (rest items) found))))))
+    (f nil list 0)))
+
+(defmethod to-string (arg) (string arg))
+(defmethod to-string ((arg integer)) (write-to-string arg))
+
+(defun str (&rest args)
+  (apply (curry #'concatenate 'string)
+         (mapcar #'to-string args)))
+
 (defun make-fen-row (board row)
   "Builds single fen row from given board and row index."
-  (compact-item #\E (mapcar (lambda (n)
-                            (piece-name (board-ref board (+ row n))))
-                          (alexandria:iota 8))))
+  (apply #'str (compact-item #\E (mapcar (lambda (n)
+                                           (piece-name (board-ref board (+ row n))))
+                                         (alexandria:iota 8)))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
-  (reduce (lambda (m o)
-            (concatenate 'string m "/" o))
-          (mapcar (alexandria:curry #'make-fen-row board)
-                  '(#x70 #x60 #x50 #x40 #x30 #x20 #x10 #x0))))
+  (format nil "~{~a~^/~}" (mapcar (alexandria:curry #'make-fen-row board)
+                                  '(#x70 #x60 #x50 #x40 #x30 #x20 #x10 #x0))))
 
 (defun add-pieces (state)
   "Adds all pieces from board to piece-map."
