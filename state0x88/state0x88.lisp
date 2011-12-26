@@ -72,6 +72,22 @@
   (and (not (checkp state))
        (null (legal-states state))))
 
+(defun merge-hash-tables (&rest tables)
+  "Returns new hash table with all the keys and values from given tables."
+  (let ((union (make-hash-table
+                :test (first
+                       (sort (mapcar #'hash-table-test tables) #'>
+                             :key (lambda (test)
+                                    (ecase test
+                                      (eq 0)
+                                      (eql 1)
+                                      (equal 2)
+                                      (equalp 3)))))
+           :size (reduce #'max (mapcar #'hash-table-size tables)))))
+    (dolist (table tables)
+      (maphash (lambda (key val) (setf (gethash key union) val)) table))
+    union))
+
 (defun fide-draw-p (state)
   "Checks if state is draw according to FIDE rules:
    - Both sides have only king piece.
