@@ -1,6 +1,6 @@
 (defpackage :tursas.state0x88
   (:documentation "Package provides 0x88-based implementation.")
-  (:use :cl :alexandria)
+  (:use :cl :alexandria :tursas.utils)
   (:export
    ;; move0x88
    coord->move move->coord from to promotion

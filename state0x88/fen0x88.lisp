@@ -42,53 +42,15 @@
                                              (State0x88-white-pieces state)
                                              (State0x88-black-pieces state)))))))
 
-(defun expand-digits (s chr)
-  "Expands digits in given string by that many of given chars."
-  (labels ((expander (acc i)
-             (if (= i (length s))
-                 acc
-                 (let* ((e (string (aref s i)))
-                        (n (parse-integer e :junk-allowed t)))
-                   (if n
-                       (expander (concatenate 'string acc (make-string n :initial-element chr)) (1+ i))
-                       (expander (concatenate 'string acc e) (1+ i)))))))
-    (expander "" 0)))
-
-(defun string-indexed (s)
-  "Return an alist of offset / character pairs for string S."
-  (mapcar #'cons
-          (loop for n below (length s) collect n)
-          (map 'list (lambda (c) (coerce c 'character)) s)))
-
 (defun fen-board->0x88board (s)
   "Converts string given in FEN notation to 0x88 board representation."
-  (let ((board (init-game-board)))
+  (let ((board (init-game-board))
+        (fen-list (map 'list #'identity s)))
     (dolist (pair (string-indexed (apply (alexandria:curry #'concatenate 'string)
                                          (mapcar (lambda (row) (concatenate 'string row "EEEEEEEE"))
-                                                 (reverse (cl-utilities:split-sequence #\/ (expand-digits s #\E)))))))
+                                                 (reverse (cl-utilities:split-sequence #\/ (expand-digits #\E fen-list)))))))
       (fill-square! board (car pair) (piece-value (cdr pair))))
     board))
-
-;; XXX: move this
-(defun compact-item (x list)
-  "Returns a list where each X in LIST is replaced by digit
-   character indicating their amount."
-  (labels ((f (result items found)
-             (cond ((null items) (if (plusp found)
-                                     (nreverse (cons found result))
-                                     (nreverse result)))
-                   ((equalp (first items) x) (f result (rest items) (1+ found)))
-                   (t (if (plusp found)
-                          (f (cons (digit-char found) result) items 0)
-                          (f (cons (first items) result) (rest items) found))))))
-    (f nil list 0)))
-
-(defmethod to-string (arg) (string arg))
-(defmethod to-string ((arg integer)) (write-to-string arg))
-
-(defun str (&rest args)
-  (apply (curry #'concatenate 'string)
-         (mapcar #'to-string args)))
 
 (defun make-fen-row (board row)
   "Builds single fen row from given board and row index."

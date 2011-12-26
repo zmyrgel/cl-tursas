@@ -12,7 +12,11 @@
   :licence "ISC license"
   :depends-on (:cl-ppcre :alexandria :cl-utilities)
   :serial t
-  :components ((:module "state0x88"
+  :components ((:module "utils"
+                :serial t
+                :components ((:file "package")
+                             (:file "utils")))
+               (:module "state0x88"
                 :serial t
                 :components ((:file "package")
                              (:file "common0x88")
@@ -23,7 +27,6 @@
                              (:file "fen0x88")
                              (:file "state0x88")))
                (:file "package")
-               (:file "util")
                (:file "search")
-               (:file "engine" :depends-on ("state0x88"))
+               (:file "engine")
                (:file "repl")))

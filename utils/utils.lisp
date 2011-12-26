@@ -1,4 +1,4 @@
-(in-package :tursas)
+(in-package :tursas.utils)
 
 (defconstant valid-coords
   (apply #'append
@@ -15,25 +15,23 @@
   "Partitions chess move given in coordinate notation to pair of coordinates
    and possible promotion character."
   (case (length algebraic)
-    (4 (list (subseq algebraic 0 2)
-             (subseq algebraic 2)))
-    (5 (list (subseq algebraic 0 2)
-             (subseq algebraic 2 4)
-             (subseq algebraic 4)))
-    (otherwise 0)))
+    (4 (values (subseq algebraic 0 2)
+               (subseq algebraic 2)
+               nil))
+    (5 (values (subseq algebraic 0 2)
+               (subseq algebraic 2 4)
+               (subseq algebraic 4)))
+    (otherwise nil)))
 
 (defun coordinate-string-p (s)
   "Predicate to detect valid move strings in
    coordinate notation."
-  (let* ((parts (split-move s))
-         (len (list-length parts))
-         (promotion-chars "rnbq"))
-    (and (or (= len 2)
-             (= len 3))
-         (valid-coord-p (first parts))
-         (valid-coord-p (second parts))
-         (if (= len 3)
-             (find (coerce (third parts) 'character) promotion-chars)
+  (multiple-value-bind (from to promotion)
+      (split-move s)
+    (and (valid-coord-p from)
+         (valid-coord-p to)
+         (if promotion
+             (find (coerce promotion 'character) "rnbq")
              t))))
 
 (defun san-string-p (s)
@@ -41,9 +39,16 @@
   nil)
 
 (defun move-string-p (s)
-  "Predicate to see if given string represents a valid chess move."
+  "Predicate to see if given string S represents a valid and supported chess move."
   (or (coordinate-string-p s)
       (san-string-p s)))
+
+(defmethod to-string (arg) (string arg))
+(defmethod to-string ((arg integer)) (write-to-string arg))
+
+ (defun str (&rest args)
+  (apply (curry #'concatenate 'string)
+          (mapcar #'to-string args)))
 
 (defun group (list n)
   "Group items in list to lists of n length."
@@ -93,6 +98,12 @@
                (cons sep (cons (first c)
                                (f (rest c)))))))
     (rest (f list))))
+
+(defun string-indexed (s)
+  "Return an alist of offset / character pairs for string S."
+  (mapcar #'cons
+          (loop for n below (length s) collect n)
+          (map 'list (lambda (c) (coerce c 'character)) s)))
 
 (defun fen->ascii (fen)
   "Return printable string for the board from FEN string.
