@@ -111,4 +111,6 @@
     (let ((count 8))
       (dolist (row (group (expand-digits #\- (delete #\/ (concatenate 'list (first (cl-utilities:split-sequence #\space fen))))) 8))
         (format t "~a~%" (concatenate 'string (cons (digit-char count) (cons #\| (interpose #\space row)))))
-        (decf count)))))
+        (decf count))
+      (format t "~a~%" "-+----------------")
+      (format t "~a~%" " | a b c d e f g h"))))
