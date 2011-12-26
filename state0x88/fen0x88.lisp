@@ -123,7 +123,7 @@
 (defun add-full-moves (board moves)
   "Helper funtion to add full moves to board.
    Needed to workaround the byte limitation of the board."
-  (let ((n-moves (/ moves 128)))
+  (let ((n-moves (truncate (/ moves 128))))
     (fill-square! board +full-move-n-store+ n-moves)
     (fill-square! board +full-move-store+ (- moves (* n-moves 128)))))
 
