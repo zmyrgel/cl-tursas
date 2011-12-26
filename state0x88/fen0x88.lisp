@@ -147,15 +147,14 @@
 (defun parse-state (state)
   "Returns FEN representation of given game state."
   (let ((board (State0x88-board state)))
-    (reduce (lambda (m o)
-              (concatenate 'string m " " o))
-            (list (board->fen-board board)
-                  (if (= (board-ref board +turn-store+) +white+) "w" "b")
-                  (castling->str (board-ref board +castling-store+))
-                  (let ((en-passant (board-ref board +en-passant-store+)))
-                    (if (= en-passant -1)
-                        "-"
-                        (index->coord en-passant)))
-                  (board-ref board +half-move-store+)
-                  (+ (* (board-ref board +full-move-n-store+) 127)
-                     (board-ref board +full-move-store+))))))
+    (format nil "~a ~a ~a ~a ~a ~a"
+            (board->fen-board board)
+            (if (= (board-ref board +turn-store+) +white+) "w" "b")
+            (castling->str (board-ref board +castling-store+))
+            (let ((en-passant (board-ref board +en-passant-store+)))
+              (if (= en-passant -1)
+                  "-"
+                  (index->coord en-passant)))
+            (board-ref board +half-move-store+)
+            (+ (* (board-ref board +full-move-n-store+) 127)
+               (board-ref board +full-move-store+)))))
