@@ -3,8 +3,8 @@
 (defconstant +rook-directions+ (list +north+ +south+ +east+ +west+))
 (defconstant +bishop-directions+ (list +nw+ +sw+ +ne+ +se+))
 (defconstant +queen-directions+ (concatenate 'list
-                                           +rook-directions+
-                                           +bishop-directions+))
+                                             +rook-directions+
+                                             +bishop-directions+))
 
 (defconstant +king-movement+ +queen-directions+)
 (defconstant +black-pawn-movement+ (list +se+ +sw+ +south+))
