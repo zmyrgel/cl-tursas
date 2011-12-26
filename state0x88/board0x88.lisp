@@ -1,11 +1,5 @@
 (in-package :tursas.state0x88)
 
-;; (defconstant +all-indexes+ (loop :for x :below 120 :collect x))
-;; (defparameter +board-indexes+ (mapcan (lambda (x)
-;;                                       (mapcar (lambda (col)
-;;                                                 (+ col x)) (range 8)))
-;;                                     '(#x70 #x60 #x50 #x40 #x30 #x20 #x10 #x0)))
-
 (defconstant +board-color+
   (make-table (list +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
                     +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
