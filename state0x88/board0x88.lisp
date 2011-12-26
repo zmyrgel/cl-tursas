@@ -113,7 +113,7 @@
 (defun init-game-board ()
   "Generates new 128 element vector of bytes
    and places chess piece representation to it."
-  (make-array 128 :initial-element 0 :element-type :byte))
+  (make-array 128 :initial-element 0 :element-type '(signed-byte)))
 
 (defun board-ref (board index)
   "Getter for board"
