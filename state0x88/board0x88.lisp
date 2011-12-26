@@ -26,9 +26,9 @@
     (and (board-occupied-p board index)
          (funcall piece-color-p (board-ref board index)))))
 
-(defmacro opponent (player)
+(defun opponent (player)
   "Return opponent of given player"
-  `(logxor ,player 1))
+  (logxor player 1))
 
 (defun promotionp (piece move)
   "Checks if given move is pawn promotion."
@@ -78,15 +78,15 @@
   "Checks if given index on board is empty."
   (zerop (board-ref board index)))
 
-(defmacro column (index)
+(defun column (index)
   "Get the board column of the given square index.
    Columns start at 0 and go up to 7."
-  `(logand ,index 7))
+  (logand index 7))
 
-(defmacro row (index)
+(defun row (index)
   "Get the board row of the given square index.
    Rows start at 0 and they go up to 7."
-  `(ash ,index -4))
+  (ash index -4))
 
 (defun same-column-p (x y)
   "Determines if both given square indexes x and x are on the same column."
@@ -97,9 +97,9 @@
   (= (row x) (row y)))
 
 ;;; alternatively (zerop (mod sq 2))
-(defmacro square-color (sq)
+(defun square-color (sq)
   "Returns the color of given square."
-  `(board-ref +board-color+ ,sq))
+  (board-ref +board-color+ sq))
 
 (defun same-color-p (sq1 sq2)
   "Check if two squares are same color."
