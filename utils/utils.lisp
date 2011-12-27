@@ -124,4 +124,4 @@
         (format t "~a~%" (concatenate 'string (cons (digit-char count) (cons #\| (interpose #\space row)))))
         (decf count))
       (format t "~a~%" "-+----------------")
-      (format t "~a~%" " | a b c d e f g h"))))
+      (format t "~a~%" " |a b c d e f g h "))))
