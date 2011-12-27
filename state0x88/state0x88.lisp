@@ -356,3 +356,9 @@
 (defun fen->state (fen)
   "Convert given FEN to state representation."
   (update-opponent-check (parse-fen fen (make-State0x88))))
+
+(defmethod copy-state ((state State0x88))
+  "Returns copy of given state."
+  (make-State0x88 :board (copy-seq (State0x88-board state))
+                  :black-pieces (copy-hash-table (State0x88-black-pieces state))
+                  :white-pieces (copy-hash-table (State0x88-white-pieces state))))
