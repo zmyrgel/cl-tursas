@@ -301,7 +301,7 @@
   "Lists all pseudo-moves for player in state.
    Note: moves generated can leave player in check, hence pseudo-moves."
   (mapcan (lambda (pair)
-            (destructuring-bind (index piece)
+            (destructuring-bind (index . piece)
                 pair
               (piece-moves (State0x88-board state) player index piece)))
           (alexandria:hash-table-alist (pmap-get state player))))
