@@ -31,45 +31,6 @@
           '("# Welcome to Tursas Chess Engine!"
             "# Type 'help' to get list of supported commands")))
 
-;; (defun tweak-text (lst caps lit)
-;;   "Utility function to convert list of symbols to a proper text string."
-;;   (when lst
-;;     (let ((item (car lst))
-;;           (rest (cdr lst)))
-;;       (cond ((eql item #\space) (cons item (tweak-text rest caps lit)))
-;;             ((member item '(#\! #\? #\. #\:)) (cons item (tweak-text rest t lit)))
-;;             ((eql item #\") (tweak-text rest caps (not lit)))
-;;             (lit (cons item (tweak-text rest nil lit)))
-;;             (caps (cons (char-upcase item) (tweak-text rest nil lit)))
-;;             (t (cons (char-downcase item) (tweak-text rest nil nil)))))))
-
-;; (defun game-print (lst)
-;;   "Prints the given sexp as string."
-;;   (princ (coerce (tweak-text (coerce (string-trim "() " (prin1-to-string lst)) 'list) t nil) 'string))
-;;   (fresh-line))
-
-
-;; (defun game-repl ()
-;;   "The main game repl function."
-;;   (let ((cmd (game-read)))
-;;     (unless (eq (car cmd) 'quit)
-;;       (game-print (game-eval cmd))
-;;       (game-repl))))
-
-;; (defun game-read ()
-;;   "Game reader function"
-;;   (let ((cmd (read-from-string
-;;               (concatenate 'string "(" (read-line) ")"))))
-;;     (flet ((quote-it (x)
-;;              (list 'quote x)))
-;;       (cons (car cmd) (mapcar #'quote-it (cdr cmd))))))
-
-;; (defun game-eval (sexp)
-;;   "Evaluate repl sexp."
-;;   (cond ((valid-commandp sexp) (eval sexp))
-;;         ((unimplemented-commandp sexp) '(command is not implemented by engine))
-;;         (t '(i do not know that command.))))
-
 (defun game-eval (s)
    "Evaluates given engine protocol command."
   (process-command s))
