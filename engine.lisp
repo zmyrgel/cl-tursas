@@ -196,7 +196,7 @@
                                    ((equal s "en") en-fen)
                                    (t (when (fenp s)
                                         s)))))
-      (add-game-state! (tursas.state0x88:fen->state fen))
+      (add-game-state! (fen->state fen))
       (concatenate 'string "Error (Invalid setboard command): " s))))
 
 (defun toggle-option! (option)
