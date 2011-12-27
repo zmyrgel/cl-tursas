@@ -48,7 +48,7 @@
                     +white+
                     +black+)))
     (progn (clear-square! (State0x88-board state) index)
-           (pmap-remove! (State0x88-board state) player index))))
+           (pmap-remove! state player index))))
 
 (defun move-piece! (state move)
   "Moves piece in the board."
