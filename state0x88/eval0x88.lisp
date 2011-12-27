@@ -140,20 +140,22 @@
 (defun score (pieces situation)
   "Calculates score for side."
   (reduce (lambda (score pair)
-            (destructuring-bind (index piece)
+            (destructuring-bind (index . piece)
                 pair
               (+ score
                  (material-value piece)
                  (index-score piece index situation))))
-          pieces))
+          (alexandria:hash-table-alist pieces)
+          :initial-value 0))
 
 (defun heuristic-value (player whites blacks situation)
   "Calculates heuristic value for given state."
-  (let ((pieces (if (= player +white+)
-                    (list whites blacks)
-                    (list blacks whites))))
-    (+ (score (first pieces) situation)
-       (- (score (second pieces) situation)))))
+  (multiple-value-bind (player-piece-map enemy-piece-map)
+      (if (= player +white+)
+          (values whites blacks)
+          (values blacks whites))
+    (+ (score player-piece-map situation)
+       (- (score enemy-piece-map situation)))))
 
 (defun end-score (state)
   "Return the final score of given state."
