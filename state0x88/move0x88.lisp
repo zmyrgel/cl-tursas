@@ -26,11 +26,12 @@
   "Make a Move from given string.
    The string should be in coordinate notation."
   (when (move-string-p s)
-    (let ((parts (split-move s)))
-      (make-move (coord->index (first parts))
-                 (coord->index (second parts))
-                 (if (= (list-length parts) 3)
-                     (piece-value (aref s 4))
+    (multiple-value-bind (from to promotion)
+        (split-move s)
+      (make-move (coord->index from)
+                 (coord->index to)
+                 (if promotion
+                     (piece-value promotion)
                      0)))))
 
 (defmethod move->coord ((move Move0x88))
