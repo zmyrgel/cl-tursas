@@ -24,7 +24,6 @@
   "Checks if given command is known but not implemented."
   `(member ,(car sexp) +unimplemented-cecp-commands+))
 
-
 (defun init-engine ()
   "Initializes the chess engine."
   (format t "~{~a~%~}"
