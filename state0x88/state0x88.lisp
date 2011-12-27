@@ -163,17 +163,17 @@
            (moving-piece (board-ref board (Move0x88-from move))))
       (cond ((promotionp moving-piece move)
              (remove-piece! state (Move0x88-from move))
-             (add-piece! (Move0x88-to move) (promotion-piece player move)))
+             (add-piece! state (Move0x88-to move) (promotion-piece player move)))
             ((castlingp moving-piece move)
              (move-castling-pieces! player state move (if (= (column (Move0x88-to move)) 2)
                                                           +queen-side+
                                                           +king-side+)))
             ((en-passant-p board moving-piece move)
              (move-piece! state move)
-             (remove-piece! (+ (Move0x88-to move)
-                               (if (= player +white+)
-                                   +south+
-                                   +north+))))
+             (remove-piece! state (+ (Move0x88-to move)
+                                     (if (= player +white+)
+                                         +south+
+                                         +north+))))
             (t (move-piece! state move)))
       state)))
 
