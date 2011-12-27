@@ -304,7 +304,7 @@
             (destructuring-bind (index piece)
                 pair
               (piece-moves (State0x88-board state) player index piece)))
-          (pmap-get state player)))
+          (alexandria:hash-table-alist (pmap-get state player))))
 
 (defun allowed-move-p (state move)
   "Checks if given move is allowed in state.
