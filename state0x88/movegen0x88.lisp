@@ -158,18 +158,15 @@
           (list +black+ +black-king+ +white-king+)
           (list +white+ +white-king+ +black-king+))
     (let ((opp-king-idx (king-index board opp)))
-      (if (not (some (lambda (offset)
-                       (= opp-king-idx offset))
-                     (mapcar (alexandria:curry #'+ index) +king-movement+)))
-          nil
-          (if (= (board-ref board index) king)
-              t
-              (unwind-protect ;; XXX: Fix this
-                   (clear-square! board opp-king-idx)
-                (fill-square! board index opp-king)
-                (not (threatenedp board index player))
-                (clear-square! board index)
-                (fill-square! board opp-king-idx opp-king)))))))
+      (when (some (lambda (offset)
+                    (= opp-king-idx offset))
+                  (mapcar (alexandria:curry #'+ index) +king-movement+))
+        (if (= (board-ref board index) king)
+            t
+            (let ((temp-board (copy-array board)))
+              (clear-square! temp-board opp-king-idx)
+              (fill-square! temp-board index opp-king)
+              (not (threatenedp temp-board index player))))))))
 
 (defun threaten-by-white-p (board index)
   "Checks if given index is threatened by white player."
