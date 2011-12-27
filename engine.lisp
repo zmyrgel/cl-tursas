@@ -104,8 +104,8 @@
   (with-open-file (s "saved-game.txt" :direction :output)
     (princ *game-state* s)))
 
-(defparameter *search-fn* (alexandria:curry #'alpha-beta (get-option :depth-limit) #'evaluate))
-(defparameter *shallow-search-fn* (alexandria:curry #'alpha-beta 2 #'evaluate))
+(defparameter *search-fn* (alexandria:curry #'alpha-beta most-positive-fixnum most-negative-fixnum (get-option :depth-limit) #'evaluate))
+(defparameter *shallow-search-fn* (alexandria:curry #'alpha-beta most-positive-fixnum most-negative-fixnum 2 #'evaluate))
 
 (defun load-game ()
   "Loads the game-state from file to resume the previous game."
