@@ -209,11 +209,10 @@
 
 (defun make-human-move! (state s)
   "If given string represents chess move, apply it to current game."
-  (when (and (move-string-p s)
+  (when (and (user-move-p s)
              (allowedp state (coord->move s)))
     (alexandria:when-let ((new-state (apply-move state (coord->move s))))
-      (add-game-state! new-state)
-      t)))
+      (add-game-state! new-state))))
 
 (defun user-move (state s)
   "Helper function to handle user and ai moves.
