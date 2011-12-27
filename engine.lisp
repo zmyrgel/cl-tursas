@@ -160,7 +160,7 @@
 (defun get-score (state)
   "Calculates state's score by checking child states
    to certain depth using alpha-beta algorithm."
-  (concatenate 'string (first (funcall *search-fn* state))))
+  (concatenate 'string (funcall *search-fn* state)))
 
 (defun eval-current-state (state)
   "Evaluates the current state and returns its score."
@@ -168,7 +168,9 @@
 
 (defun get-hint (state)
   "Evaluates all states and chooses one from top five moves at random."
-  (move->coord (last-move (second (funcall *shallow-search-fn* state)))))
+  (multiple-value-bind (score best-state)
+      (funcall *shallow-search-fn* state)
+    (move->coord (last-move best-state))))
 
 (defun fenp (s)
   "Predicate to check if given string S is a valid FEN string."
@@ -203,7 +205,9 @@
 
 (defun make-ai-move! (state)
   "Tell engine to make an move in current game state."
-  (add-game-state! (second (funcall *search-fn* state)))
+  (multiple-value-bind (score best-state)
+      (funcall *search-fn* state)
+    (add-game-state! best-state))
   (concatenate 'string "move "
                (move->coord (last-move (current-game-state)))))
 
