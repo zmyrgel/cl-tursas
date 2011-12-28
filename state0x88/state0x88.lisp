@@ -83,8 +83,8 @@
    - Both sides have only bishop of same color besides kings"
   (let* ((piece-map (merge-hash-tables (State0x88-white-pieces state)
                                        (State0x88-black-pieces state)))
-         (indexes (alexandria:hash-table-keys piece-map))
-         (pieces (alexandria:hash-table-values piece-map))
+         (indexes (hash-table-keys piece-map))
+         (pieces (hash-table-values piece-map))
          (piece-count (list-length indexes)))
     (and (<= piece-count 4)
          (or (= piece-count 2)
@@ -107,8 +107,8 @@
                                                 indexes)))
 
                         (when (not (< (list-length bishops) 2))
-                          (same-color-p (first (alexandria:hash-table-keys bishops))
-                                        (second (alexandria:hash-table-keys bishops)))))))))))
+                          (same-color-p (first (hash-table-keys bishops))
+                                        (second (hash-table-keys bishops)))))))))))
 
 (defun repetitionp (state)
   "Predicate to see if game is draw by repetition.
@@ -297,11 +297,11 @@
   (parse-state state))
 
 (defmethod apply-move ((state State0x88) (move Move0x88))
-  (alexandria:when-let ((new-state (update-state state move)))
+  (when-let ((new-state (update-state state move)))
     new-state))
 
 (defmethod legal-states ((state State0x88))
-  (delete nil (mapcar (alexandria:curry #'apply-move state)
+  (delete nil (mapcar (curry #'apply-move state)
                       (pseudo-moves (board-ref (State0x88-board state) +turn-store+) state))))
 
 (defmethod legal-moves ((state State0x88))
@@ -356,3 +356,7 @@
   (make-State0x88 :board (copy-seq (State0x88-board state))
                   :black-pieces (copy-hash-table (State0x88-black-pieces state))
                   :white-pieces (copy-hash-table (State0x88-white-pieces state))))
+
+;; TURSAS.STATE0X88::COPY-ARRAY
+;; TURSAS.STATE0X88::COPY-HASH-TABLE
+;; TURSAS.STATE0X88::HASH-TABLE-KEYS

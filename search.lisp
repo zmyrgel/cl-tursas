@@ -13,6 +13,6 @@
                          (t (f (rest states) best-state ac depth)))))))
     (cond ((game-end-p state) (values (game-score state) nil))
           ((zerop depth) (values (funcall eval-fn state) nil))
-          (t (alexandria:if-let ((children (legal-states state)))
+          (t (if-let ((children (legal-states state)))
                (f children (first children) alpha (1- depth))
                (f nil nil (funcall eval-fn state) 0))))))

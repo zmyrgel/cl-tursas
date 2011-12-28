@@ -1,6 +1,8 @@
 (defpackage :tursas.utils
   (:documentation "Utilities used by Tursas.")
-  (:use :cl :alexandria :cl-ppcre)
-  (:export "VALID-COORD-P" "SPLIT-MOVE" "COORDINATE-STRING-P"
-           "SAN-STRING-P" "MOVE-STRING-P" "FEN->ASCII"
-           "SPLIT-ON" "EXPAND-DIGITS" "COMPACT-ITEM" "STR" "STRING-INDEXED"))
+  (:use :cl)
+  (:import-from :alexandria :define-constant :curry :when-let)
+  (:import-from :cl-utilities :split-sequence)
+  (:export :valid-coord-p :split-move :coordinate-string-p
+           :san-string-p :move-string-p :fen->ascii
+           :split-on :expand-digits :compact-item :str :string-indexed))

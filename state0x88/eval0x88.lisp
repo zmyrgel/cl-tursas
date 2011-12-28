@@ -147,7 +147,7 @@
               (+ score
                  (material-value piece)
                  (index-score piece index situation))))
-          (alexandria:hash-table-alist pieces)
+          (hash-table-alist pieces)
           :initial-value 0))
 
 (defun heuristic-value (player whites blacks situation)

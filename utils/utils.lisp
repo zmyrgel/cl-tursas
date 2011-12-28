@@ -72,7 +72,7 @@
    LIST of characters expanded by that many of X's."
   (labels ((f (result items)
              (cond ((null items) (nreverse result))
-                   ((alexandria:when-let ((num (digit-char-p (first items))))
+                   ((when-let ((num (digit-char-p (first items))))
                       (f (append (list-of num x) result)
                          (rest items))))
                    (t (f (cons (first items)  result)
@@ -121,7 +121,7 @@
   | a b c d e f g h"
   (with-output-to-string (*STANDARD-OUTPUT*)
     (let ((count 8))
-      (dolist (row (group (expand-digits #\- (delete #\/ (concatenate 'list (first (cl-utilities:split-sequence #\space fen))))) 8))
+      (dolist (row (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8))
         (format t "~a~%" (concatenate 'string (cons (digit-char count) (cons #\| (interpose #\space row)))))
         (decf count))
       (format t "~a~%" "-+----------------")

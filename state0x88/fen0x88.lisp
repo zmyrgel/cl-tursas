@@ -8,7 +8,7 @@
 
 (defun castling->str (castling)
   "Converts internal castling representation to string."
-  (let ((result (apply (alexandria:curry #'concatenate 'string)
+  (let ((result (apply (curry #'concatenate 'string)
                        (mapcar (lambda (castling-value)
                                  (when (plusp (logand castling (first castling-value)))
                                    (string (rest castling-value))))
@@ -39,17 +39,17 @@
                  (if (= piece king)
                      index
                      (seek (rest alist))))))
-      (seek (alexandria:hash-table-alist (if (= player +white+)
-                                             (State0x88-white-pieces state)
-                                             (State0x88-black-pieces state)))))))
+      (seek (hash-table-alist (if (= player +white+)
+                                  (State0x88-white-pieces state)
+                                  (State0x88-black-pieces state)))))))
 
 (defun fen-board->0x88board (s)
   "Converts string given in FEN notation to 0x88 board representation."
   (let ((board (init-game-board))
         (fen-list (map 'list #'identity s)))
-    (dolist (pair (string-indexed (apply (alexandria:curry #'concatenate 'string)
+    (dolist (pair (string-indexed (apply (curry #'concatenate 'string)
                                          (mapcar (lambda (row) (concatenate 'string row "EEEEEEEE"))
-                                                 (reverse (cl-utilities:split-sequence #\/ (expand-digits #\E fen-list)))))))
+                                                 (reverse (split-sequence #\/ (expand-digits #\E fen-list)))))))
       (fill-square! board (car pair) (piece-value (cdr pair))))
     board))
 
@@ -57,11 +57,11 @@
   "Builds single fen row from given board and row index."
   (apply #'str (compact-item #\E (mapcar (lambda (n)
                                            (piece-name (board-ref board (+ row n))))
-                                         (alexandria:iota 8)))))
+                                         (iota 8)))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
-  (format nil "~{~a~^/~}" (mapcar (alexandria:curry #'make-fen-row board)
+  (format nil "~{~a~^/~}" (mapcar (curry #'make-fen-row board)
                                   '(#x70 #x60 #x50 #x40 #x30 #x20 #x10 #x0))))
 
 (defun add-pieces (state)
@@ -93,7 +93,7 @@
 (defun parse-fen (s state)
   "Parses information from given FEN and applies it to given state."
   (destructuring-bind (board turn cast en-pass half full)
-      (cl-utilities:split-sequence #\space s)
+      (split-sequence #\space s)
     (let ((game-board (fen-board->0x88board board)))
       (fill-square! game-board +turn-store+ (if (string= turn "w") +white+ +black+))
       (fill-square! game-board +castling-store+ (castling->value cast))

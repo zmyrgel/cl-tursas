@@ -87,7 +87,7 @@
 (defun piece-indexes (state player)
   "Gets a list of all board indexes containing
    player's pieces in given board."
-  (alexandria:hash-table-keys (pmap-get state player)))
+  (hash-table-keys (pmap-get state player)))
 
 (defun castlingp (piece move)
   "Checks given move is castling move."
@@ -169,7 +169,7 @@
     (let ((opp-king-idx (king-index board opp)))
       (when (some (lambda (offset)
                     (= opp-king-idx offset))
-                  (mapcar (alexandria:curry #'+ index) +king-movement+))
+                  (mapcar (curry #'+ index) +king-movement+))
         (if (= (board-ref board index) king)
             t
             (let ((temp-board (copy-array board)))
@@ -179,8 +179,8 @@
 
 (defun threaten-by-white-p (board index)
   "Checks if given index is threatened by white player."
-  (let ((by-piece-p (alexandria:curry #'threaten-by-piece-p board index))
-        (by-slider-p (alexandria:curry #'threaten-by-slider-p board index +white+)))
+  (let ((by-piece-p (curry #'threaten-by-piece-p board index))
+        (by-slider-p (curry #'threaten-by-slider-p board index +white+)))
     (or (funcall by-piece-p +white-knight+ +knight-movement+)
         (funcall by-slider-p (list +white-queen+ +white-rook+) +rook-directions+)
         (funcall by-slider-p (list +white-queen+ +white-bishop+) +bishop-directions+)
@@ -189,8 +189,8 @@
 
 (defun threaten-by-black-p (board index)
   "Checks if given index is threatened by black player."
-  (let ((by-piece-p (alexandria:curry #'threaten-by-piece-p board index))
-        (by-slider-p (alexandria:curry #'threaten-by-slider-p board index +black+)))
+  (let ((by-piece-p (curry #'threaten-by-piece-p board index))
+        (by-slider-p (curry #'threaten-by-slider-p board index +black+)))
     (or (funcall by-piece-p +black-knight+ +knight-movement+)
         (funcall by-slider-p (list +black-queen+ +black-rook+) +rook-directions+)
         (funcall by-slider-p (list +black-queen+ +black-bishop+) +bishop-directions+)
@@ -232,7 +232,7 @@
                                      (legal-castling-p player board index dir))
                             (list (make-move index (+ index dir dir) 0))))))
     (concatenate 'list
-                 (mapcan (alexandria:curry #'move-to-place player board index) +king-movement+)
+                 (mapcan (curry #'move-to-place player board index) +king-movement+)
                  (funcall castling-move +king-side+ +east+)
                  (funcall castling-move +queen-side+ +west+))))
 
@@ -279,7 +279,7 @@
    for player's pawn in board index."
   (concatenate 'list
                (list-pawn-normal-moves player board index)
-               (mapcan (alexandria:curry #'pawn-capture player board index)
+               (mapcan (curry #'pawn-capture player board index)
                        (if (= player +white+)
                            (list (+ index +nw+) (+ index +ne+))
                            (list (+ index +sw+) (+ index +se+))))))
@@ -287,9 +287,9 @@
 (defun piece-moves (board player index piece)
   "Returns a list of possible piece moves in board index."
   (let ((slider (lambda (directions)
-                  (mapcan (alexandria:curry #'slide-in-dir player board index) directions)))
+                  (mapcan (curry #'slide-in-dir player board index) directions)))
         (mover (lambda (movement)
-                 (mapcan (alexandria:curry #'move-to-place player board index) movement))))
+                 (mapcan (curry #'move-to-place player board index) movement))))
     (cond ((or (= piece +white-pawn+)
                (= piece +black-pawn+)) (list-pawn-moves player board index))
           ((or (= piece +white-bishop+)
@@ -310,7 +310,7 @@
             (destructuring-bind (index . piece)
                 pair
               (piece-moves (State0x88-board state) player index piece)))
-          (alexandria:hash-table-alist (pmap-get state player))))
+          (hash-table-alist (pmap-get state player))))
 
 (defun allowed-move-p (state move)
   "Checks if given move is allowed in state.
