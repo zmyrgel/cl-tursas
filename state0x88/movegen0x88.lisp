@@ -226,7 +226,7 @@
                           (let ((value (if (= player +white+)
                                            (if (= side +king-side+) 8 4)
                                            (if (= side +king-side+) 2 1))))
-                            (plusp (logand value dir))))) ;; XXX: castling
+                            (plusp (logand value dir)))))
          (castling-move (lambda (side dir)
                           (when (and (funcall castle-side-p side castling)
                                      (legal-castling-p player board index dir))
