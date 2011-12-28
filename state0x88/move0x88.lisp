@@ -19,7 +19,7 @@
 
 (defun index->coord (index)
   "Converts given index to algebraic representation."
-  (let* ((coord (format nil "~X" index))
+  (let* ((coord (format nil "~2,'0x" index))
          (num (+ (- (char-code (schar coord 0)) 48) 1))
          (alpha (schar "abcdefgh" (- (char-code (schar coord 1)) 48))))
     (format nil "~a~a" alpha num)))
