@@ -135,12 +135,14 @@
                      (= (board-ref board new-index) piece))
                    pieces)))))
 
-(defun threaten-by-piece-p (board index opponent piece places)
+(defun threaten-by-piece-p (board index piece places)
   "Can piece in index be captured by opponents pieces."
-  (some (lambda (place)
-          (= (board-ref board place) piece))
-        (remove-if-not #'board-index-p
-                       (mapcar (alexandria:curry #'+ index) places))))
+  (loop for place in places
+        do (let ((new-index (+ index place)))
+             (if (and (board-index-p new-index)
+                      (= (board-ref board new-index) piece))
+                 (return t)
+                 nil))))
 
 (defun threaten-by-slider-p (board index opponent pieces directions)
   "Can the piece in index of board be captured
@@ -170,7 +172,7 @@
 
 (defun threaten-by-white-p (board index)
   "Checks if given index is threatened by white player."
-  (let ((by-piece-p (alexandria:curry #'threaten-by-piece-p board index +white+))
+  (let ((by-piece-p (alexandria:curry #'threaten-by-piece-p board index))
         (by-slider-p (alexandria:curry #'threaten-by-slider-p board index +white+)))
     (or (funcall by-piece-p +white-knight+ +knight-movement+)
         (funcall by-slider-p (list +white-queen+ +white-rook+) +rook-directions+)
@@ -180,7 +182,7 @@
 
 (defun threaten-by-black-p (board index)
   "Checks if given index is threatened by black player."
-  (let ((by-piece-p (alexandria:curry #'threaten-by-piece-p board index +black+))
+  (let ((by-piece-p (alexandria:curry #'threaten-by-piece-p board index))
         (by-slider-p (alexandria:curry #'threaten-by-slider-p board index +black+)))
     (or (funcall by-piece-p +black-knight+ +knight-movement+)
         (funcall by-slider-p (list +black-queen+ +black-rook+) +rook-directions+)
