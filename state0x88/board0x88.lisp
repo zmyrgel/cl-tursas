@@ -1,14 +1,15 @@
 (in-package :tursas.state0x88)
 
-(defconstant +board-color+
-  (make-table (list +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
-                    +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
-                    +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
-                    +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
-                    +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
-                    +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
-                    +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
-                    +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+)))
+(define-constant +board-color+
+    (make-table (list +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
+                      +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
+                      +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
+                      +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
+                      +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
+                      +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
+                      +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
+                      +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+))
+  :test 'equalp)
 
 (defun white-piece-p (piece)
   "Predicate to check if given piece value belongs to white."

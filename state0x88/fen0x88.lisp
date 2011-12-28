@@ -1,9 +1,10 @@
 (in-package :tursas.state0x88)
 
-(defconstant +castling-values+ '((8 . #\K)
-                                 (4 . #\Q)
-                                 (2 . #\k)
-                                 (1 . #\q)))
+(define-constant +castling-values+ '((8 . #\K)
+                                     (4 . #\Q)
+                                     (2 . #\k)
+                                     (1 . #\q))
+  :test 'equal)
 
 (defun castling->str (castling)
   "Converts internal castling representation to string."

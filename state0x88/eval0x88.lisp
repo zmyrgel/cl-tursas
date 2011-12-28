@@ -1,11 +1,11 @@
 (in-package :tursas.state0x88)
 
-(defconstant +pawn-value+ 10)
-(defconstant +bishop-value+ 30)
-(defconstant +knight-value+ 30)
-(defconstant +rook-value+ 50)
-(defconstant +queen-value+ 90)
-(defconstant +king-value+ 99999)
+(define-constant +pawn-value+ 10)
+(define-constant +bishop-value+ 30)
+(define-constant +knight-value+ 30)
+(define-constant +rook-value+ 50)
+(define-constant +queen-value+ 90)
+(define-constant +king-value+ 99999)
 
 (defmacro group (list n)
   "Group items in list to lists of n length."
@@ -20,10 +20,12 @@
 (defmacro make-table-scores (name board)
   "Utility to make white and black score table based on initial board."
   `(progn
-     (defconstant ,(intern (concatenate 'string "+WHITE-" (string name) "-TABLE+"))
-       (make-table ,board))
-     (defconstant ,(intern (concatenate 'string "+BLACK-" (string name) "-TABLE+"))
-       (make-table (reverse ,board)))))
+     (define-constant ,(intern (concatenate 'string "+WHITE-" (string name) "-TABLE+"))
+         (make-table ,board)
+       :test 'equalp)
+     (define-constant ,(intern (concatenate 'string "+BLACK-" (string name) "-TABLE+"))
+         (make-table (reverse ,board))
+       :test 'equalp)))
 
 (defmacro make-table (score-list)
   "Utility to make full 0x88 vector board out of score list"

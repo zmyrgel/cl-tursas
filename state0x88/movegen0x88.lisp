@@ -1,15 +1,22 @@
 (in-package #:tursas.state0x88)
 
-(defconstant +rook-directions+ (list +north+ +south+ +east+ +west+))
-(defconstant +bishop-directions+ (list +nw+ +sw+ +ne+ +se+))
-(defconstant +queen-directions+ (concatenate 'list
-                                             +rook-directions+
-                                             +bishop-directions+))
+(define-constant +rook-directions+ (list +north+ +south+ +east+ +west+)
+  :test 'equal)
+(define-constant +bishop-directions+ (list +nw+ +sw+ +ne+ +se+)
+  :test 'equal)
+(define-constant +queen-directions+ (concatenate 'list
+                                                 +rook-directions+
+                                                 +bishop-directions+)
+  :test 'equal)
 
-(defconstant +king-movement+ +queen-directions+)
-(defconstant +black-pawn-movement+ (list +se+ +sw+ +south+))
-(defconstant +white-pawn-movement+ (list +ne+ +nw+ +north+))
-(defconstant +knight-movement+ (list -33 -31 -18 -14 14 18 31 33))
+(define-constant +king-movement+ +queen-directions+
+  :test 'equal)
+(define-constant +black-pawn-movement+ (list +se+ +sw+ +south+)
+  :test 'equal)
+(define-constant +white-pawn-movement+ (list +ne+ +nw+ +north+)
+  :test 'equal)
+(define-constant +knight-movement+ (list -33 -31 -18 -14 14 18 31 33)
+  :test 'equal)
 
 (defun pmap-add! (state player index piece)
   "Add piece to player piece-map store on the board."

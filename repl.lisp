@@ -1,19 +1,22 @@
 (in-package :tursas)
 
-(defconstant +implemented-cecp-commands+
+(define-constant +implemented-cecp-commands+
   '(protover accepted rejected new
     variant force go sd usermove ping
     draw result setboard hint undo remove
-    name rating computer option))
+    name rating computer option)
+  :test 'equal)
 
-(defconstant +implemented-general-commands+
-  '(help load save bd fd lm gs es pf xboard quit))
+(define-constant +implemented-general-commands+
+  '(help load save bd fd lm gs es pf xboard quit)
+  :test 'equal)
 
 ;; XXX: not used yet
-(defconstant +unimplemented-xboard-commands+
+(define-constant +unimplemented-xboard-commands+
   '(playother level st nps time otim ?
     bk hard easy post nopost analyse
-    ics pause resume memory cores egtpath))
+    ics pause resume memory cores egtpath)
+  :test 'equal)
 
 (defmacro valid-commandp (sexp)
   "Checks if given command can be run."
