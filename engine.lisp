@@ -166,7 +166,8 @@
 
 (defun add-game-state! (new-state)
   "Adds given state to game state."
-  (setf *game-state* (cons new-state *game-state*)))
+  (setf *game-state* (cons new-state *game-state*))
+  t)
 
 (defun display-board (state)
   "Displays the current chess board in ASCII."
