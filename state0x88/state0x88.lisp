@@ -26,19 +26,6 @@
         ((= (Move0x88-to move) #x07) (logand castling 7))
         (t castling)))
 
-(defun calculate-en-passant (player piece west-piece east-piece move)
-  "Utility to calculate new en-passant index value.
-   If pawn moves two steps next to opponents pawn, return en-passant
-   value as board index just behind moved pawn, otherwise -1."
-  (let ((opp-pawn (if (= player +white+) +black-pawn+ +white-pawn+)))
-    (if (and (or (= piece +white-pawn+)
-                 (= piece +black-pawn+))
-             (= (abs (- (Move0x88-to move) (Move0x88-from move))) #x20)
-             (or (= opp-pawn west-piece)
-                 (= opp-pawn east-piece)))
-        (/ (+ (Move0x88-to move) (Move0x88-from move)) 2)
-        -1)))
-
 (defun inc-full-moves! (board)
   "Utility to increase full moves on the board.
    Uses two vector indexes because of the limitation of byte value.
@@ -202,11 +189,16 @@
   (when (not (null state))
     (let ((board (State0x88-board state)))
       (fill-square! board +en-passant-store+
-                    (calculate-en-passant (board-ref board +turn-store+)
-                                          (board-ref board (Move0x88-to move))
-                                          (board-ref board (+ (Move0x88-to move) +west+))
-                                          (board-ref board (+ (Move0x88-to move) +east+))
-                                          move))
+                    (let ((piece (board-ref board (Move0x88-to move)))
+                          (opp-pawn (if (= (board-ref board +turn-store+) +white+)
+                                        +black-pawn+ +white-pawn+)))
+                      (if (and (or (= piece +white-pawn+)
+                                   (= piece +black-pawn+))
+                               (= (abs (- (Move0x88-to move) (Move0x88-from move))) #x20)
+                               (or (= opp-pawn (board-ref board (+ (Move0x88-to move) +west+)))
+                                   (= opp-pawn (board-ref board (+ (Move0x88-to move) +east+)))))
+                          (/ (+ (Move0x88-to move) (Move0x88-from move)) 2)
+                          -1)))
       state)))
 
 (defun update-full-moves (state)
