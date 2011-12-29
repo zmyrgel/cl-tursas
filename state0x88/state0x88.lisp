@@ -372,7 +372,3 @@
   (make-State0x88 :board (copy-seq (State0x88-board state))
                   :black-pieces (copy-hash-table (State0x88-black-pieces state))
                   :white-pieces (copy-hash-table (State0x88-white-pieces state))))
-
-;; TURSAS.STATE0X88::COPY-ARRAY
-;; TURSAS.STATE0X88::COPY-HASH-TABLE
-;; TURSAS.STATE0X88::HASH-TABLE-KEYS
