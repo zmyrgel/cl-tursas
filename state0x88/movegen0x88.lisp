@@ -84,14 +84,14 @@
 (defun move-castling-pieces! (player state move castling-side)
   "Helper function for update-board to make castling move on board.
    Mainly it moves the king piece and the participating rook piece."
-  (destructuring-bind (rook king from to)
+  (multiple-value-bind (rook king from to)
       (if (= player +white+)
-          (list +white-rook+ +white-king+
-                (make-array 2 :initial-contents '(#x00 #x07))
-                (make-array 2 :initial-contents '(#x03 #x05)))
-          (list +black-rook+ +black-king+
-                (make-array 2 :initial-contents '(#x70 #x77))
-                (make-array 2 :initial-contents '(#x73 #x75))))
+          (values +white-rook+ +white-king+
+                  (make-array 2 :initial-contents '(#x00 #x07))
+                  (make-array 2 :initial-contents '(#x03 #x05)))
+          (values +black-rook+ +black-king+
+                  (make-array 2 :initial-contents '(#x70 #x77))
+                  (make-array 2 :initial-contents '(#x73 #x75))))
     (progn
       (remove-piece! state (Move0x88-from move))
       (remove-piece! state (aref from castling-side))
