@@ -160,10 +160,9 @@
   "Can piece in index be captured by opponents pieces."
   (loop for place in places
         do (let ((new-index (+ index place)))
-             (if (and (board-index-p new-index)
-                      (= (board-ref board new-index) piece))
-                 (return t)
-                 nil))))
+             (when (and (board-index-p new-index)
+                        (= (board-ref board new-index) piece))
+               (return t)))))
 
 (defun threaten-by-slider-p (board index opponent pieces directions)
   "Can the piece in index of board be captured
