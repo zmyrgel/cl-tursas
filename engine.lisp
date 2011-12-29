@@ -188,7 +188,7 @@
 
 (defun display-perft (state depth)
   "Display Perft of given depth."
-  (time (perft state depth)))
+  (perft state depth))
 
 (defun list-moves (state)
   "List all available moves from currect state."
