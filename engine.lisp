@@ -197,7 +197,7 @@
 (defun get-score (state)
   "Calculates state's score by checking child states
    to certain depth using alpha-beta algorithm."
-  (concatenate 'string (funcall *search-fn* state)))
+  (funcall *search-fn* state))
 
 (defun eval-current-state (state)
   "Evaluates the current state and returns its score."
