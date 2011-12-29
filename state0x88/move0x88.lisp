@@ -54,7 +54,7 @@
                (index->coord (Move0x88-to move))
                (let ((piece (piece-name (Move0x88-promotion move))))
                  (when (not (eql piece #\E))
-                   piece))))
+                   (string piece)))))
 
 (defmethod from ((move Move0x88))
   (index->coord (Move0x88-from move)))
