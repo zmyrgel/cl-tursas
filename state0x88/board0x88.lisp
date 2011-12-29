@@ -132,11 +132,11 @@
 
 (defun board-ref (board index)
   "Getter for board"
-  (svref board index))
+  (aref board index))
 
 (defun fill-square! (board index value)
   "Return new board with given value added to given board's index."
-  (setf (board-ref board index) value))
+  (setf (aref board index) value))
 
 (defun clear-square! (board index)
   "Clears the given square index on the game board."
