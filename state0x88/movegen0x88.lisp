@@ -52,15 +52,15 @@
 
 (defun add-piece! (state index piece)
   "Associates given piece to states board."
-  (destructuring-bind (player king)
+  (multiple-value-bind (player king)
       (if (white-piece-p piece)
-          (list +white+ +white-king+)
-          (list +black+ +black-king+))
-    (if (= piece king)
-        (let ((board (State0x88-board state)))
-          (update-king-index! board index player)
-          (fill-square! board index piece))
-        (fill-square! (State0x88-board state) index piece))
+          (values +white+ +white-king+)
+          (values +black+ +black-king+))
+    (let ((board (State0x88-board state)))
+      (if (= piece king)
+          (progn (update-king-index! board index player)
+                 (fill-square! board index piece))
+          (fill-square! (State0x88-board state) index piece)))
     (pmap-add! state player index piece)))
 
 (defun remove-piece! (state index)
