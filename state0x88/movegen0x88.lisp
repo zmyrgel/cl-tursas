@@ -164,12 +164,12 @@
                         (= (board-ref board new-index) piece))
                (return t)))))
 
-(defun threaten-by-slider-p (board index opponent pieces directions)
+(defun threaten-by-slider-p (board index pieces directions)
   "Can the piece in index of board be captured
    by opponents queen or rook?"
-  (find t (mapcar (lambda (dir)
-                    (ray-to-pieces-p board index dir pieces))
-                  directions)))
+  (loop for dir in directions
+        do (when (ray-to-pieces-p board index dir pieces)
+             (return t))))
 
 (defun threaten-by-king-p (board index opp)
   "Can the piece in index on board be captured by opponents king.
@@ -193,7 +193,7 @@
 (defun threaten-by-white-p (board index)
   "Checks if given index is threatened by white player."
   (let ((by-piece-p (curry #'threaten-by-piece-p board index))
-        (by-slider-p (curry #'threaten-by-slider-p board index +white+)))
+        (by-slider-p (curry #'threaten-by-slider-p board index)))
     (or (funcall by-piece-p +white-knight+ +knight-movement+)
         (funcall by-slider-p (list +white-queen+ +white-rook+) +rook-directions+)
         (funcall by-slider-p (list +white-queen+ +white-bishop+) +bishop-directions+)
@@ -203,7 +203,7 @@
 (defun threaten-by-black-p (board index)
   "Checks if given index is threatened by black player."
   (let ((by-piece-p (curry #'threaten-by-piece-p board index))
-        (by-slider-p (curry #'threaten-by-slider-p board index +black+)))
+        (by-slider-p (curry #'threaten-by-slider-p board index)))
     (or (funcall by-piece-p +black-knight+ +knight-movement+)
         (funcall by-slider-p (list +black-queen+ +black-rook+) +rook-directions+)
         (funcall by-slider-p (list +black-queen+ +black-bishop+) +bishop-directions+)
