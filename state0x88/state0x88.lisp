@@ -248,17 +248,19 @@
   "Updates game state to reflect changes from move.
    If game state is not legal, will return a nil value."
   (when (not (null state))
-    (let ((new-state (copy-state state)))
-      (update-move new-state move)
-      (update-half-moves new-state move)
-      (update-board new-state move)
-      (update-player-check new-state)
-      (update-castling new-state move)
-      (update-en-passant new-state move)
-      (update-full-moves new-state)
-      (update-opponent-check new-state)
-      (update-turn new-state)
-      new-state)))
+    (update-turn
+     (update-opponent-check
+      (update-full-moves
+       (update-en-passant
+        (update-castling
+         (update-player-check
+          (update-board
+           (update-half-moves
+            (update-move (copy-state state) move)
+            move)
+           move))
+         move)
+        move))))))
 
 (defun check-situation (state)
   "Checks which situation, opening, middle or end-game the game is."
