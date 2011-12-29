@@ -60,6 +60,7 @@
   "Prints prompt and responses to user."
   (cond ((listp output) (format t "~{~a~%~}" output))
         ((stringp output) (format t "~a~%" output))
+        ((numberp output) (format t "~a~%" output))
         (t nil)))
 
 (defun main (&rest args)
