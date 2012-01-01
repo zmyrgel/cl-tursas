@@ -14,33 +14,6 @@
 
 (in-package :tursas)
 
-(define-constant +implemented-cecp-commands+
-  '(protover accepted rejected new
-    variant force go sd usermove ping
-    draw result setboard hint undo remove
-    name rating computer option)
-  :test 'equal)
-
-(define-constant +implemented-general-commands+
-  '(help load save bd fd lm gs es pf xboard quit)
-  :test 'equal)
-
-;; XXX: not used yet
-(define-constant +unimplemented-xboard-commands+
-  '(playother level st nps time otim ?
-    bk hard easy post nopost analyse
-    ics pause resume memory cores egtpath)
-  :test 'equal)
-
-(defmacro valid-commandp (sexp)
-  "Checks if given command can be run."
-  `(or (member ,(car sexp) +implemented-cecp-commands+)
-       (member ,(car sexp) +implemented-general-commands+)))
-
-(defmacro unimplemented-commandp (sexp)
-  "Checks if given command is known but not implemented."
-  `(member ,(car sexp) +unimplemented-cecp-commands+))
-
 (defun init-engine ()
   "Initializes the chess engine."
   (format t "~{~a~%~}"
