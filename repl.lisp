@@ -14,12 +14,6 @@
 
 (in-package :tursas)
 
-(defun init-engine ()
-  "Initializes the chess engine."
-  (format t "~{~a~%~}"
-          '("# Welcome to Tursas Chess Engine!"
-            "# Type 'help' to get list of supported commands")))
-
 (defun game-eval (s)
    "Evaluates given engine protocol command."
   (process-command s))
@@ -38,5 +32,7 @@
 
 (defun main (&rest args)
   "Starts the engine repl for input handling."
-  (init-engine)
+  (format t "~{~a~%~}"
+          '("# Welcome to Tursas Chess Engine!"
+            "# Type 'help' to get list of supported commands"))
   (loop (game-print (game-eval (game-read)))))
