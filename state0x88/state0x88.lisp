@@ -141,9 +141,10 @@
 
 (defun pawn-or-capture-move-p (board move)
   "Predicate to see if move was pawn move or a capture"
-  (or (= (board-ref board (Move0x88-from move)) +white-pawn+)
-      (= (board-ref board (Move0x88-from move)) +black-pawn+)
-      (not (= (board-ref board (Move0x88-to move)) +empty-square+))))
+  (let ((moving-piece (board-ref board (Move0x88-from move))))
+    (or (= moving-piece +white-pawn+)
+        (= moving-piece +black-pawn+)
+        (not (= (board-ref board (Move0x88-to move)) +empty-square+)))))
 
 (defun update-half-moves (state move)
   "Increases half move count on board unless the move
