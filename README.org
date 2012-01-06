@@ -2,17 +2,16 @@
 
   Tursas is a chess engine implemented in Common Lisp. It tries to follow
   functional programming style throughout the code. This is my first project
-  using Common Lisp so some questionable design choices will be present in the
+  using Common Lisp so some questionable design choices might be present in the
   code.
 
-  Currently the port isn't functioning but its getting there. I've used it with
-  the XBoard program as UI but the engine can also be played from the
-  console. To make the console interface more usable I've included some utility
-  commands in Tursas. These commands can print the board in ASCII or list
-  available moves to user. There are also some undocumented commands but these
-  are little use to casual user and are used mostly for debugging the engine
-  from the console. I'm planning to add full XBoard protocol support to Tursas
-  eventually.
+  Currently the port is functioning but its pretty slow. I've used it with the
+  XBoard program as UI but the engine can also be played from the console. To
+  make the console interface more usable I've included some utility commands in
+  Tursas. These commands can print the board in ASCII or list available moves to
+  user. There are also some undocumented commands but these are little use to
+  casual user and are used mostly for debugging the engine from the console. I'm
+  planning to add full XBoard protocol support to Tursas eventually.
 
   The engine itself uses alphabeta algorithm to search moves and uses 0x88 as
   board representation. The move generation is still problematic as it generates
@@ -76,12 +75,15 @@
 
 * Installation
 
-  The Tursas uses SBCL buildapp to build the executable image. After setting it up you can
-  build the project with command "buildapp ...".
+  The Tursas can be installed by following.
+  # Checkout the code
+  # run sbcl
+  # (require 'tursas)
+  # (sb-ext:save-lisp-and-die :toplevel #'tursas.main :executable t)
 
 * Running
 
-  After making the jar file you can run the engine with
+  After making the binary file you can run the engine with
   "./tursas"
 
   Its recommeded to run the engine with some external program to get more visual
