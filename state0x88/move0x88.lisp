@@ -15,7 +15,9 @@
 (in-package :tursas.state0x88)
 
 (defstruct Move0x88
-  from to promotion)
+  (from 0 :type board-index)
+  (to 0 :type board-index)
+  (promotion 0 :type board-index))
 
 (defun index->coord (index)
   "Converts given index to algebraic representation."
