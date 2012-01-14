@@ -30,9 +30,16 @@
         ((numberp output) (format t "~a~%" output))
         (t nil)))
 
+(defun game-repl ()
+  "Main game loop"
+  (let ((command (game-read)))
+    (unless (string= command "quit")
+      (game-print (game-eval command))
+      (game-repl))))
+
 (defun main (&rest args)
   "Starts the engine repl for input handling."
   (format t "~{~a~%~}"
           '("# Welcome to Tursas Chess Engine!"
             "# Type 'help' to get list of supported commands"))
-  (loop (game-print (game-eval (game-read)))))
+  (game-repl))
