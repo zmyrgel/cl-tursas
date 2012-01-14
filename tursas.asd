@@ -24,7 +24,7 @@
   :description "Tursas"
   :long-description "a simple chess engine which uses XBoard protocol."
   :licence "ISC license"
-  :depends-on (:cl-ppcre :alexandria :cl-utilities)
+  :depends-on (:cl-ppcre :alexandria :cl-utilities :fiveam)
   :serial t
   :components ((:module "utils"
                 :serial t
@@ -43,4 +43,7 @@
                (:file "package")
                (:file "search")
                (:file "engine")
-               (:file "repl")))
+               (:file "repl")
+               (:module "tests"
+                        :components ((:file "package")
+                                     (:file "utils")))))
