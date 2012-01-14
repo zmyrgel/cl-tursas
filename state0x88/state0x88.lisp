@@ -344,7 +344,7 @@
                    piece
                    0))))
 
-(defmethod perft ((state State0x88) (depth board-value))
+(defmethod perft ((state State0x88) (depth integer))
   (declare (board-value depth))
   (if (zerop depth)
       1
