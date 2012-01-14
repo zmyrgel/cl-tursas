@@ -14,6 +14,25 @@
 
 (in-package :tursas.state0x88)
 
+(declaim (inline white-piece-p
+                 black-piece-p
+                 occupied-by-p
+                 opponent
+                 promotionp
+                 board-index-p
+                 column
+                 row
+                 same-column-p
+                 same-row-p
+                 square-color
+                 same-color-p
+                 board-occupied-p
+                 board-ref
+                 fill-square!
+                 clear-square!
+                 king-index
+                 update-king-index!))
+
 (define-constant +board-color+
     (make-table (list +black+ +white+ +black+ +white+ +black+ +white+ +black+ +white+
                       +white+ +black+ +white+ +black+ +white+ +black+ +white+ +black+
