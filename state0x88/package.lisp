@@ -17,7 +17,7 @@
   (:use :cl)
   (:import-from :cl-utilities :split-sequence)
   (:import-from :alexandria
-   :define-constant :when-let :if-let :curry :iota :hash-table-keys :hash-table-values :copy-array :copy-hash-table :hash-table-alist)
+   :define-constant :when-let :if-let :curry :hash-table-keys :hash-table-values :copy-array :copy-hash-table :hash-table-alist)
   (:import-from :tursas.utils
    :valid-coord-p :split-move :coordinate-string-p
    :san-string-p :move-string-p :fen->ascii
