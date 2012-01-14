@@ -112,7 +112,7 @@
          (or (= piece-count 2)
              (and (= piece-count 3)
                   (some (lambda (p)
-                          (declare (fixnum p))
+                          (declare (board-value p))
                           (or (= +black-knight+ p)
                               (= +black-bishop+ p)
                               (= +white-knight+ p)
@@ -281,17 +281,17 @@
 (defmethod allowedp ((state State0x88) (move Move0x88))
   (allowed-move-p state move))
 
-(defmethod occupiedp ((state State0x88) (index board-value))
+(defmethod occupiedp ((state State0x88) (index integer))
   (board-occupied-p (State0x88-board state) index))
 
-(defmethod blackp ((state State0x88) (index board-value))
+(defmethod blackp ((state State0x88) (index integer))
   (occupied-by-p (State0x88-board state) index +black+))
 
-(defmethod whitep ((state State0x88) (index board-value))
+(defmethod whitep ((state State0x88) (index integer))
   (occupied-by-p (State0x88-board state) index +white+))
 
 (defmethod checkp ((state State0x88))
-  (= (the fixnum (board-ref (State0x88-board state) +check-store+)) 1))
+  (= (the bit (board-ref (State0x88-board state) +check-store+)) 1))
 
 (defmethod matep ((state State0x88))
   (and (checkp state)
