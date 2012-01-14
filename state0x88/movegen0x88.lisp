@@ -12,7 +12,7 @@
 ;; ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 ;; OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(in-package #:tursas.state0x88)
+(in-package :tursas.state0x88)
 
 (define-constant +rook-directions+ (list +north+ +south+ +east+ +west+)
   :test 'equal)
