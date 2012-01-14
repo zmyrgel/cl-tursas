@@ -51,6 +51,7 @@
 
 (defun san-string-p (s)
   "Predicate to see if given string represents chess move in SAN notation."
+  (declare (ignore s))
   nil)
 
 (defun move-string-p (s)
