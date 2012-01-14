@@ -149,7 +149,7 @@
 (defun square-color (sq)
   "Returns the color of given square."
   (declare (board-value sq))
-  (the board-value (board-ref +board-color+ sq)))
+  (the bit (board-ref +board-color+ sq)))
 
 (defun same-color-p (sq1 sq2)
   "Check if two squares are same color."
@@ -166,13 +166,13 @@
 (defun init-game-board ()
   "Generates new 128 element vector of bytes
    and places chess piece representation to it."
-  (make-array 128 :initial-element 0 :element-type 'board-index))
+  (make-array 128 :initial-element 0 :element-type 'board-value))
 
 (defun board-ref (board index)
   "Getter for board"
   (declare (board-vector board)
            (board-value index))
-  (the fixnum (aref board index)))
+  (the board-value (aref board index)))
 
 (defun fill-square! (board index value)
   "Return new board with given value added to given board's index."
