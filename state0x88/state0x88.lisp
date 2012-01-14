@@ -140,6 +140,7 @@
 (defun repetitionp (state)
   "Predicate to see if game is draw by repetition.
    Stub function to be filled later."
+  (declare (ignore state))
   nil)
 
 (defun update-move (state move)
