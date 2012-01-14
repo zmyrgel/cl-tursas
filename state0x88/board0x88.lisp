@@ -26,14 +26,18 @@
   :test 'equalp)
 
 (defun white-piece-p (piece)
+  (declare (board-value piece))
   "Predicate to check if given piece value belongs to white."
   (> piece +empty-square+))
 
 (defun black-piece-p (piece)
+  (declare (board-value piece))
   "Checks if given piece value belongs to black."
   (< piece +empty-square+))
 
 (defun occupied-by-p (board index player)
+  (declare (board-vector board)
+           (board-value index player))
   "Checks if given board index is occupied by player."
   (let ((piece-color-p (if (= player +white+)
                            #'white-piece-p
@@ -42,18 +46,21 @@
          (funcall piece-color-p (board-ref board index)))))
 
 (defun opponent (player)
+  (declare (bit player))
   "Return opponent of given player"
-  (logxor player 1))
+  (the bit (logxor player 1)))
 
 (defun promotionp (piece move)
+  (declare (board-value piece))
   "Checks if given move is pawn promotion."
   (or (and (= piece +white-pawn+)
-           (= (row (Move0x88-to move)) 7))
+           (= (the board-value (row (Move0x88-to move))) 7))
       (and (= piece +black-pawn+)
-           (= (row (Move0x88-to move)) 0))))
+           (= (the board-value (row (Move0x88-to move))) 0))))
 
 (defun piece-name (piece)
   "Gives piece character representation from its board value."
+  (declare (board-value piece))
   (cond ((= piece +white-king+) #\K)
         ((= piece +white-queen+) #\Q)
         ((= piece +white-bishop+) #\B)
@@ -70,86 +77,109 @@
 
 (defun piece-value (char)
   "Gives pieces character numerical representation from its char."
-  (case char
-    (#\P +white-pawn+)
-    (#\p +black-pawn+)
-    (#\R +white-rook+)
-    (#\r +black-rook+)
-    (#\N +white-knight+)
-    (#\n +black-knight+)
-    (#\B +white-bishop+)
-    (#\b +black-bishop+)
-    (#\Q +white-queen+)
-    (#\q +black-queen+)
-    (#\K +white-king+)
-    (#\k +black-king+)
-    (otherwise +empty-square+)))
+  (the board-value
+       (case char
+         (#\P +white-pawn+)
+         (#\p +black-pawn+)
+         (#\R +white-rook+)
+         (#\r +black-rook+)
+         (#\N +white-knight+)
+         (#\n +black-knight+)
+         (#\B +white-bishop+)
+         (#\b +black-bishop+)
+         (#\Q +white-queen+)
+         (#\q +black-queen+)
+         (#\K +white-king+)
+         (#\k +black-king+)
+         (otherwise +empty-square+))))
 
 (defun board-index-p (index)
   "Does the given index represent a square on the board?"
-  (zerop (logand index #x88)))
+  (declare (board-value index))
+  (zerop (the fixnum (logand index #x88))))
 
 (defun empty-square-p (board index)
   "Checks if given index on board is empty."
-  (zerop (board-ref board index)))
+  (declare (board-vector board)
+           (board-value index))
+  (zerop (the board-value (board-ref board index))))
 
 (defun column (index)
   "Get the board column of the given square index.
    Columns start at 0 and go up to 7."
-  (logand index 7))
+  (declare (board-value index))
+  (the board-value (logand index 7)))
 
 (defun row (index)
   "Get the board row of the given square index.
    Rows start at 0 and they go up to 7."
-  (ash index -4))
+  (declare (board-value index))
+  (the board-value (ash index -4)))
 
 (defun same-column-p (x y)
   "Determines if both given square indexes x and x are on the same column."
+  (declare (board-value x y))
   (= (column x) (column y)))
 
 (defun same-row-p (x y)
   "Determines if both given square indexes x and y are on the same row."
+  (declare (board-value x y))
   (= (row x) (row y)))
 
 ;;; alternatively (zerop (mod sq 2))
 (defun square-color (sq)
   "Returns the color of given square."
-  (board-ref +board-color+ sq))
+  (declare (board-value sq))
+  (the board-value (board-ref +board-color+ sq)))
 
 (defun same-color-p (sq1 sq2)
   "Check if two squares are same color."
+  (declare (board-value sq1 sq2))
   (= (square-color sq1)
      (square-color sq2)))
 
 (defun board-occupied-p (board index)
   "Predicate to check if board index is occupied or not."
+  (declare (board-value index)
+           (board-vector board))
   (not (empty-square-p board index)))
 
 (defun init-game-board ()
   "Generates new 128 element vector of bytes
    and places chess piece representation to it."
-  (make-array 128 :initial-element 0 :element-type '(signed-byte)))
+  (make-array 128 :initial-element 0 :element-type 'board-index))
 
 (defun board-ref (board index)
   "Getter for board"
-  (aref board index))
+  (declare (board-vector board)
+           (board-value index))
+  (the fixnum (aref board index)))
 
 (defun fill-square! (board index value)
   "Return new board with given value added to given board's index."
-  (setf (aref board index) value))
+  (declare (board-vector board)
+           (board-value index value))
+  (setf (aref board index) value)
+  nil)
 
 (defun clear-square! (board index)
   "Clears the given square index on the game board."
+  (declare (board-vector board)
+           (board-value index))
   (fill-square! board index +empty-square+))
 
 (defun king-index (board player)
   "Returns the players king's index on the board."
-  (board-ref board (if (= player +white+)
-                       +white-king-store+
-                       +black-king-store+)))
+  (declare (board-vector board)
+           (board-value player))
+  (the board-value (board-ref board (if (= player +white+)
+                                        +white-king-store+
+                                        +black-king-store+))))
 
 (defun update-king-index! (board index player)
   "Updates index of given player's king in outer board."
+  (declare (board-vector board)
+           (board-value index player))
   (fill-square! board (if (= player +white+)
                           +white-king-store+
                           +black-king-store+)
