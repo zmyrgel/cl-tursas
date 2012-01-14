@@ -39,6 +39,7 @@
 
 (defun main (&rest args)
   "Starts the engine repl for input handling."
+  (declare (ignore args))
   (format t "~{~a~%~}"
           '("# Welcome to Tursas Chess Engine!"
             "# Type 'help' to get list of supported commands"))
