@@ -16,7 +16,7 @@
 
 ;; Type declarations
 (deftype board-value () '(signed-byte 8))
-(deftype board-vector () '(vector board-index 128))
+(deftype board-vector () '(vector board-value 128))
 
 ;; Constants used throughout tursas.state0x88 package
 (define-constant +white-king-store+ #x0c)
