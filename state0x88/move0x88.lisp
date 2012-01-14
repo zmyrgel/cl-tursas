@@ -15,13 +15,13 @@
 (in-package :tursas.state0x88)
 
 (defstruct Move0x88
-  (from 0 :type board-index)
-  (to 0 :type board-index)
-  (promotion 0 :type board-index))
+  (from 0 :type board-value)
+  (to 0 :type board-value)
+  (promotion 0 :type board-value))
 
 (defun index->coord (index)
   "Converts given index to algebraic representation."
-  (declare (board-index index))
+  (declare (board-value index))
   (let* ((coord (format nil "~2,'0x" index))
          (num (+ (- (char-code (schar coord 0)) 48) 1))
          (alpha (schar "abcdefgh" (- (char-code (schar coord 1)) 48))))
@@ -37,7 +37,7 @@
 
 (defun make-move (from to promotion)
   "Constructor for moves."
-  (declare (board-index from to promotion))
+  (declare (board-value from to promotion))
   (make-Move0x88 :from from :to to :promotion promotion))
 
 (defun coord->move (s)
