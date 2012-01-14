@@ -184,8 +184,8 @@
           (let ((new-index (the fixnum (+ index place))))
             (when (and (board-index-p new-index)
                        (= (the board-value (board-ref board new-index)) piece))
-              t))
-          places)))
+              t)))
+        places))
 
 (defun threaten-by-slider-p (board index pieces directions)
   "Can the piece in index of board be captured
