@@ -183,6 +183,7 @@
   "Evaluates all states and chooses one from top five moves at random."
   (multiple-value-bind (score best-state)
       (funcall *shallow-search-fn* state)
+    (declare (ignore score))
     (move->coord (last-move best-state))))
 
 (defun fenp (s)
@@ -220,6 +221,7 @@
   "Tell engine to make an move in current game state."
   (multiple-value-bind (score best-state)
       (funcall *search-fn* state)
+    (declare (ignore score))
     (add-game-state! best-state))
   (concatenate 'string "move "
                (move->coord (last-move (current-game-state)))))
