@@ -21,6 +21,7 @@
 
 (defun index->coord (index)
   "Converts given index to algebraic representation."
+  (declare (board-index index))
   (let* ((coord (format nil "~2,'0x" index))
          (num (+ (- (char-code (schar coord 0)) 48) 1))
          (alpha (schar "abcdefgh" (- (char-code (schar coord 1)) 48))))
@@ -36,6 +37,7 @@
 
 (defun make-move (from to promotion)
   "Constructor for moves."
+  (declare (board-index from to promotion))
   (make-Move0x88 :from from :to to :promotion promotion))
 
 (defun coord->move (s)
