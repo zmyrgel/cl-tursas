@@ -214,7 +214,7 @@
   (let ((board (State0x88-board state)))
     (fill-square! board +en-passant-store+
                   (let ((piece (the board-value (board-ref board (Move0x88-to move))))
-                        (opp-pawn (if (= (the board-value (board-ref board +turn-store+)) +white+)
+                        (opp-pawn (if (= (the bit (board-ref board +turn-store+)) +white+)
                                       +black-pawn+ +white-pawn+)))
                     (if (and (or (= piece +white-pawn+)
                                  (= piece +black-pawn+))
