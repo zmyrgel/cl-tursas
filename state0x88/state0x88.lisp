@@ -351,12 +351,12 @@
                    piece
                    0))))
 
-(defmethod perft ((state State0x88) (depth integer))
-  (declare (board-value depth))
+(defmethod perft (state (depth integer))
+  (declare (fixnum depth))
   (if (zerop depth)
       1
       (apply #'+ (mapcar (lambda (st)
-                           (perft st (the board-value (1- depth))))
+                           (perft st (the fixnum (1- depth))))
                          (legal-states state)))))
 
 (defmethod dynamicp ((state State0x88))
