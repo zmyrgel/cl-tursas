@@ -108,7 +108,7 @@
 
 (test fen->ascii-test
       "Test ascii printing."
-      (is (fen->ascii "")
+      (is (fen->ascii "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
           (concatenate 'string
                        "8| r n b q k b n r\n"
                        "7| p p p p p p p p\n"
