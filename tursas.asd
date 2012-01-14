@@ -18,7 +18,7 @@
 
 (defsystem "tursas"
   :name "tursas"
-  :version "0.0.1"
+  :version "0.2"
   :author "Timo Myyrä <timo.myyra@gmail.com>"
   :maintainer "Timo Myyrä <timo.myyra@gmail.com>"
   :description "Tursas"
