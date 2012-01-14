@@ -179,13 +179,13 @@
 (defun threaten-by-piece-p (board index piece places)
   "Can piece in index be captured by opponents pieces."
   (declare (board-vector board)
-           (board-valueindex piece))
-  ;; XXX: some here
-  (loop for place in places
-        do (let ((new-index (the fixnum (+ index place))))
-             (when (and (board-index-p new-index)
-                        (= (the board-value (board-ref board new-index)) piece))
-               (return t)))))
+           (board-value index piece))
+  (some (lambda (place)
+          (let ((new-index (the fixnum (+ index place))))
+            (when (and (board-index-p new-index)
+                       (= (the board-value (board-ref board new-index)) piece))
+              t))
+          places)))
 
 (defun threaten-by-slider-p (board index pieces directions)
   "Can the piece in index of board be captured
