@@ -1,9 +1,8 @@
-* Tursas
+* CL-Tursas
 
-  Tursas is a chess engine implemented in Common Lisp. It tries to follow
-  functional programming style throughout the code. This is my first project
-  using Common Lisp so some questionable design choices might be present in the
-  code.
+  CL-Tursas is port of my Clojure chess engine to Common Lisp. This is my first
+  project using Common Lisp so some questionable design choices might be present
+  in the code.
 
   Currently the port is functioning but its pretty slow. I've used it with the
   XBoard program as UI but the engine can also be played from the console. To
@@ -24,6 +23,10 @@
   I'll try to update here the major points in each version of the chess
   engine. For detailed list check the [[https://github.com/zmyrgel/tursas/commits/0.1-release][commits]].
 
+*** Version 0.2
+    - Added some unit tests, more to come
+    - Error detection in game repl via cl-ppcre
+
 *** Version 0.1
     - Subset of Chess Engine Communication Protocol implemented so engine can be played.
     - Working alphabeta algorithm
@@ -36,10 +39,6 @@
   These are some of my ideas what could be done in the Tursas project.
   I'm not planning to blindly follow these but I think it gives nice rough
   idea what to except and in what point.
-
-  Version 0.2
-    - add unit tests to detect regressions and such
-    - add more error detection to repl commands
 
   Version 0.3
     - More functional version of alphabeta search
@@ -69,6 +68,7 @@
     - Clean up and testing
 
 *** Possibly added in later versions
+
     - UCI protocol interface
     - Bitboard state representation
     - Negascout replacement for alphabeta
