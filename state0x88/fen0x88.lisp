@@ -71,7 +71,7 @@
   "Builds single fen row from given board and row index."
   (apply #'str (compact-item #\E (mapcar (lambda (n)
                                            (piece-name (board-ref board (+ row n))))
-                                         (iota 8)))))
+                                         (loop for x below 8 collect x)))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
