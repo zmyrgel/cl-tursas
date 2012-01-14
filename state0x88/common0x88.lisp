@@ -18,6 +18,7 @@
 (deftype board-value () '(signed-byte 8))
 (deftype board-vector () '(vector board-index 128))
 
+;; Constants used throughout tursas.state0x88 package
 (define-constant +white-king-store+ #x0c)
 (define-constant +black-king-store+ #x7c)
 (define-constant +turn-store+ #x38)
