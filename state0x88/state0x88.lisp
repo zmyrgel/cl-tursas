@@ -325,7 +325,8 @@
     (loop for move in (pseudo-moves (the board-value (board-ref (State0x88-board state) +turn-store+))
                                     state)
           do (when move
-               (setf states (cons (apply-move state move) states))))))
+               (setf states (cons (apply-move state move) states))))
+    states))
 
 (defmethod legal-moves ((state State0x88))
   (mapcar #'last-move (legal-states state)))
