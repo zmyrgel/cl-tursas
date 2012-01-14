@@ -158,7 +158,7 @@
   (declare (bit player)
            (board-vector board)
            (board-value index place))
-  (let ((new-place (the board-value (+ index place))))
+  (let ((new-place (the fixnum (+ index place))))
     (when (and (board-index-p new-place)
                (or (empty-square-p board new-place)
                    (occupied-by-p board new-place (opponent player))))
