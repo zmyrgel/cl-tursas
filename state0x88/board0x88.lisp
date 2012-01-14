@@ -114,7 +114,7 @@
 
 (defun board-index-p (index)
   "Does the given index represent a square on the board?"
-  (declare (board-value index))
+  (declare (fixnum index))
   (zerop (the fixnum (logand index #x88))))
 
 (defun empty-square-p (board index)
