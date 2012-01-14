@@ -46,4 +46,5 @@
                (:file "repl")
                (:module "tests"
                         :components ((:file "package")
-                                     (:file "utils")))))
+                                     (:file "utils")
+                                     (:file "tests")))))
