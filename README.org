@@ -135,7 +135,7 @@
 
 * License
 
-  Copyright (c) 2010,2011 Timo Myyrä
+  Copyright (c) 2012 Timo Myyrä
 
   Permission to use, copy, modify, and/or distribute this software for
   any purpose with or without fee is hereby granted, provided that the
