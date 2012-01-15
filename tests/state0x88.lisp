@@ -14,11 +14,23 @@
 
 (in-package :tursas.tests)
 
-;; Define test suites
-;;(def-suite tursas-suite :description "Tursas package test suite.")
-;;(def-suite state0x88-suite :description "State0x88 package test suite.")
+(def-suite state0x88-suite :description "State0x88 package test suite.")
+(in-suite state0x88-suite)
 
-(defun run-tests ()
-  (explain! (run 'utils-suite))
-  (explain! (run 'tursas-suite))
-  (explain! (run 'state0x88-suite)))
+;; (def-fixture person-schema []
+;;   (with-connection hdb
+;;     (try
+;;      (do-commands "create table person (name varchar(255), age integer)")
+;;      (insert-values :person [:name] ["bill"] ["joey"])
+;;      (with-query-results results [query]
+;;        (test-body))
+;;      (finally
+;;       (do-commands "drop schema public cascade")))))
+
+;; (deftest test-ideal
+;;   (with-fixture person-schema []
+;;     (is (= "bill" (:name (first results))))
+;;     (is (= "joey" (:name (second results)))))))
+
+(test dummy
+  (is (= 1 1)))

@@ -14,6 +14,7 @@
 
 (in-package :tursas.tests)
 
+(def-suite utils-suite :description "Utils package test suite.")
 (in-suite utils-suite)
 
 ;; (def-fixture person-schema []
@@ -34,38 +35,38 @@
 
 (test valid-coord-test
   "Test coordinate validation."
-  (is (null (valid-coord-p "a2a3")))
-  (is (null (valid-coord-p "foo")))
-  (is (eq t (valid-coord-p "a2")))
-  (is (eq t (valid-coord-p "h8")))
-  (is (eq t (valid-coord-p "g3")))
-  (is (null (valid-coord-p "k3"))))
+  (is-false (valid-coord-p "a2a3"))
+  (is-false (valid-coord-p "foo"))
+  (is-true (valid-coord-p "a2"))
+  (is-true (valid-coord-p "h8"))
+  (is-true (valid-coord-p "g3"))
+  (is-false (valid-coord-p "k3")))
 
 (test split-move-test
       "Test move splitting."
       (is (string= "a2" (multiple-value-bind (from to promotion)
                             (split-move "a2a3")
                           from)))
-      (is (null (split-move "foo")))
-      (is (null (split-move "foo000"))))
+      (is-false (split-move "foo"))
+      (is-false (split-move "foo000")))
 
 (test coordinate-string-test
       "Test coordinate string representation."
-      (is (eq t (coordinate-string-p "a2a3")))
-      (is (eq t (coordinate-string-p "a4h5q")))
-      (is (eq t (coordinate-string-p "b2c3")))
-      (is (eq t (coordinate-string-p "h2g1")))
-      (is (eq nil (coordinate-string-p "bd32")))
-      (is (eq nil (coordinate-string-p "h7h8g"))))
+      (is-true (coordinate-string-p "a2a3"))
+      (is-true (coordinate-string-p "a4h5q"))
+      (is-true (coordinate-string-p "b2c3"))
+      (is-true (coordinate-string-p "h2g1"))
+      (is-false (coordinate-string-p "bd32"))
+      (is-false (coordinate-string-p "h7h8g")))
 
 (test san-string-test
       "Dummy test"
-      (is (eq nil (san-string-p "foo"))))
+      (is-false (san-string-p "foo")))
 
 (test move-string-test
       "Testing stuff."
-      (is (eq t (move-string-p "a2a3")))
-      (is (eq t (move-string-p "h6h8b"))))
+      (is-true (move-string-p "a2a3"))
+      (is-true (move-string-p "h6h8b")))
 
 ;; XXX: not exported, don't test
 ;; (test group-test
@@ -92,8 +93,8 @@
 
 (test str-test
   "Test string creation"
-  (is (string= (str "foo" "bar" "baz")
-               "foobarbaz")))
+  (is-true (string= (str "foo" "bar" "baz")
+                    "foobarbaz")))
 
 ;; XXX: not exported, don't test
 ;; (test interpose-test

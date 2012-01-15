@@ -14,11 +14,19 @@
 
 (in-package :tursas.tests)
 
-;; Define test suites
-;;(def-suite tursas-suite :description "Tursas package test suite.")
-;;(def-suite state0x88-suite :description "State0x88 package test suite.")
+(def-suite tursas-suite :description "Tursas package test suite.")
+(in-suite tursas-suite)
 
-(defun run-tests ()
-  (explain! (run 'utils-suite))
-  (explain! (run 'tursas-suite))
-  (explain! (run 'state0x88-suite)))
+(test repl-test
+  "Test game repl functionality."
+  (is (with-output-to-string (*STANDARD-OUTPUT*)
+        (game-print (list "foo" "bar")))
+      "foo\nbar")
+  (is (with-output-to-string (*STANDARD-OUTPUT*)
+        (game-print "foo"))
+      "foo")
+  (is (with-output-to-string (*STANDARD-OUTPUT*)
+        (game-print 200))
+      "200")
+  (is-false (with-output-to-string (*STANDARD-OUTPUT*)
+              (game-print nil))))
