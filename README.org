@@ -134,9 +134,7 @@
 
 * Known issues
 
-  - Engine is currently not functioning correctly and crashes on end game.
-  - Type declarations need to be reviewed and tested.
-  - Unit tests need to be reviewed for correctness
+  None currently.
 
 * License
 
