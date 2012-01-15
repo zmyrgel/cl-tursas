@@ -56,7 +56,8 @@
 
 (defun occupied-by-p (board index player)
   (declare (board-vector board)
-           (board-value index player))
+           (board-value index)
+           (bit player))
   "Checks if given board index is occupied by player."
   (let ((piece-color-p (if (= player +white+)
                            #'white-piece-p
@@ -159,8 +160,8 @@
 
 (defun board-occupied-p (board index)
   "Predicate to check if board index is occupied or not."
-  (declare (board-value index)
-           (board-vector board))
+  (declare (board-vector board)
+           (board-value index))
   (not (empty-square-p board index)))
 
 (defun init-game-board ()
@@ -190,7 +191,7 @@
 (defun king-index (board player)
   "Returns the players king's index on the board."
   (declare (board-vector board)
-           (board-value player))
+           (bit player))
   (the board-value (board-ref board (if (= player +white+)
                                         +white-king-store+
                                         +black-king-store+))))
@@ -198,7 +199,8 @@
 (defun update-king-index! (board index player)
   "Updates index of given player's king in outer board."
   (declare (board-vector board)
-           (board-value index player))
+           (board-value index)
+           (bit player))
   (fill-square! board (if (= player +white+)
                           +white-king-store+
                           +black-king-store+)
