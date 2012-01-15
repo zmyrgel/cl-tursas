@@ -146,7 +146,6 @@
   (declare (board-value x y))
   (= (row x) (row y)))
 
-;;; alternatively (zerop (mod sq 2))
 (defun square-color (sq)
   "Returns the color of given square."
   (declare (board-value sq))
