@@ -42,7 +42,7 @@
   idea what to except and in what point.
 
   Version 0.3
-    - More functional version of alphabeta search
+    - Convert rest of the code to more idiomatic Common Lisp
     - Repetition rule for draws and making AI avoid it
 
   Version 0.4
@@ -51,7 +51,7 @@
 
   Version 0.5
     - NPS command
-    - Transposition table?
+    - Transposition table
 
   Version 0.6
     - Analyse mode
@@ -66,6 +66,7 @@
     - Core/Mem limits for engine
 
   Version 1.0
+    - Type declarations and optimizations
     - Clean up and testing
 
 *** Possibly added in later versions
