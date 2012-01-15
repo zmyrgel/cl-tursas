@@ -92,13 +92,6 @@
                                                  (:ponder . nil)
                                                  (:ponder-output . nil))))
 
-(defparameter *allowed-commands*
-  '(protover accepther rejected new
-    variant force go sd usermove ping
-    draw setboard hint undo remove
-    name rating computer option
-    help load save bd fd lm gs es pf xboard quit))
-
 (defun current-game-state ()
   "Utility to return current game state or nil."
   (first *game-state*))
