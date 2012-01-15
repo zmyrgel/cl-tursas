@@ -2,7 +2,8 @@
 
   CL-Tursas is port of my Clojure chess engine to Common Lisp. This is my first
   project using Common Lisp so some questionable design choices might be present
-  in the code.
+  in the code. The engine shows its Clojure roots but its slowly being converted
+  to more idiomatic Common Lisp code.
 
   Currently the port is functioning but its pretty slow. I've used it with the
   XBoard program as UI but the engine can also be played from the console. To
@@ -21,7 +22,7 @@
 * ChangeLog:
 
   I'll try to update here the major points in each version of the chess
-  engine. For detailed list check the [[https://github.com/zmyrgel/tursas/commits/0.1-release][commits]].
+  engine. For detailed list check the [[https://github.com/zmyrgel/cl-tursas/commits/][commits]].
 
 *** Version 0.2
     - Added some unit tests, more to come
@@ -76,10 +77,11 @@
 * Installation
 
   The Tursas can be installed by following.
-  # Checkout the code
-  # run sbcl
-  # (require 'tursas)
-  # (sb-ext:save-lisp-and-die :toplevel #'tursas.main :executable t)
+  - Checkout the code and change to cl-tursas
+  - run command: sbcl --eval "(asdf:operate 'asdf:load-op 'tursas)"
+  - (sb-ext:save-lisp-and-die :toplevel #'tursas.main :executable t)
+
+  The above commands will compile the code and dump executable core file.
 
 * Running
 
@@ -131,7 +133,9 @@
 
 * Known issues
 
-  None at the moment
+  - Engine is currently not functioning correctly and crashes on end game.
+  - Type declarations need to be reviewed and tested.
+  - Unit tests need to be reviewed for correctness
 
 * License
 
