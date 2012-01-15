@@ -15,16 +15,15 @@
 (in-package :tursas)
 
 (defun game-eval (s)
-   "Evaluates given engine protocol command."
+   "Evaluates given string S as engine protocol command."
   (process-command s))
 
 (defun game-read ()
-  "Reader function to parse commandline.
-   Reads user input as a string and converts it to sexp."
+  "Reader function to parse user given command."
   (read-line))
 
 (defun game-print (output)
-  "Prints prompt and responses to user."
+  "Prints the engine response to user."
   (cond ((listp output) (format t "~{~a~%~}" output))
         ((stringp output) (format t "~a~%" output))
         ((numberp output) (format t "~a~%" output))
