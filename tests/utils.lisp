@@ -28,9 +28,9 @@
 
 (test split-move-test
   "Test move splitting."
-  (declare (ignore to promotion))
   (is (string= "a2" (multiple-value-bind (from to promotion)
                         (split-move "a2a3")
+                      (declare (ignore to promotion))
                       from)))
   (is-false (split-move "foo"))
   (is-false (split-move "foo000")))
