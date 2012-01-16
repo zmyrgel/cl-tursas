@@ -17,22 +17,6 @@
 (def-suite utils-suite :description "Utils package test suite.")
 (in-suite utils-suite)
 
-;; (def-fixture person-schema []
-;;   (with-connection hdb
-;;     (try
-;;      (do-commands "create table person (name varchar(255), age integer)")
-;;      (insert-values :person [:name] ["bill"] ["joey"])
-;;      (with-query-results results [query]
-;;        (test-body))
-;;      (finally
-;;       (do-commands "drop schema public cascade")))))
-
-;; (deftest test-ideal
-;;   (with-fixture person-schema []
-;;     (is (= "bill" (:name (first results))))
-;;     (is (= "joey" (:name (second results)))))))
-
-
 (test valid-coord-test
   "Test coordinate validation."
   (is-false (valid-coord-p "a2a3"))
