@@ -68,17 +68,6 @@
       (is-true (move-string-p "a2a3"))
       (is-true (move-string-p "h6h8b")))
 
-;; XXX: not exported, don't test
-;; (test group-test
-;;       "Test group function"
-;;       (is (equal (group '(a b c d) 2)
-;;                  '((a b) (c d)))))
-
-;; (test list-of-test
-;;       "Test list-of function"
-;;       (is (equal (list-of 3 'a)
-;;                  '(a a a))))
-
 (test expand-digits-test
       "Test digit expansion."
       (is (expand-digits #\x '(#\a #\3 #\b #\2 #\b))
@@ -95,12 +84,6 @@
   "Test string creation"
   (is-true (string= (str "foo" "bar" "baz")
                     "foobarbaz")))
-
-;; XXX: not exported, don't test
-;; (test interpose-test
-;;       "Test interposing"
-;;       (is (interpose #\space '(#\a #\b #\c))
-;;           '(#\a #\space #\b #\space #\c)))
 
 (test string-indexed-test
       "Test string indexing"
