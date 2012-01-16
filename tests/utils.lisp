@@ -57,8 +57,7 @@
   "Test digit expansion."
   (is (expand-digits #\x '(#\a #\3 #\b #\2 #\b))
       '(#\a #\x #\x #\x #\b #\x #\x #\b))
-  (is (expand-digits #\x '(#\a #\3 #\b 2 #\b))
-      '(#\a #\x #\x #\x #\b 2 #\b)))
+  (signals type-error (expand-digits #\x '(#\a #\3 #\b 2 #\b))))
 
 (test compact-item-test
   "Test compacting."
