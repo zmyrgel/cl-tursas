@@ -73,20 +73,14 @@
   (and (not (checkp state))
        (null (legal-states state))))
 
-(defun merge-hash-tables (&rest tables)
-  "Returns new hash table with all the keys and values from given tables."
-  (let ((union (make-hash-table
-                :test (first
-                       (sort (mapcar #'hash-table-test tables) #'>
-                             :key (lambda (test)
-                                    (ecase test
-                                      (eq 0)
-                                      (eql 1)
-                                      (equal 2)
-                                      (equalp 3)))))
-                :size (reduce #'max (mapcar #'hash-table-size tables)))))
-    (dolist (table tables)
-      (maphash (lambda (key val) (setf (gethash key union) val)) table))
+(defun merge-hash-tables (&rest hashes)
+  "Returns new hash table which contains union of hash table keys and
+  values from HASHES."
+  (let ((union (make-hash-table)))
+    (dolist (hash hashes)
+      (maphash (lambda (key val)
+                 (setf (gethash key union) val))
+               hash))
     union))
 
 (defun fide-draw-p (state)
