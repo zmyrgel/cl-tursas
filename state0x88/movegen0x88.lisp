@@ -190,10 +190,10 @@
 
 (defun threaten-by-white-p (board index)
   "Checks if given index is threatened by white player."
-  (flet ((by-piece-p (d)
-           (threaten-by-piece-p board index d))
-         (by-slider-p (d)
-           (threaten-by-slider-p board index d)))
+  (flet ((by-piece-p (piece places)
+           (threaten-by-piece-p board index piece places))
+         (by-slider-p (pieces directions)
+           (threaten-by-slider-p board index pieces directions)))
     (or (by-piece-p +white-knight+ +knight-movement+)
         (by-slider-p (list +white-queen+ +white-rook+) +rook-directions+)
         (by-slider-p (list +white-queen+ +white-bishop+) +bishop-directions+)
@@ -202,10 +202,10 @@
 
 (defun threaten-by-black-p (board index)
   "Checks if given index is threatened by black player."
-  (flet ((by-piece-p (d)
-           (threaten-by-piece-p board index d))
-         (by-slider-p (d)
-           (threaten-by-slider-p board index d)))
+  (flet ((by-piece-p (piece places)
+           (threaten-by-piece-p board index piece places))
+         (by-slider-p (pieces directions)
+           (threaten-by-slider-p board index pieces directions)))
     (or (by-piece-p +black-knight+ +knight-movement+)
         (by-slider-p (list +black-queen+ +black-rook+) +rook-directions+)
         (by-slider-p (list +black-queen+ +black-bishop+) +bishop-directions+)
