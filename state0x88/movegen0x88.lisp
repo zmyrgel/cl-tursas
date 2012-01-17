@@ -190,8 +190,10 @@
 
 (defun threaten-by-white-p (board index)
   "Checks if given index is threatened by white player."
-  (let ((by-piece-p (curry #'threaten-by-piece-p board index))
-        (by-slider-p (curry #'threaten-by-slider-p board index)))
+  (let ((by-piece-p (lambda (d)
+                      (threaten-by-piece-p board index d)))
+        (by-slider-p (lambda (d)
+                       (threaten-by-slider-p board index d))))
     (or (funcall by-piece-p +white-knight+ +knight-movement+)
         (funcall by-slider-p (list +white-queen+ +white-rook+) +rook-directions+)
         (funcall by-slider-p (list +white-queen+ +white-bishop+) +bishop-directions+)
@@ -200,8 +202,10 @@
 
 (defun threaten-by-black-p (board index)
   "Checks if given index is threatened by black player."
-  (let ((by-piece-p (curry #'threaten-by-piece-p board index))
-        (by-slider-p (curry #'threaten-by-slider-p board index)))
+  (let ((by-piece-p (lambda (d)
+                      (threaten-by-piece-p board index d)))
+        (by-slider-p (lambda (d)
+                       (threaten-by-slider-p board index d))))
     (or (funcall by-piece-p +black-knight+ +knight-movement+)
         (funcall by-slider-p (list +black-queen+ +black-rook+) +rook-directions+)
         (funcall by-slider-p (list +black-queen+ +black-bishop+) +bishop-directions+)
@@ -243,7 +247,9 @@
                                      (legal-castling-p player board index dir))
                             (list (make-move index (+ index dir dir) 0))))))
     (concatenate 'list
-                 (mapcan (curry #'move-to-place player board index) +king-movement+)
+                 (mapcan (lambda (m)
+                           (move-to-place player board index m))
+                         +king-movement+)
                  (funcall castling-move +king-side+ +east+)
                  (funcall castling-move +queen-side+ +west+))))
 
@@ -290,17 +296,23 @@
    for player's pawn in board index."
   (concatenate 'list
                (list-pawn-normal-moves player board index)
-               (mapcan (curry #'pawn-capture player board index)
+               (mapcan (lambda (p)
+                         (pawn-capture player board index p))
                        (if (= player +white+)
                            (list (+ index +nw+) (+ index +ne+))
                            (list (+ index +sw+) (+ index +se+))))))
 
+;; XXX: dispatch table based on piece type
 (defun piece-moves (board player index piece)
   "Returns a list of possible piece moves in board index."
   (let ((slider (lambda (directions)
-                  (mapcan (curry #'slide-in-dir player board index) directions)))
+                  (mapcan (lambda (d)
+                            (slide-in-dir player board index d))
+                          directions)))
         (mover (lambda (movement)
-                 (mapcan (curry #'move-to-place player board index) movement))))
+                 (mapcan (lambda (m)
+                           (move-to-place player board index m))
+                         movement))))
     (cond ((or (= piece +white-pawn+)
                (= piece +black-pawn+)) (list-pawn-moves player board index))
           ((or (= piece +white-bishop+)
