@@ -14,31 +14,22 @@
 
 (in-package :tursas.state0x88)
 
-(defun calculate-white-castling (castling move)
+(defun calculate-castling (player castling move)
   "Utility to calculate new castling value after white players move.
    Castling value is updated if either our king or rook moves
    or opponents rook gets captured.
    Castling value is kept as a number and is operated at bit level.
    Castling value is composesd as: K = 8, Q = 4, k = 2, q = 1"
-  (cond ((= (Move0x88-from move) #x04) (logand castling 3))
-        ((= (Move0x88-from move) #x00) (logand castling 11))
-        ((= (Move0x88-from move) #x07) (logand castling 7))
-        ((= (Move0x88-to move) #x70) (logand castling 14))
-        ((= (Move0x88-to move) #x77) (logand castling 13))
-        (t castling)))
-
-(defun calculate-black-castling (castling move)
-  "Utility to calculate new castling value after black players move.
-   Castling value is updated if either our king or rook moves
-   or opponents rook gets captured.
-   Castling value is kept as a number and is operated at bit level.
-   Castling value is composesd as: K = 8, Q = 4, k = 2, q = 1"
-  (cond ((= (Move0x88-from move) #x74) (logand castling 12))
-        ((= (Move0x88-from move) #x70) (logand castling 14))
-        ((= (Move0x88-from move) #x77) (logand castling 13))
-        ((= (Move0x88-to move) #x00) (logand castling 11))
-        ((= (Move0x88-to move) #x07) (logand castling 7))
-        (t castling)))
+  (multiple-value-bind (king-m l-rook-m r-rook-m l-rook-c r-rook-c)
+      (if (= player +white+)
+          (values 3 11 7 14 13)
+          (values 12 13 13 11 7))
+    (cond ((= (Move0x88-from move) #x04) (logand castling king-m))
+          ((= (Move0x88-from move) #x00) (logand castling l-rook-m))
+          ((= (Move0x88-from move) #x07) (logand castling r-rook-m))
+          ((= (Move0x88-to move) #x70) (logand castling l-rook-c))
+          ((= (Move0x88-to move) #x77) (logand castling r-rook-c))
+          (t castling))))
 
 (defun inc-full-moves! (board)
   "Utility to increase full moves on the board.
@@ -183,12 +174,11 @@
 (defun update-castling (state move)
   "Updates states castling value by checking move with current castling value."
   (let* ((board (State0x88-board state))
-         (castling (board-ref board +castling-store+)))
+         (castling (board-ref board +castling-store+))
+         (player (board-ref board +turn-store+)))
     (if (zerop castling)
         state
-        (progn (fill-square! board +castling-store+ (if (= (board-ref board +turn-store+) +white+)
-                                                        (calculate-white-castling castling move)
-                                                        (calculate-black-castling castling move)))
+        (progn (fill-square! board +castling-store+ (calculate-castling player castling move))
                state))))
 
 (defun update-en-passant (state move)
