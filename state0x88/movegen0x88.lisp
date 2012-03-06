@@ -183,10 +183,12 @@
                   +king-movement+)
         (if (= (board-ref board index) king)
             t
-            (let ((temp-board (copy-array board)))
-              (clear-square! temp-board opp-king-idx)
-              (fill-square! temp-board index opp-king)
-              (not (threatenedp temp-board index player))))))))
+            (unwind-protect
+                 (progn (clear-square! board opp-king-idx)
+                        (fill-square! board index opp-king)
+                        (not (threatenedp board index player)))
+              (clear-square! board index)
+              (fill-square! board opp-king-idx opp-king)))))))
 
 (defun threaten-by-white-p (board index)
   "Checks if given index is threatened by white player."
