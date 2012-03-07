@@ -22,11 +22,14 @@
 
 (defun castling->str (castling)
   "Converts internal castling representation to string."
-  (let ((result (apply (curry #'concatenate 'string)
-                       (mapcar (lambda (castling-value)
-                                 (when (plusp (logand castling (first castling-value)))
-                                   (string (rest castling-value))))
-                               +castling-values+))))
+  (flet ((castling-value (values)
+           (apply (lambda (value)
+                    (concatenate 'string value))
+                  (mapcar (lambda (castling-value)
+                            (when (plusp (logand castling (first castling-value)))
+                              (string (rest castling-value))))
+                          values)))))
+  (let ((result (castling-value +castling-values+)))
     (if (string-equal result "")
         "-"
         result)))
