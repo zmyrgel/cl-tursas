@@ -20,6 +20,14 @@
                                      (1 . #\q))
   :test 'equal)
 
+(defmacro do-board (&rest body)
+  "Utility to iterate board indexes.
+   Binds current index to IT."
+  `(dolist (it (list ,@(loop for x upto #x77
+                             when (board-index-p x)
+                               collect x)))
+     ,@body))
+
 (defun castling->str (castling)
   "Converts internal castling representation to string."
   (if (zerop castling)
