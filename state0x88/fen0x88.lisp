@@ -22,17 +22,15 @@
 
 (defun castling->str (castling)
   "Converts internal castling representation to string."
-  (flet ((castling-value (values)
-           (apply (lambda (value)
-                    (concatenate 'string value))
-                  (mapcar (lambda (castling-value)
-                            (when (plusp (logand castling (first castling-value)))
-                              (string (rest castling-value))))
-                          values)))))
-  (let ((result (castling-value +castling-values+)))
-    (if (string-equal result "")
-        "-"
-        result)))
+  (if (zerop castling)
+      "-"
+      (reduce (lambda (x y)
+                (concatenate 'string x y))
+              (mapcar (lambda (pair)
+                        (when (plusp (logand castling (first pair)))
+                          (string (rest pair))))
+                      +castling-values+)
+              :initial-value "")))
 
 (defun castling->value (s)
   "Convers string representing castling to
