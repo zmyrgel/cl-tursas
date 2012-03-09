@@ -27,11 +27,9 @@
   :depends-on (:cl-ppcre :alexandria :cl-utilities :fiveam)
   :serial t
   :components ((:module "utils"
-                :serial t
                 :components ((:file "package")
                              (:file "utils")))
                (:module "state0x88"
-                :serial t
                 :components ((:file "package")
                              (:file "common0x88")
                              (:file "eval0x88")
