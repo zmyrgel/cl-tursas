@@ -81,22 +81,20 @@
     (add-piece! state (Move0x88-to move) piece)
     (set-dynamic! state (if (= occupant +empty-square+) 0 1))))
 
-(defun move-castling-pieces! (player state move castling-side)
+(defun move-castling-pieces! (player state move)
   "Helper function for update-board to make castling move on board.
    Mainly it moves the king piece and the participating rook piece."
   (multiple-value-bind (rook king from to)
       (if (= player +white+)
-          (values +white-rook+ +white-king+
-                  (make-array 2 :initial-contents '(#x00 #x07))
-                  (make-array 2 :initial-contents '(#x03 #x05)))
-          (values +black-rook+ +black-king+
-                  (make-array 2 :initial-contents '(#x70 #x77))
-                  (make-array 2 :initial-contents '(#x73 #x75))))
-    (progn
+          (values +white-rook+ +white-king+ '(#x00 #x07) '(#x03 #x05))
+          (values +black-rook+ +black-king+ '(#x70 #x77) '(#x73 #x75)))
+    (let ((castling-side (if (= (column (Move0x88-to move)) 2)
+                             #'car
+                             #'cadr)))
       (remove-piece! state (Move0x88-from move))
-      (remove-piece! state (aref from castling-side))
+      (remove-piece! state (funcall castling-side from))
       (add-piece! state (Move0x88-to move) king)
-      (add-piece! state (aref to castling-side) rook))))
+      (add-piece! state (funcall castling-side to) rook))))
 
 (defun piece-indexes (state player)
   "Gets a list of all board indexes containing

@@ -151,10 +151,7 @@
            (remove-piece! state (Move0x88-from move))
            (add-piece! state (Move0x88-to move) (promotion-piece player move)))
           ((castlingp moving-piece move)
-           (move-castling-pieces! player state move
-                                  (if (= (column (Move0x88-to move)) 2)
-                                      +queen-side+
-                                      +king-side+)))
+           (move-castling-pieces! player state move))
           ((en-passant-p board moving-piece move)
            (move-piece! state move)
            (remove-piece! state (+ (Move0x88-to move)
