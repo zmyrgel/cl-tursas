@@ -27,9 +27,11 @@
   :depends-on (:cl-ppcre :alexandria :cl-utilities :fiveam)
   :serial t
   :components ((:module "utils"
+                :serial t
                 :components ((:file "package")
                              (:file "utils")))
                (:module "state0x88"
+                :serial t
                 :components ((:file "package")
                              (:file "common0x88")
                              (:file "eval0x88")
@@ -43,6 +45,9 @@
                (:file "engine")
                (:file "repl")
                (:module "tests"
-                        :components ((:file "package")
-                                     (:file "utils")
-                                     (:file "tests")))))
+                :serial t
+                :components ((:file "package")
+                             (:file "utils")
+                             (:file "tursas")
+                             (:file "state0x88")
+                             (:file "tests")))))
