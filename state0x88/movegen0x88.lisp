@@ -34,11 +34,15 @@
 
 (defun pmap-add! (state player index piece)
   "Add piece to player piece-map store on the board."
-  (setf (gethash index (pmap-get state player)) piece))
+  (if (= player +white+)
+      (push (cons index piece) (State0x88-white-pieces state))
+      (push (cons index piece) (State0x88-black-pieces state))))
 
 (defun pmap-remove! (state player index)
   "Remove piece from player piece-map store on the board."
-  (remhash index (pmap-get state player)))
+  (delete index (pmap-get state player)
+          :test (lambda (x y)
+                  (= x (car y)))))
 
 (defun pmap-get (state player)
   "Returns the players piece-map from board."
@@ -99,7 +103,7 @@
 (defun piece-indexes (state player)
   "Gets a list of all board indexes containing
    player's pieces in given board."
-  (hash-table-keys (pmap-get state player)))
+  (mapcar #'car (pmap-get state player)))
 
 (defun castlingp (piece move)
   "Checks given move is castling move."
@@ -327,8 +331,7 @@
 (defun pseudo-moves (player state)
   "Lists all pseudo-moves for player in state.
    Note: moves generated can leave player in check, hence pseudo-moves."
-  (loop for index being the hash-keys in (pmap-get state player)
-        using (hash-value piece)
+  (loop for (index . piece) in (pmap-get state player)
         nconc (piece-moves (State0x88-board state) player index piece)))
 
 (defun allowed-move-p (state move)

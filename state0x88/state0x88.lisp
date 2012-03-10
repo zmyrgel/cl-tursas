@@ -64,26 +64,16 @@
   (and (not (checkp state))
        (null (legal-states state))))
 
-(defun merge-hash-tables (&rest hashes)
-  "Returns new hash table which contains union of hash table keys and
-  values from HASHES."
-  (let ((union (make-hash-table)))
-    (dolist (hash hashes)
-      (maphash (lambda (key val)
-                 (setf (gethash key union) val))
-               hash))
-    union))
-
 (defun fide-draw-p (state)
   "Checks if state is draw according to FIDE rules:
    - Both sides have only king piece.
    - One side has king and bishop or knight vs. others king
    - One sides king and two knights agains others bare king
    - Both sides have only bishop of same color besides kings"
-  (let* ((piece-map (merge-hash-tables (State0x88-white-pieces state)
-                                       (State0x88-black-pieces state)))
-         (indexes (hash-table-keys piece-map))
-         (pieces (hash-table-values piece-map))
+  (let* ((piece-list (append (State0x88-white-pieces state)
+                             (State0x88-black-pieces state)))
+         (indexes (mapcar #'car piece-list))
+         (pieces (mapcar #'cdr piece-list))
          (piece-count (list-length indexes)))
     (and (<= piece-count 4)
          (or (= piece-count 2)
@@ -102,13 +92,12 @@
                                                      (= +white-knight+ p))
                                                    pieces)))
                       (let ((bishops (remove-if (lambda (i)
-                                                  (or (= +black-bishop+ (gethash i piece-map))
-                                                      (= +white-bishop+ (gethash i piece-map))))
+                                                  (or (= +black-bishop+ (cdr (assoc i piece-list)))
+                                                      (= +white-bishop+ (cdr (assoc i piece-list)))))
                                                 indexes)))
-
                         (when (not (< (list-length bishops) 2))
-                          (same-color-p (first (hash-table-keys bishops))
-                                        (second (hash-table-keys bishops)))))))))))
+                          (same-color-p (first (mapcar #'car bishops))
+                                        (second (mapcar #'cdr bishops)))))))))))
 
 (defun repetitionp (state)
   "Predicate to see if game is draw by repetition.
@@ -242,16 +231,16 @@
 
 (defun check-situation (state)
   "Checks which situation, opening, middle or end-game the game is."
-  (let ((pieces (merge-hash-tables (State0x88-white-pieces state)
-                                   (State0x88-black-pieces state))))
-    (cond ((< (list-length (hash-table-keys pieces)) 15) +end-game+)
+  (let ((pieces (append (State0x88-white-pieces state)
+                        (State0x88-black-pieces state))))
+    (cond ((< (list-length (mapcar #'car pieces)) 15) +end-game+)
           ((> (board-ref (State0x88-board state) +full-move-store+) 10) +middle-game+)
           (t +opening-game+))))
 
 (defstruct State0x88
   (board (init-game-board) :type board-vector)
-  (black-pieces (make-hash-table) :type hash-table)
-  (white-pieces (make-hash-table) :type hash-table))
+  (black-pieces nil :type list)
+  (white-pieces nil :type list))
 
 (defmethod allowedp ((state State0x88) (move Move0x88))
   (allowed-move-p state move))
@@ -353,5 +342,5 @@
 (defmethod copy-state ((state State0x88))
   "Returns copy of given state."
   (make-State0x88 :board (copy-seq (State0x88-board state))
-                  :black-pieces (copy-hash-table (State0x88-black-pieces state))
-                  :white-pieces (copy-hash-table (State0x88-white-pieces state))))
+                  :black-pieces (copy-tree (State0x88-black-pieces state))
+                  :white-pieces (copy-tree (State0x88-white-pieces state))))

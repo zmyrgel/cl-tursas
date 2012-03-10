@@ -156,20 +156,18 @@
 
 (defun score (pieces situation)
   "Calculates score for side."
-  (loop for index being the hash-keys in pieces
-        using (hash-value piece)
+  (loop for (index . piece) in pieces
         summing (+ (material-value piece)
                    (index-score piece index situation))))
 
-
 (defun heuristic-value (player whites blacks situation)
   "Calculates heuristic value for given state."
-  (multiple-value-bind (player-piece-map enemy-piece-map)
+  (multiple-value-bind (player-pieces enemy-pieces)
       (if (= player +white+)
           (values whites blacks)
           (values blacks whites))
-    (+ (score player-piece-map situation)
-       (- (score enemy-piece-map situation)))))
+    (+ (score player-pieces situation)
+       (- (score enemy-pieces situation)))))
 
 (defun end-score (state)
   "Return the final score of given state."

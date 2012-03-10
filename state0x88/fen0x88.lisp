@@ -53,26 +53,23 @@
   "Seeks king's index from piece-map.
    This is only used when generating state from a fen.
    Otherwise the king index can be queried from the board directly."
-  (let ((king (if (= player +white+)
-                  +white-king+
-                  +black-king+)))
-    (labels ((seek (alist)
-               (destructuring-bind (index . piece)
-                   (first alist)
-                 (if (= piece king)
-                     index
-                     (seek (rest alist))))))
-      (seek (hash-table-alist (if (= player +white+)
-                                  (State0x88-white-pieces state)
-                                  (State0x88-black-pieces state)))))))
+  (multiple-value-bind (king pieces)
+      (if (= player +white+)
+          (values +white-king+ (State0x88-white-pieces state))
+          (values +black-king+ (State0x88-black-pieces state)))
+    (loop for (index . piece) in pieces
+          when (= piece king)
+            return index)))
 
 (defun fen-board->0x88board (s)
   "Converts string given in FEN notation to 0x88 board representation."
   (let ((board (init-game-board))
         (fen-list (map 'list #'identity s)))
-    (dolist (pair (string-indexed (apply (curry #'concatenate 'string)
-                                         (mapcar (lambda (row) (concatenate 'string row "EEEEEEEE"))
-                                                 (reverse (split-sequence #\/ (expand-digits #\E fen-list)))))))
+    (dolist (pair (string-indexed (reduce (lambda (x y)
+                                            (concatenate 'string x y))
+                                          (mapcar (lambda (row) (concatenate 'string row "EEEEEEEE"))
+                                                  (reverse (split-sequence #\/ (expand-digits #\E fen-list))))
+                                          :initial-value "")))
       (fill-square! board (car pair) (piece-value (cdr pair))))
     board))
 
@@ -84,19 +81,18 @@
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
-  (format nil "~{~a~^/~}" (mapcar (curry #'make-fen-row board)
+  (format nil "~{~a~^/~}" (mapcar (lambda (i)
+                                    (make-fen-row board i))
                                   '(#x70 #x60 #x50 #x40 #x30 #x20 #x10 #x0))))
 
 (defun add-pieces (state)
   "Adds all pieces from board to piece-map."
-  (loop :for i :below #x77
-        :do (when (board-index-p i)
-              (let ((piece (board-ref (State0x88-board state) i)))
-                (cond ((black-piece-p piece)
-                       (setf (gethash i (State0x88-black-pieces state)) piece))
-                      ((white-piece-p piece)
-                       (setf (gethash i (State0x88-white-pieces state)) piece))
-                      (t nil))))))
+  (do-board (let ((piece (board-ref (State0x88-board state) it)))
+              (cond ((black-piece-p piece)
+                     (push (cons it piece) (State0x88-black-pieces state)))
+                    ((white-piece-p piece)
+                     (push (cons it piece) (State0x88-white-pieces state)))
+                    (t nil)))))
 
 (defun add-king-indexes (state)
   "Adds king indexes to state."
