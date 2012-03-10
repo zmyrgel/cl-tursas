@@ -152,19 +152,18 @@
 
 (defun threaten-by-piece-p (board index piece places)
   "Can piece in index be captured by opponents pieces."
-  (some (lambda (place)
-          (let ((new-index (+ index place)))
-            (when (and (board-index-p new-index)
-                       (= (board-ref board new-index) piece))
-              t)))
-        places))
+  (loop for place in places
+        for new-index = (+ index place)
+        when (and (board-index-p new-index)
+                  (= (board-ref board new-index) piece))
+          do (return t)))
 
 (defun threaten-by-slider-p (board index pieces directions)
   "Can the piece in index of board be captured
    by opponents queen or rook?"
-  (some (lambda (dir)
-          (ray-to-pieces-p board index dir pieces))
-        directions))
+  (loop for direction in directions
+        when (ray-to-pieces-p board index direction pieces) do
+          (return t)))
 
 (defun threaten-by-king-p (board index opp)
   "Can the piece in index on board be captured by opponents king.
@@ -175,10 +174,9 @@
           (values +black+ +black-king+ +white-king+)
           (values +white+ +white-king+ +black-king+))
     (let ((opp-king-idx (king-index board opp)))
-      (when (some (lambda (offset)
-                    (when (= opp-king-idx (+ index offset))
-                      t))
-                  +king-movement+)
+      (when (loop for move in +king-movement+
+                  when (= opp-king-idx (+ index move)) do
+                    (return t))
         (if (= (board-ref board index) king)
             t
             (unwind-protect
