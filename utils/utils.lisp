@@ -109,11 +109,8 @@
 
 (defun interpose (sep list)
   "Returns a list with SEP interposed with given LIST."
-  (labels ((f (c)
-             (when (not (null c))
-               (cons sep (cons (first c)
-                               (f (rest c)))))))
-    (rest (f list))))
+  (rest (loop for item in list
+              nconc (list sep item))))
 
 (defun string-indexed (s)
   "Return an alist of offset / character pairs for string S."
