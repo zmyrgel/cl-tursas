@@ -17,15 +17,10 @@
 (def-suite state0x88-suite :description "State0x88 package test suite.")
 (in-suite state0x88-suite)
 
-(def-fixture with-board [fen]
-  (let ((board (State0x88-board (fen->state fen))))
-    (test-body)))
-
 ;;; BOARD TESTS ;;;
-
-(deftest board-tests
-    (with-fixture board-setup ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
-      (is-false (white-piece-p +black-pawn+))
+(test board-tests
+  (let ((board (State0x88-board (fen->state "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))))
+    (is-false (white-piece-p +black-pawn+))
       (is-false (white-piece-p +black-king+))
       (is-true (white-piece-p +white-pawn+))
       (is-false (white-piece-p +empty-square+))
@@ -93,7 +88,4 @@
 
       (is-false (fill-square! board #x45 20))
 
-      ;; fill-square!
-      ;; clear-square!
-
-      (is (king-index board +white+) #44))
+      (is (king-index board +white+) #x44)))
