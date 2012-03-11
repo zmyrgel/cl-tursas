@@ -153,7 +153,7 @@
     (cond ((not (board-index-p new-index)) nil)
           ((empty-square-p board new-index) (ray-to-pieces-p board new-index dir pieces))
           (t (loop for piece in pieces
-                   when (= (board-ref board-new-index) piece)
+                   when (= (board-ref board new-index) piece)
                      do (return t))))))
 
 (defun threaten-by-piece-p (board index piece places)
