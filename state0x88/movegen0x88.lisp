@@ -251,9 +251,8 @@
                         (legal-castling-p player board index dir))
                (list (make-move index (+ index dir dir) 0)))))
     (concatenate 'list
-                 (mapcan (lambda (m)
-                           (move-to-place player board index m))
-                         +king-movement+)
+                 (loop for m in +king-movement+
+                       nconc (move-to-place player board index m))
                  (castling-move +king-side+ +east+)
                  (castling-move +queen-side+ +west+))))
 
