@@ -118,9 +118,10 @@
   (let ((movement (- (Move0x88-to move) (Move0x88-from move))))
     (and (or (= piece +white-pawn+)
              (= piece +black-pawn+))
-         (some (lambda (dir)
-                 (= dir movement)) (list +sw+ +se+ +ne+ +nw+))
-         (empty-square-p board (Move0x88-to move)))))
+         (empty-square-p board (Move0x88-to move))
+         (loop dir in (list +sw+ +se+ +ne+ +nw+)
+               when (= dir movement)
+                 do (return t)))))
 
 (defun slide-in-dir (player board index dir)
   "Returns a list of possible moves by sliding piece
@@ -151,9 +152,9 @@
   (let ((new-index (+ index dir)))
     (cond ((not (board-index-p new-index)) nil)
           ((empty-square-p board new-index) (ray-to-pieces-p board new-index dir pieces))
-          (t (some (lambda (piece)
-                     (= (board-ref board new-index) piece))
-                   pieces)))))
+          (t (loop for piece in pieces
+                   when (= (board-ref board-new-index) piece)
+                     do (return t))))))
 
 (defun threaten-by-piece-p (board index piece places)
   "Can piece in index be captured by opponents pieces."
@@ -299,23 +300,20 @@
    for player's pawn in board index."
   (concatenate 'list
                (list-pawn-normal-moves player board index)
-               (mapcan (lambda (p)
-                         (pawn-capture player board index p))
-                       (if (= player +white+)
-                           (list (+ index +nw+) (+ index +ne+))
-                           (list (+ index +sw+) (+ index +se+))))))
+               (loop for place in (if (= player +white+)
+                                      (list (+ index +nw+) (+ index +ne+))
+                                      (list (+ index +sw+) (+ index +se+)))
+                     nconc (pawn-capture player board index place))))
 
 ;; XXX: dispatch table based on piece type
 (defun piece-moves (board player index piece)
   "Returns a list of possible piece moves in board index."
   (flet ((slider (directions)
-           (mapcan (lambda (d)
-                     (slide-in-dir player board index d))
-                   directions))
+           (loop for d in directions
+                 nconc (slide-in-dir player board index d)))
          (mover (movement)
-           (mapcan (lambda (m)
-                     (move-to-place player board index m))
-                   movement)))
+           (loop for m in movement
+                 nconc (move-to-place player board index m))))
     (cond ((or (= piece +white-pawn+)
                (= piece +black-pawn+)) (list-pawn-moves player board index))
           ((or (= piece +white-bishop+)
