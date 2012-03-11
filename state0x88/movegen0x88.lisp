@@ -103,7 +103,8 @@
 (defun piece-indexes (state player)
   "Gets a list of all board indexes containing
    player's pieces in given board."
-  (mapcar #'car (pmap-get state player)))
+  (loop for x in (pmap-get state player)
+        collect (car x)))
 
 (defun castlingp (piece move)
   "Checks given move is castling move."
