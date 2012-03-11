@@ -119,7 +119,7 @@
     (and (or (= piece +white-pawn+)
              (= piece +black-pawn+))
          (empty-square-p board (Move0x88-to move))
-         (loop dir in (list +sw+ +se+ +ne+ +nw+)
+         (loop for dir in (list +sw+ +se+ +ne+ +nw+)
                when (= dir movement)
                  do (return t)))))
 
