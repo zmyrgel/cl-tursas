@@ -30,6 +30,8 @@
                 :serial t
                 :components ((:file "package")
                              (:file "utils")))
+               (:file "package")
+               (:file "protocols")
                (:module "state0x88"
                 :serial t
                 :components ((:file "package")
@@ -40,7 +42,6 @@
                              (:file "movegen0x88")
                              (:file "fen0x88")
                              (:file "state0x88")))
-               (:file "package")
                (:file "search")
                (:file "engine")
                (:file "repl")
