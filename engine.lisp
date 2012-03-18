@@ -226,17 +226,28 @@
     (when-let ((new-state (apply-move state (coord->move s))))
       (add-game-state! new-state))))
 
+(defun game-result (state)
+  "Returns string representation for game result."
+  (case (result state)
+    (:FIFTY-MOVE-RULE "1/2-1/2 {50-move rule}")
+    (:FIDE-DRAW "1/2-1/2 {Draw per FIDE rules}")
+    (:STALEMATE "1/2-1/2 {Stalemate}")
+    (:REPETITION "1/2-1/2 {Draw by repetition}")
+    (:MATE-FOR-BLACK "0-1 {Black mates}")
+    (:MATE-FOR-WHITE "1-0 {White mates}")
+    (otherwise nil)))
+
 (defun user-move (state s)
   "Helper function to handle user and ai moves.
    State arg included to avoid user moves when game is not set."
   (if (null (make-human-move! state s))
       (concatenate 'string "Illegal move: " s)
       (if (game-end-p (current-game-state))
-          (result (current-game-state))
+          (game-result (current-game-state))
           (when (get-option :ai-mode)
             (let ((move (make-ai-move! (current-game-state))))
               (if (game-end-p (current-game-state))
-                  (format nil "~a~%~a" move (result (current-game-state)))
+                  (format nil "~a~%~a" move (game-result (current-game-state)))
                   move))))))
 
 (defun undo-move! (&optional n)

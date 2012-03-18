@@ -268,13 +268,13 @@
       (repetitionp state)))
 
 (defmethod result ((state State0x88))
-  (cond ((fifty-move-rule-p state) "1/2-1/2 {50-move rule}")
-        ((fide-draw-p state) "1/2-1/2 {Draw per FIDE rules}")
-        ((stalematep state) "1/2-1/2 {Stalemate}")
-        ((repetitionp state) "1/2-1/2 {Draw by repetition}")
+  (cond ((fifty-move-rule-p state) :FIFTY-MOVE-RULE)
+        ((fide-draw-p state) :FIDE-DRAW)
+        ((stalematep state) :STALEMATE)
+        ((repetitionp state) :REPETITION)
         ((matep state) (if (= (board-ref (State0x88-board state) +turn-store+) +white+)
-                           "0-1 {Black mates}"
-                           "1-0 {White mates}"))))
+                           :MATE-FOR-BLACK
+                           :MATE-FOR-WHITE))))
 
 (defmethod state->fen ((state State0x88))
   (parse-state state))
