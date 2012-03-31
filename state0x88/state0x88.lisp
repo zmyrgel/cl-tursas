@@ -284,15 +284,12 @@
     new-state))
 
 (defmethod legal-states ((state State0x88))
-  (let (states)
-    (loop for move in (pseudo-moves (board-ref (State0x88-board state) +turn-store+)
-                                    state)
-          do (when move
-               (setf states (cons (apply-move state move) states))))
-    states))
+  (loop for move in (pseudo-moves (board-ref (State0x88-board state) +turn-store+) state)
+        collect (apply-move state move))) ;; nil values?
 
 (defmethod legal-moves ((state State0x88))
-  (mapcar #'last-move (legal-states state)))
+  (loop for s (legal-states state)
+        collect (last-move s)))
 
 (defmethod turn ((state State0x88))
   (if (= (board-ref (State0x88-board state) +turn-store+) +white+)
