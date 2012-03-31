@@ -22,7 +22,7 @@
   (:import-from :cl-ppcre
    :scan :register-groups-bind)
   (:import-from :alexandria
-   :define-constant :iota :curry :if-let :when-let :alist-hash-table)
+   :define-constant :if-let :when-let)
   (:import-from :cl-utilities
    :split-sequence)
   (:import-from :tursas.state0x88
