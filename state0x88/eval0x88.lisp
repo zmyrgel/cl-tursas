@@ -44,11 +44,10 @@
 
 (defmacro make-table (score-list)
   "Utility to make full 0x88 vector board out of score list"
-  `(apply #'vector
-          (apply #'append
-                 (mapcar (lambda (list)
-                           (append list (make-list 8 :initial-element 0)))
-                         (group ,score-list 8)))))
+  `(make-array 128
+               :element-type board-value
+               :initial-contents ,(loop for row in (group score-list 8)
+                                        nconc (nconc row (make-list 8 :initial-element 0)))))
 
 (make-table-scores pawn
                    '(0   0   0   0   0   0   0   0
