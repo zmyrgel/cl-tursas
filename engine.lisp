@@ -85,12 +85,12 @@
 
 (defparameter *protocol* 'general)
 (defparameter *game-state* nil)
-(defparameter *game-options* (alist-hash-table '((:depth-limit . 4)
-                                                 (:ai-mode . nil)
-                                                 (:cecp-protocol-version . 2)
-                                                 (:debug . nil)
-                                                 (:ponder . nil)
-                                                 (:ponder-output . nil))))
+(defparameter *game-options* '((:depth-limit . 4)
+                               (:ai-mode . nil)
+                               (:cecp-protocol-version . 2)
+                               (:debug . nil)
+                               (:ponder . nil)
+                               (:ponder-output . nil)))
 
 (defun current-game-state ()
   "Utility to return current game state or nil."
@@ -98,19 +98,23 @@
 
 (defun set-option! (key value)
   "Sets game option of given key to value."
-  (setf (gethash key *game-options*) value))
+  (setf (assoc key *game-options*) value))
 
 (defun get-option (option)
   "Returns value of given game option"
-  (gethash option *game-options*))
+  (assoc option *game-options*))
 
 (defun save-game ()
   "Saves the current game by writing game-state to file."
   (with-open-file (s "saved-game.txt" :direction :output)
     (princ *game-state* s)))
 
-(defparameter *search-fn* (curry #'alpha-beta most-negative-fixnum most-positive-fixnum (get-option :depth-limit) #'evaluate))
-(defparameter *shallow-search-fn* (curry #'alpha-beta most-negative-fixnum most-positive-fixnum 2 #'evaluate))
+(defparameter *search-fn*
+  (lambda (state)
+    (alpha-beta most-negative-fixnum most-positive-fixnum (get-option :depth-limit) #'evaluate state)))
+(defparameter *shallow-search-fn*
+  (lambda (state)
+    (alpha-beta most-negative-fixnum most-positive-fixnum 2 #'evaluate state)))
 
 (defun load-game ()
   "Loads the game-state from file to resume the previous game."
