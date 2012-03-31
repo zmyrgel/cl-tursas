@@ -24,7 +24,7 @@
 (defmacro group (list n)
   "Group items in list to lists of n length."
   (declare (type (integer 0 10) n))
-  (when (zerop n) (error "Groups fo zero are no fun"))
+  (when (zerop n) (error "Groups of zero are not allowed."))
   `(labels ((rec (list acc)
               (let ((rest (nthcdr ,n list)))
                 (if (consp rest)
