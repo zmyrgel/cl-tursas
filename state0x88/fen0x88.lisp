@@ -75,15 +75,13 @@
 
 (defun make-fen-row (board row)
   "Builds single fen row from given board and row index."
-  (apply #'str (compact-item #\E (mapcar (lambda (n)
-                                           (piece-name (board-ref board (+ row n))))
-                                         (loop for x below 8 collect x)))))
+  (apply #'str (compact-item #\E (loop for n below 8
+                                       collect (piece-name (board-ref board (+ row n)))))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
-  (format nil "~{~a~^/~}" (mapcar (lambda (i)
-                                    (make-fen-row board i))
-                                  '(#x70 #x60 #x50 #x40 #x30 #x20 #x10 #x0))))
+  (loop for i from #x70 downto #x0 by #x10
+        collect (format nil "~{~a~^/~}" (make-fen-row board i))))
 
 (defun add-pieces (state)
   "Adds all pieces from board to piece-map."
