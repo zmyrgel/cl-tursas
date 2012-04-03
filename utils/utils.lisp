@@ -132,9 +132,6 @@
  -+----------------
   | a b c d e f g h"
   (with-output-to-string (*STANDARD-OUTPUT*)
-    (let ((count 8))
-      (dolist (row (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8))
-        (format t "~a~%" (concatenate 'string (cons (digit-char count) (cons #\| (interpose #\space row)))))
-        (decf count))
-      (format t "~a~%" "-+----------------")
-      (format t "~a~%" " |a b c d e f g h "))))
+    (loop for row in (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8)
+          for n from 8 downto 1
+          do (format t "~a~%" (concatenate 'string (cons (digit-char n) (cons #\| (interpose #\space row))))))))
