@@ -107,9 +107,9 @@
 
 (defun string-indexed (s)
   "Return an alist of offset / character pairs for string S."
-  (mapcar #'cons
-          (loop for n below (length s) collect n)
-          (map 'list (lambda (c) (coerce c 'character)) s)))
+  (loop for i across s
+        for n upto (length s)
+        collect (cons n i)))
 
 (defun fen->ascii (fen)
   "Return printable string for the board from FEN string.
