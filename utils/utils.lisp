@@ -76,19 +76,13 @@
                    (nreverse (cons list acc))))))
     (when list (rec list nil))))
 
-(defun list-of (n elt)
-  "Returns list of N ELT's."
-  (if (zerop n)
-      nil
-      (cons elt (list-of (1- n) elt))))
-
 (defun expand-digits (x list)
   "Returns new list of characters with each digit character in given
    LIST of characters expanded by that many of X's."
   (labels ((f (result items)
              (cond ((null items) (nreverse result))
                    ((when-let ((num (digit-char-p (first items))))
-                      (f (append (list-of num x) result)
+                      (f (append (make-list num :initial-element x) result)
                          (rest items))))
                    (t (f (cons (first items)  result)
                          (rest items))))))
