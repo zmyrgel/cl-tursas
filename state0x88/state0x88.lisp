@@ -285,7 +285,8 @@
 
 (defmethod legal-states ((state State0x88))
   (loop for move in (pseudo-moves (board-ref (State0x88-board state) +turn-store+) state)
-        collect (apply-move state move))) ;; nil values?
+        unless (null move)
+          collect (apply-move state move)))
 
 (defmethod legal-moves ((state State0x88))
   (loop for s (legal-states state)
