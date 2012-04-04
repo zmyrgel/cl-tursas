@@ -15,9 +15,8 @@
 (in-package :tursas.utils)
 
 (define-constant valid-coords
-  (apply #'append
-         (loop :for x :across "abcdefgh"
-               :collect (loop :for y :below 8 :collect (format nil "~a~a" x (1+ y)))))
+    (loop for x across "abcdefgh"
+          nconc (loop for y below 8 collect (format nil "~a~a" x (1+ y))))
   :test 'equal
   :documentation "List of valid chess coordinate strings.")
 
