@@ -108,7 +108,7 @@
 (defun string-indexed (s)
   "Return an alist of offset / character pairs for string S."
   (loop for i across s
-        for n upto (length s)
+        for n from 0
         collect (cons n i)))
 
 (defun fen->ascii (fen)
