@@ -63,15 +63,14 @@
 
 (defun fen-board->0x88board (s)
   "Converts string given in FEN notation to 0x88 board representation."
-  (let ((board (init-game-board))
-        (fen-list (map 'list #'identity s)))
-    (dolist (pair (string-indexed (reduce (lambda (x y)
-                                            (concatenate 'string x y))
-                                          (mapcar (lambda (row) (concatenate 'string row "EEEEEEEE"))
-                                                  (reverse (split-sequence #\/ (expand-digits #\E fen-list))))
-                                          :initial-value "")))
-      (fill-square! board (car pair) (piece-value (cdr pair))))
-    board))
+  (loop with board = (init-game-board)
+        for (index . piece) in (string-indexed
+                                (loop with result = nil
+                                      for row in (reverse (split-sequence #\/ (expand-digits #\E (map 'list #'identity s))))
+                                      do (setf result (concatenate 'string result row "EEEEEEEE"))
+                                      finally (return result)))
+      do (fill-square! board index (piece-value piece))
+      finally (return board)))
 
 (defun make-fen-row (board row)
   "Builds single fen row from given board and row index."
