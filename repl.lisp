@@ -24,10 +24,10 @@
 
 (defun game-print (output)
   "Prints the engine response to user."
-  (cond ((listp output) (format t "~{~a~%~}" output))
-        ((stringp output) (format t "~a~%" output))
-        ((numberp output) (format t "~a~%" output))
-        (t nil)))
+  (typecase output
+    (list (format t "~{~a~%~}" output))
+    (string (format t "~a~%" output))
+    (number (format t "~a~%" output))))
 
 (defun game-repl ()
   "Main game loop"
