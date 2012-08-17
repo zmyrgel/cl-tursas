@@ -64,11 +64,6 @@
   (is (compact-item #\x '(#\a #\x #\x #\x #\b))
       '(#\a #\3 #\b)))
 
-(test str-test
-  "Test string creation"
-  (is-true (string= (str "foo" "bar" "baz")
-                    "foobarbaz")))
-
 (test string-indexed-test
   "Test string indexing"
   (is (string-indexed "foo")

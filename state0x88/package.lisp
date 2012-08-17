@@ -21,7 +21,7 @@
   (:import-from :tursas.utils
    :valid-coord-p :split-move :coordinate-string-p
    :san-string-p :move-string-p :fen->ascii
-   :split-on :expand-digits :compact-item :str :string-indexed)
+   :split-on :expand-digits :compact-item :string-indexed)
   (:export
    :coord->move :move->coord :from :to :promotion
    :allowedp :occupiedp :blackp :whitep :checkp :matep :drawp

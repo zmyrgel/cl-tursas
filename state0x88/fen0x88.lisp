@@ -74,7 +74,8 @@
 
 (defun make-fen-row (board row)
   "Builds single fen row from given board and row index."
-  (apply #'str (compact-item #\E (loop for n below 8
+  (concatenate 'string
+               (compact-item #\E (loop for n below 8
                                        collect (piece-name (board-ref board (+ row n)))))))
 
 (defun board->fen-board (board)

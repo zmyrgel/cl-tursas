@@ -58,13 +58,6 @@
   (or (coordinate-string-p s)
       (san-string-p s)))
 
-(defmethod to-string (arg) (string arg))
-(defmethod to-string ((arg integer)) (write-to-string arg))
-
- (defun str (&rest args)
-  (apply (curry #'concatenate 'string)
-          (mapcar #'to-string args)))
-
 (defun group (list n)
   "Group items in list to lists of n length."
   (when (zerop n) (error "Groups fo zero are no fun"))

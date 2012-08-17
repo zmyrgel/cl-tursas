@@ -18,7 +18,7 @@
   (:import-from :tursas.utils
    :valid-coord-p :split-move :coordinate-string-p
    :san-string-p :move-string-p :fen->ascii
-   :split-on :expand-digits :compact-item :str :string-indexed)
+   :split-on :expand-digits :compact-item :string-indexed)
   (:import-from :cl-ppcre
    :scan :register-groups-bind)
   (:import-from :alexandria
