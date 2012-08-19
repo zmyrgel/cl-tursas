@@ -1,4 +1,4 @@
-;; Copyright (c) 2012 Timo Myyrä <timo.myyra@gmail.com>
+;; Copyright (c) 2012 Timo Myyrä <timo.myyra@iki.fi>
 
 ;; Permission to use, copy, modify, and/or distribute this software for any
 ;; purpose with or without fee is hereby granted, provided that the above
@@ -19,8 +19,8 @@
 (defsystem "tursas"
   :name "tursas"
   :version "0.2"
-  :author "Timo Myyrä <timo.myyra@gmail.com>"
-  :maintainer "Timo Myyrä <timo.myyra@gmail.com>"
+  :author "Timo Myyrä <timo.myyra@iki.fi>"
+  :maintainer "Timo Myyrä <timo.myyra@iki.fi>"
   :description "Tursas"
   :long-description "a simple chess engine which uses XBoard protocol."
   :licence "ISC license"
