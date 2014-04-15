@@ -85,7 +85,7 @@
    character indicating their amount."
   (labels ((f (result items found)
              (cond ((null items) (if (plusp found)
-                                     (nreverse (cons found result))
+                                     (nreverse (cons (digit-char found) result))
                                      (nreverse result)))
                    ((equalp (first items) x) (f result (rest items) (1+ found)))
                    (t (if (plusp found)

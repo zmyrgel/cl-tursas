@@ -80,8 +80,8 @@
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
-  (loop for i from #x70 downto #x0 by #x10
-        collect (format nil "~{~a~^/~}" (make-fen-row board i))))
+  (format nil "~{~A~^/~}" (loop for i from #x70 downto #x0 by #x10
+                               collect (make-fen-row board i))))
 
 (defun add-pieces (state)
   "Adds all pieces from board to piece-map."

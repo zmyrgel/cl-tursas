@@ -289,7 +289,7 @@
           collect (apply-move state move)))
 
 (defmethod legal-moves ((state State0x88))
-  (loop for s (legal-states state)
+  (loop for s in (legal-states state)
         collect (last-move s)))
 
 (defmethod turn ((state State0x88))
