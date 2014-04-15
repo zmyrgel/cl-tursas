@@ -21,6 +21,18 @@
 (define-constant +queen-value+ 90)
 (define-constant +king-value+ 99999)
 
+(defun group (list n)
+  "Group items in list to lists of n length."
+  (declare (type (integer 0 10) n))
+  (when (zerop n) (error "Groups of zero are not allowed."))
+  (labels ((rec (list acc)
+             (let ((rest (nthcdr n list)))
+               (if (consp rest)
+                   (rec rest (cons (subseq list 0 n) acc))
+                   (nreverse (cons list acc))))))
+    (when list
+      (rec list nil))))
+
 (defun make-table (score-list)
   "Utility to make full 0x88 vector board out of score list"
   (make-array 128
@@ -36,19 +48,13 @@
                   0   0   5  10  10   5   0   0
                   0   0   0   0   0   0   0   0
                   0   0   0   0   0   0   0   0
-                  0   0   0   0   0   0   0   0)))
-(define-constant +black-pawn-table+ (reverse +white-pawn-table+))
+                  0   0   0   0   0   0   0   0))
+  :test #'equalp)
+(define-constant +black-pawn-table+ (reverse +white-pawn-table+)
+  :test #'equalp)
 
-(define-constant +white-rook-table+
-    (make-table '(5  0  5  0  0  5  0  5
-                  0  0  0  0  0  0  0  0
-                  0  0  0  0  0  0  0  0
-                  0  0  0  0  0  0  0  0
-                  0  0  0  0  0  0  0  0
-                  0  0  0  0  0  0  0  0
-                  0  0  0  0  0  0  0  0
-                  0  0  0  0  0  0  0  0)))
-(define-constant +black-rook-table+ (reverse +white-rook-table+))
+(define-constant +black-rook-table+ (reverse +white-rook-table+)
+  :test #'equalp)
 
 (define-constant +white-rook-end-table+
     (make-table '(0  0  0  0  0  0  0  0
@@ -58,8 +64,10 @@
                   0  0  0  0  0  0  0  0
                   0  0  0  0  0  0  0  0
                   0  0  0  0  0  0  0  0
-                  0  0  0  0  0  0  0  0)))
-(define-constant +black-rook-end-table+ (reverse +white-rook-end-table+))
+                  0  0  0  0  0  0  0  0))
+  :test #'equalp)
+(define-constant +black-rook-end-table+ (reverse +white-rook-end-table+)
+  :test #'equalp)
 
 (define-constant +white-knight-table+
     (make-table '(-10 -5 -5  -5  -5  -5  -5 -10
@@ -69,8 +77,10 @@
                   -5   0  10  10  10  10  0 -5
                   -5   5  5   10  10  10  5 -5
                   -5  -5  0   5   5   0  -5 -5
-                  -10 -5  -5  -5  -5  -5 -5 -10)))
-(define-constant +black-knight-table+ (reverse +white-knight-table+))
+                  -10 -5  -5  -5  -5  -5 -5 -10))
+  :test #'equalp)
+(define-constant +black-knight-table+ (reverse +white-knight-table+)
+  :test #'equalp)
 
 (define-constant +white-bishop-table+
     (make-table '(-15 -10 -10 -10 -10 -10 -10 -15
@@ -80,8 +90,10 @@
                   -10   0  10  10  10  10   0 -10
                   -10  10  10  10  10  10  10 -10
                   -10   5   0   0   0   0   5 -10
-                  -15 -10 -10 -10 -10 -10 -10 -15)))
-(define-constant +black-bishop-table+ (reverse +white-bishop-table+))
+                  -15 -10 -10 -10 -10 -10 -10 -15))
+  :test #'equalp)
+(define-constant +black-bishop-table+ (reverse +white-bishop-table+)
+  :test #'equalp)
 
 (define-constant +white-king-table+
     (make-table '(  0  -5   5   0   0  -5   5   0
@@ -91,8 +103,10 @@
                   -10 -10 -10 -10 -10 -10 -10 -10
                   -10 -10 -10 -10 -10 -10 -10 -10
                   -10 -10 -10 -10 -10 -10 -10 -10
-                  -10 -10 -10 -10 -10 -10 -10 -10)))
-(define-constant +black-king-table+ (reverse +white-king-table+))
+                  -10 -10 -10 -10 -10 -10 -10 -10))
+  :test #'equalp)
+(define-constant +black-king-table+ (reverse +white-king-table+)
+  :test #'equalp)
 
 (define-constant +white-king-end-game-table+
     (make-table '(-15 -10 -10 -10 -10 -10 -10 -15
@@ -102,8 +116,10 @@
                   -10  -5  10  15  15  10  -5 -10
                   -10  -5   5  10  10   5  -5 -10
                   -10 -10  -5   0   0  -5 -10 -10
-                  -15 -10 -10 -10 -10 -10 -10 -15)))
-(define-constant +black-king-end-game-table+ (reverse +white-king-end-game-table+))
+                  -15 -10 -10 -10 -10 -10 -10 -15))
+  :test #'equalp)
+(define-constant +black-king-end-game-table+ (reverse +white-king-end-game-table+)
+  :test #'equalp)
 
 (defun material-value (piece)
   "Gives material value for given piece."
