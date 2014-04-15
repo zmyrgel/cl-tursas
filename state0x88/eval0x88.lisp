@@ -21,103 +21,89 @@
 (define-constant +queen-value+ 90)
 (define-constant +king-value+ 99999)
 
-(defmacro group (list n)
-  "Group items in list to lists of n length."
-  (declare (type (integer 0 10) n))
-  (when (zerop n) (error "Groups of zero are not allowed."))
-  `(labels ((rec (list acc)
-              (let ((rest (nthcdr ,n list)))
-                (if (consp rest)
-                    (rec rest (cons (subseq list 0 ,n) acc))
-                    (nreverse (cons list acc))))))
-    (when ,list (rec ,list nil))))
-
-(defmacro make-table-scores (name board)
-  "Utility to make white and black score table based on initial board."
-  `(progn
-     (define-constant ,(intern (concatenate 'string "+WHITE-" (string name) "-TABLE+"))
-         (make-table ,board)
-       :test 'equalp)
-     (define-constant ,(intern (concatenate 'string "+BLACK-" (string name) "-TABLE+"))
-         (make-table (reverse ,board))
-       :test 'equalp)))
-
-(defmacro make-table (score-list)
+(defun make-table (score-list)
   "Utility to make full 0x88 vector board out of score list"
-  `(make-array 128
-               :element-type board-value
-               :initial-contents ,(loop for row in (group score-list 8)
-                                        nconc (nconc row (make-list 8 :initial-element 0)))))
+  (make-array 128
+              :element-type 'board-value
+              :initial-contents (loop for row in (group score-list 8)
+                                      append (append row (make-list 8 :initial-element 0)))))
 
-(make-table-scores pawn
-                   '(0   0   0   0   0   0   0   0
-                     5   5   5   0   0   5   5   5
-                     0   0   5  15  15   5   0   0
-                     5   5  10  15  15  10   5   5
-                     0   0   5  10  10   5   0   0
-                     0   0   0   0   0   0   0   0
-                     0   0   0   0   0   0   0   0
-                     0   0   0   0   0   0   0   0))
+(define-constant +white-pawn-table+
+    (make-table '(0   0   0   0   0   0   0   0
+                  5   5   5   0   0   5   5   5
+                  0   0   5  15  15   5   0   0
+                  5   5  10  15  15  10   5   5
+                  0   0   5  10  10   5   0   0
+                  0   0   0   0   0   0   0   0
+                  0   0   0   0   0   0   0   0
+                  0   0   0   0   0   0   0   0)))
+(define-constant +black-pawn-table+ (reverse +white-pawn-table+))
 
-(make-table-scores rook
-                   '(5  0  5  0  0  5  0  5
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0))
+(define-constant +white-rook-table+
+    (make-table '(5  0  5  0  0  5  0  5
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0)))
+(define-constant +black-rook-table+ (reverse +white-rook-table+))
 
-(make-table-scores rook-end
-                   '(0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0
-                     0  0  0  0  0  0  0  0))
+(define-constant +white-rook-end-table+
+    (make-table '(0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0)))
+(define-constant +black-rook-end-table+ (reverse +white-rook-end-table+))
 
-(make-table-scores knight
-                   '(-10 -5 -5  -5  -5  -5  -5 -10
-                     -5  -5  0   5   5   0  -5 -5
-                     -5   5  5   10  10  5   5 -5
-                     -5   0  10  10  10  10  0 -5
-                     -5   0  10  10  10  10  0 -5
-                     -5   5  5   10  10  10  5 -5
-                     -5  -5  0   5   5   0  -5 -5
-                     -10 -5  -5  -5  -5  -5 -5 -10))
+(define-constant +white-knight-table+
+    (make-table '(-10 -5 -5  -5  -5  -5  -5 -10
+                  -5  -5  0   5   5   0  -5 -5
+                  -5   5  5   10  10  5   5 -5
+                  -5   0  10  10  10  10  0 -5
+                  -5   0  10  10  10  10  0 -5
+                  -5   5  5   10  10  10  5 -5
+                  -5  -5  0   5   5   0  -5 -5
+                  -10 -5  -5  -5  -5  -5 -5 -10)))
+(define-constant +black-knight-table+ (reverse +white-knight-table+))
 
-(make-table-scores bishop
-                   '(-15 -10 -10 -10 -10 -10 -10 -15
-                     -10   0   0   0   0   0   0 -10
-                     -10   0   5  10  10   5   0 -10
-                     -10   5   5  10  10   5   5 -10
-                     -10   0  10  10  10  10   0 -10
-                     -10  10  10  10  10  10  10 -10
-                     -10   5   0   0   0   0   5 -10
-                     -15 -10 -10 -10 -10 -10 -10 -15))
+(define-constant +white-bishop-table+
+    (make-table '(-15 -10 -10 -10 -10 -10 -10 -15
+                  -10   0   0   0   0   0   0 -10
+                  -10   0   5  10  10   5   0 -10
+                  -10   5   5  10  10   5   5 -10
+                  -10   0  10  10  10  10   0 -10
+                  -10  10  10  10  10  10  10 -10
+                  -10   5   0   0   0   0   5 -10
+                  -15 -10 -10 -10 -10 -10 -10 -15)))
+(define-constant +black-bishop-table+ (reverse +white-bishop-table+))
 
-(make-table-scores king
-                   '(  0  -5   5   0   0  -5   5   0
-                     -10 -10 -10 -10 -10 -10 -10 -10
-                     -10 -10 -10 -10 -10 -10 -10 -10
-                     -10 -10 -10 -10 -10 -10 -10 -10
-                     -10 -10 -10 -10 -10 -10 -10 -10
-                     -10 -10 -10 -10 -10 -10 -10 -10
-                     -10 -10 -10 -10 -10 -10 -10 -10
-                     -10 -10 -10 -10 -10 -10 -10 -10))
+(define-constant +white-king-table+
+    (make-table '(  0  -5   5   0   0  -5   5   0
+                  -10 -10 -10 -10 -10 -10 -10 -10
+                  -10 -10 -10 -10 -10 -10 -10 -10
+                  -10 -10 -10 -10 -10 -10 -10 -10
+                  -10 -10 -10 -10 -10 -10 -10 -10
+                  -10 -10 -10 -10 -10 -10 -10 -10
+                  -10 -10 -10 -10 -10 -10 -10 -10
+                  -10 -10 -10 -10 -10 -10 -10 -10)))
+(define-constant +black-king-table+ (reverse +white-king-table+))
 
-(make-table-scores king-end-game
-                   '(-15 -10 -10 -10 -10 -10 -10 -15
-                     -10 -10  -5   0   0  -5 -10 -10
-                     -10  -5   5  10  10   5  -5 -10
-                     -10  -5  10  15  15  10  -5 -10
-                     -10  -5  10  15  15  10  -5 -10
-                     -10  -5   5  10  10   5  -5 -10
-                     -10 -10  -5   0   0  -5 -10 -10
-                     -15 -10 -10 -10 -10 -10 -10 -15))
+(define-constant +white-king-end-game-table+
+    (make-table '(-15 -10 -10 -10 -10 -10 -10 -15
+                  -10 -10  -5   0   0  -5 -10 -10
+                  -10  -5   5  10  10   5  -5 -10
+                  -10  -5  10  15  15  10  -5 -10
+                  -10  -5  10  15  15  10  -5 -10
+                  -10  -5   5  10  10   5  -5 -10
+                  -10 -10  -5   0   0  -5 -10 -10
+                  -15 -10 -10 -10 -10 -10 -10 -15)))
+(define-constant +black-king-end-game-table+ (reverse +white-king-end-game-table+))
 
 (defun material-value (piece)
   "Gives material value for given piece."
