@@ -53,6 +53,16 @@
 (define-constant +black-pawn-table+ (reverse +white-pawn-table+)
   :test #'equalp)
 
+(define-constant +white-rook-table+
+    (make-table '(5  0  5  0  0  5  0  5
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0
+                  0  0  0  0  0  0  0  0))
+  :test #'equalp)
 (define-constant +black-rook-table+ (reverse +white-rook-table+)
   :test #'equalp)
 
