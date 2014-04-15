@@ -98,7 +98,7 @@
 
 (defun set-option! (key value)
   "Sets game option of given key to value."
-  (setf (assoc key *game-options*) value))
+  (setf (rest (assoc key *game-options*)) value))
 
 (defun get-option (option)
   "Returns value of given game option"
@@ -325,7 +325,7 @@
         ((scan "^\\?$" cmd) (unsupported-command cmd))
         ((register-groups-bind ((#'parse-integer arg))
              ("^ping\\s(\\d+)$" cmd)
-           (concatenate 'string "pong " arg)))
+           (concatenate 'string "pong " (write-to-string arg))))
         ((scan "^draw$" cmd) (tursas-cmd "Can't offer draw to empty board!" #'cecp-draw))
         ((scan "^result\\s(1/2-1/2\\s\{.+\}|1-0\\s\{.+\}|0-1\\s\{.+\}|\\*)$" cmd) nil)
         ((register-groups-bind (arg)
