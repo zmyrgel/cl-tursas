@@ -61,16 +61,20 @@
           when (= piece king)
             return index)))
 
-(defun fen-board->0x88board (s)
-  "Converts string given in FEN notation to 0x88 board representation."
+(defun fen-board-parse (fen-string)
+  "Utility function to help in converting given FEN-STRING to 0x88 board."
+  (loop for row in (reverse
+                    (split-sequence
+                     #\/ (expand-digits #\E (map 'list #'identity fen-string))))
+        nconc (nconc row (make-list 8 :initial-element #\E))))
+
+(defun fen-board->0x88board (fen-board)
+  "Converts FEN-BOARD string to a 0x88 board representation."
   (loop with board = (init-game-board)
-        for (index . piece) in (string-indexed
-                                (loop with result = nil
-                                      for row in (reverse (split-sequence #\/ (expand-digits #\E (map 'list #'identity s))))
-                                      do (setf result (concatenate 'string result row "EEEEEEEE"))
-                                      finally (return result)))
-      do (fill-square! board index (piece-value piece))
-      finally (return board)))
+        for piece in (fen-board-parse fen-board)
+        for index upfrom 0
+        do (fill-square! board index (piece-value piece))
+        finally (return board)))
 
 (defun make-fen-row (board row)
   "Builds single fen row from given board and row index."
