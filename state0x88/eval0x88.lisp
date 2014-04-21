@@ -21,24 +21,25 @@
 (define-constant +queen-value+ 90)
 (define-constant +king-value+ 99999)
 
-(defun group (list n)
-  "Group items in list to lists of n length."
-  (declare (type (integer 0 10) n))
-  (when (zerop n) (error "Groups of zero are not allowed."))
-  (labels ((rec (list acc)
-             (let ((rest (nthcdr n list)))
-               (if (consp rest)
-                   (rec rest (cons (subseq list 0 n) acc))
-                   (nreverse (cons list acc))))))
-    (when list
-      (rec list nil))))
+(eval-when (:compile-toplevel)
+  (defun group (list n)
+    "Group items in list to lists of n length."
+    (declare (type (integer 0 10) n))
+    (when (zerop n) (error "Groups of zero are not allowed."))
+    (labels ((rec (list acc)
+               (let ((rest (nthcdr n list)))
+                 (if (consp rest)
+                     (rec rest (cons (subseq list 0 n) acc))
+                     (nreverse (cons list acc))))))
+      (when list
+        (rec list nil))))
 
-(defun make-table (score-list)
-  "Utility to make full 0x88 vector board out of score list"
-  (make-array 128
-              :element-type 'board-value
-              :initial-contents (loop for row in (group score-list 8)
-                                      append (append row (make-list 8 :initial-element 0)))))
+  (defun make-table (score-list)
+    "Utility to make full 0x88 vector board out of score list"
+    (make-array 128
+                :element-type 'board-value
+                :initial-contents (loop for row in (group score-list 8)
+                                        append (append row (make-list 8 :initial-element 0))))))
 
 (define-constant +white-pawn-table+
     (make-table '(0   0   0   0   0   0   0   0
