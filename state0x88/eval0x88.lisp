@@ -21,7 +21,7 @@
 (define-constant +queen-value+ 90)
 (define-constant +king-value+ 99999)
 
-(eval-when (:compile-toplevel)
+(eval-when (:compile-toplevel :load-toplevel)
   (defun group (list n)
     "Group items in list to lists of n length."
     (declare (type (integer 0 10) n))
