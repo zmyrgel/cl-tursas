@@ -106,8 +106,10 @@
 
 (defun save-game ()
   "Saves the current game by writing game-state to file."
-  (with-open-file (s "saved-game.txt" :direction :output)
-    (princ *game-state* s)))
+  (with-open-file (s "saved-game.txt" :direction :output :if-exists :supersede)
+    (with-standard-io-syntax
+      (princ *game-state* s))
+    nil))
 
 (defparameter *search-fn*
   (lambda (state)
@@ -119,9 +121,10 @@
 (defun load-game ()
   "Loads the game-state from file to resume the previous game."
   (with-open-file (stream "saved-game.txt")
-    (loop for form = (read stream nil 'eof)
-          until (eq form 'eof)
-          do (setf *game-state* form))))
+    (with-standard-io-syntax
+      (loop for form = (read stream nil 'eof)
+            until (eq form 'eof)
+            do (setf *game-state* form)))))
 
 (defun get-protocol ()
   "Returns currently active reader protocol"
