@@ -236,12 +236,12 @@
 (defun game-result (state)
   "Returns string representation for game result."
   (case (result state)
-    (:FIFTY-MOVE-RULE "1/2-1/2 {50-move rule}")
-    (:FIDE-DRAW "1/2-1/2 {Draw per FIDE rules}")
-    (:STALEMATE "1/2-1/2 {Stalemate}")
-    (:REPETITION "1/2-1/2 {Draw by repetition}")
-    (:MATE-FOR-BLACK "0-1 {Black mates}")
-    (:MATE-FOR-WHITE "1-0 {White mates}")
+    (:fifty-move-rule "1/2-1/2 {50-move rule}")
+    (:fide-draw "1/2-1/2 {Draw per FIDE rules}")
+    (:stalemate "1/2-1/2 {Stalemate}")
+    (:repetition "1/2-1/2 {Draw by repetition}")
+    (:mate-for-black "0-1 {Black mates}")
+    (:mate-for-white "1-0 {White mates}")
     (otherwise nil)))
 
 (defun user-move (state s)
