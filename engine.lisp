@@ -306,7 +306,7 @@
         ((scan "^rejected$" cmd) nil)
         ((scan "^random$" cmd) nil)
         ((scan "^new$" cmd) (progn (set-game! "startpos")
-                                         (set-option! :ai-mode t)))
+                                   (set-option! :ai-mode t)))
         ((register-groups-bind ((#'parse-integer arg))
              ("^variant\\s(\\w+)$" cmd)
            (set-variant arg)))
