@@ -84,13 +84,16 @@
   "Returns a list where each X in LIST is replaced by digit
    character indicating their amount."
   (labels ((f (result items found)
-             (cond ((null items) (if (plusp found)
-                                     (nreverse (cons (digit-char found) result))
-                                     (nreverse result)))
-                   ((equalp (first items) x) (f result (rest items) (1+ found)))
-                   (t (if (plusp found)
-                          (f (cons (digit-char found) result) items 0)
-                          (f (cons (first items) result) (rest items) found))))))
+             (cond ((null items)
+                    (if (plusp found)
+                        (nreverse (cons (digit-char found) result))
+                        (nreverse result)))
+                   ((equalp (first items) x)
+                    (f result (rest items) (1+ found)))
+                   ((plusp found)
+                    (f (cons (digit-char found) result) items 0))
+                   (t
+                    (f (cons (first items) result) (rest items) found)))))
     (f nil list 0)))
 
 (defun interpose (sep list)
