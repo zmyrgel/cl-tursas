@@ -277,13 +277,18 @@
       (repetitionp state)))
 
 (defmethod result ((state State0x88))
-  (cond ((fifty-move-rule-p state) :fifty-move-rule)
-        ((fide-draw-p state) :fide-draw)
-        ((stalematep state) :stalemate)
-        ((repetitionp state) :repetition)
-        ((matep state) (if (= (board-ref (State0x88-board state) +turn-store+) +white+)
-                           :mate-for-black
-                           :mate-for-white))
+  (cond ((fifty-move-rule-p state)
+         :fifty-move-rule)
+        ((fide-draw-p state)
+         :fide-draw)
+        ((stalematep state)
+         :stalemate)
+        ((repetitionp state)
+         :repetition)
+        ((matep state)
+         (if (= (board-ref (State0x88-board state) +turn-store+) +white+)
+             :mate-for-black
+             :mate-for-white))
         (t
          (error "game is still in progress!"))))
 
