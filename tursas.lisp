@@ -162,6 +162,14 @@
   "Display FEN of currect game state."
   (state->fen state))
 
+(defun perft (state depth)
+  (if (zerop depth)
+      1
+      (apply #'+ (mapcar (lambda (st)
+                           (perft st (1- depth)))
+                         (when state
+                           (legal-states state))))))
+
 (defun display-perft (state depth)
   "Display Perft of given depth."
   (perft state depth))
@@ -316,7 +324,7 @@
         ((scan "^level\\s\\d+\\s[0-9:]+\\s\\d+$" cmd) (unsupported-command cmd))
         ((scan "^st\\s\\d+$" cmd) (unsupported-command cmd))
         ((register-groups-bind ((#'parse-integer arg))
-             ("^sd\\s(\\d+)$"cmd)
+             ("^sd\\s(\\d+)$" cmd)
            (set-option! :depth-limit arg)))
         ((scan "^nps\\s\\d+$" cmd) (unsupported-command cmd))
         ((scan "^time\\s\\d+$" cmd) (unsupported-command cmd))
@@ -398,3 +406,17 @@
         (t (if (eq (get-protocol) :cecp)
                (process-cecp-command cmd)
                (concatenate 'string "Error (Invalid command): " cmd)))))
+
+(defun main (&rest args)
+  "Starts the engine repl for input handling."
+  (declare (ignore args))
+  (format t "~{~a~%~}"
+          '("# Welcome to Tursas Chess Engine!"
+            "# Type 'help' to get list of supported commands"))
+  (loop for command = (read-line) then (read-line)
+        until (string= command "quit")
+        do (let ((output (process-command command)))
+             (typecase output
+               (list (format t "~{~a~%~}" output))
+               (string (format t "~a~%" output))
+               (number (format t "~a~%" output))))))

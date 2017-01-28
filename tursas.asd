@@ -43,8 +43,7 @@
                (:file "package")
                (:file "protocols")
                (:file "search")
-               (:file "engine")
-               (:file "repl")
+               (:file "tursas")
                (:module "tests"
                 :serial t
                 :components ((:file "package")
