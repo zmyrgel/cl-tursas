@@ -22,7 +22,7 @@
 (defun index->coord (index)
   "Converts given index to algebraic representation."
   (let* ((coord (format nil "~2,'0x" index))
-         (num (+ (- (char-code (schar coord 0)) 48) 1))
+         (num (1+ (- (char-code (schar coord 0)) 48)))
          (alpha (schar "abcdefgh" (- (char-code (schar coord 1)) 48))))
     (format nil "~a~a" alpha num)))
 
@@ -32,7 +32,7 @@
   (when (valid-coord-p s)
     (let ((file (- (char-code (schar s 0)) 97))
           (rank (- (char-code (schar s 1)) 48)))
-      (+ (* (- rank 1) 16) file))))
+      (+ (* (1- rank) 16) file))))
 
 (defun make-move (from to promotion)
   "Constructor for moves."
@@ -55,7 +55,7 @@
                (index->coord (Move0x88-from move))
                (index->coord (Move0x88-to move))
                (let ((piece (piece-name (Move0x88-promotion move))))
-                 (when (not (eql piece #\E))
+                 (unless (eql piece #\E)
                    (string piece)))))
 
 (defmethod from ((move Move0x88))
@@ -65,5 +65,5 @@
   (index->coord (Move0x88-to move)))
 
 (defmethod promotion ((move Move0x88))
-  (when (not (zerop (Move0x88-promotion move)))
+  (unless (zerop (Move0x88-promotion move))
     (piece-name (Move0x88-promotion move))))
