@@ -24,12 +24,18 @@
       (if (= player +white+)
           (values 3 11 7 14 13)
           (values 12 13 13 11 7))
-    (cond ((= (Move0x88-from move) #x04) (logand castling king-m))
-          ((= (Move0x88-from move) #x00) (logand castling l-rook-m))
-          ((= (Move0x88-from move) #x07) (logand castling r-rook-m))
-          ((= (Move0x88-to move) #x70) (logand castling l-rook-c))
-          ((= (Move0x88-to move) #x77) (logand castling r-rook-c))
-          (t castling))))
+    (cond ((= (Move0x88-from move) #x04)
+           (logand castling king-m))
+          ((= (Move0x88-from move) #x00)
+           (logand castling l-rook-m))
+          ((= (Move0x88-from move) #x07)
+           (logand castling r-rook-m))
+          ((= (Move0x88-to move) #x70)
+           (logand castling l-rook-c))
+          ((= (Move0x88-to move) #x77)
+           (logand castling r-rook-c))
+          (t
+           castling))))
 
 (defun inc-full-moves! (board)
   "Utility to increase full moves on the board.
@@ -38,22 +44,24 @@
    store to 0. This gets full move count to get high enough."
   (let ((moves (board-ref board +full-move-store+))
         (n-moves (board-ref board +full-move-n-store+)))
-    (if (= moves 127)
-        (progn (fill-square! board +full-move-n-store+ (1+ n-moves))
-               (fill-square! board +full-move-store+ 0))
-        (fill-square! board +full-move-store+ (1+ moves)))))
+    (cond ((= moves 127)
+           (fill-square! board +full-move-n-store+ (1+ n-moves))
+           (fill-square! board +full-move-store+ 0))
+          (t
+           (fill-square! board +full-move-store+ (1+ moves))))))
 
 (defun promotion-piece (player move)
   "Helper function to return promotion piece value.
     Reads the promotion piece value from move, defaults to queen."
   (let ((piece (Move0x88-promotion move)))
-    (if (zerop piece)
-        (if (= player +white+)
-            +white-queen+
-            +black-queen+)
-        (if (= player +white+)
-            (- piece)
-            piece))))
+    (cond ((and (zerop piece) (= player +white+))
+           +white-queen+)
+          ((and (zerop piece) (= player +black+))
+           +black-queen+)
+          ((= player white)
+           (- piece))
+          (t
+           piece))))
 
 (defun fifty-move-rule-p (state)
   "Checks if state is draw according to 50-move rule."
@@ -95,9 +103,9 @@
                                                   (or (= +black-bishop+ (cdr (assoc i piece-list)))
                                                       (= +white-bishop+ (cdr (assoc i piece-list)))))
                                                 indexes)))
-                        (when (not (< (list-length bishops) 2))
-                          (same-color-p (first (loop for x in bishops collect (car x)))
-                                        (second (loop for x in bishops collect (cdr x))))))))))))
+                        (unless (< (list-length bishops) 2)
+                          (same-color-p (first (loop for x in bishops collect (first x)))
+                                        (second (loop for x in bishops collect (rest x))))))))))))
 
 (defun repetitionp (state)
   "Predicate to see if game is draw by repetition.
@@ -154,7 +162,7 @@
   "Checks that players move won't leave the players king in check."
   (let* ((board (State0x88-board state))
          (player (board-ref board +turn-store+)))
-    (when (not (threatenedp board (king-index board player) (opponent player)))
+    (unless (threatenedp board (king-index board player) (opponent player))
       state)))
 
 (defun update-castling (state move)
@@ -162,10 +170,11 @@
   (let* ((board (State0x88-board state))
          (castling (board-ref board +castling-store+))
          (player (board-ref board +turn-store+)))
-    (if (zerop castling)
-        state
-        (progn (fill-square! board +castling-store+ (calculate-castling player castling move))
-               state))))
+    (cond ((zerop castling)
+           state)
+          (t
+           (fill-square! board +castling-store+ (calculate-castling player castling move))
+           state))))
 
 (defun update-en-passant (state move)
   "Associates new en-passant value with given state based on the move."
@@ -274,7 +283,9 @@
         ((repetitionp state) :repetition)
         ((matep state) (if (= (board-ref (State0x88-board state) +turn-store+) +white+)
                            :mate-for-black
-                           :mate-for-white))))
+                           :mate-for-white))
+        (t
+         (error "game is still in progress!"))))
 
 (defmethod state->fen ((state State0x88))
   (parse-state state))
