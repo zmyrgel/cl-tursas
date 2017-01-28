@@ -61,10 +61,11 @@
           (values +white+ +white-king+)
           (values +black+ +black-king+))
     (let ((board (State0x88-board state)))
-      (if (= piece king)
-          (progn (update-king-index! board index player)
-                 (fill-square! board index piece))
-          (fill-square! (State0x88-board state) index piece)))
+      (cond ((= piece king)
+             (update-king-index! board index player)
+             (fill-square! board index piece))
+            (t
+             (fill-square! (State0x88-board state) index piece))))
     (pmap-add! state player index piece)))
 
 (defun remove-piece! (state index)
@@ -72,14 +73,14 @@
   (let ((player (if (white-piece-p (board-ref (State0x88-board state) index))
                     +white+
                     +black+)))
-    (progn (clear-square! (State0x88-board state) index)
-           (pmap-remove! state player index))))
+    (clear-square! (State0x88-board state) index)
+    (pmap-remove! state player index)))
 
 (defun move-piece! (state move)
   "Moves piece in the board."
   (let ((piece (board-ref (State0x88-board state) (Move0x88-from move)))
         (occupant (board-ref (State0x88-board state) (Move0x88-to move))))
-    (when (not (= occupant +empty-square+))
+    (unless (= occupant +empty-square+)
       (remove-piece! state (Move0x88-to move)))
     (remove-piece! state (Move0x88-from move))
     (add-piece! state (Move0x88-to move) piece)
@@ -128,15 +129,15 @@
    from index to given direction on the board.
    Sliding will continue until it hits piece or board edge."
   (labels ((slider (new-index moves)
-             (if (or (not (board-index-p new-index))
-                     (occupied-by-p board new-index player))
-                 moves
-                 (if (empty-square-p board new-index)
-                     (slider (+ new-index dir)
-                             (cons (make-move index new-index 0)
-                                   moves))
-                     (cons (make-move index new-index 0)
-                           moves)))))
+             (cond ((or (not (board-index-p new-index))
+                        (occupied-by-p board new-index player))
+                    moves)
+                   ((empty-square-p board new-index)
+                    (slider (+ new-index dir)
+                            (cons (make-move index new-index 0)
+                                  moves)))
+                   (t
+                    (cons (make-move index new-index 0) moves)))))
     (slider (+ index dir) nil)))
 
 (defun move-to-place (player board index place)
@@ -183,8 +184,7 @@
       (when (loop for move in +king-movement+
                   when (= opp-king-idx (+ index move)) do
                     (return t))
-        (if (= (board-ref board index) king)
-            t
+        (or (= (board-ref board index) king)
             (unwind-protect
                  (progn (clear-square! board opp-king-idx)
                         (fill-square! board index opp-king)
@@ -314,17 +314,25 @@
            (loop for m in movement
                  nconc (move-to-place player board index m))))
     (cond ((or (= piece +white-pawn+)
-               (= piece +black-pawn+)) (list-pawn-moves player board index))
+               (= piece +black-pawn+))
+           (list-pawn-moves player board index))
           ((or (= piece +white-bishop+)
-               (= piece +black-bishop+)) (slider +bishop-directions+))
+               (= piece +black-bishop+))
+           (slider +bishop-directions+))
           ((or (= piece +white-knight+)
-               (= piece +black-knight+)) (mover +knight-movement+))
+               (= piece +black-knight+))
+           (mover +knight-movement+))
           ((or (= piece +white-rook+)
-               (= piece +black-rook+)) (slider +rook-directions+))
+               (= piece +black-rook+))
+           (slider +rook-directions+))
           ((or (= piece +white-queen+)
-               (= piece +black-queen+)) (slider +queen-directions+))
+               (= piece +black-queen+))
+           (slider +queen-directions+))
           ((or (= piece +white-king+)
-               (= piece +black-king+)) (list-king-moves player board index)))))
+               (= piece +black-king+))
+           (list-king-moves player board index))
+          (t
+           (error "invalid piece value!")))))
 
 (defun pseudo-moves (player state)
   "Lists all pseudo-moves for player in state.
