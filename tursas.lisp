@@ -265,11 +265,9 @@
                   (format nil "~a~%~a" move (game-result (current-game-state)))
                   move))))))
 
-(defun undo-move! (&optional n)
+(defun undo-move! (&optional (n 1))
   "Undo last move or if N given, N last moves."
-  (setf *game-state* (if n
-                         (nthcdr *game-state* n)
-                         (rest *game-state*))))
+  (setf *game-state* (nthcdr n *game-state*)))
 
 (defun list-cecp-supported-features ()
   "Prints the default features of the engine."
