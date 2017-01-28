@@ -142,7 +142,7 @@
 
 (defun add-game-state! (new-state)
   "Adds given state to game state."
-  (setf *game-state* (cons new-state *game-state*))
+  (push new-state *game-state*)
   t)
 
 (defun display-board (state)
