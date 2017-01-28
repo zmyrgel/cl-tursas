@@ -123,4 +123,4 @@
   (with-output-to-string (*STANDARD-OUTPUT*)
     (loop for row in (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8)
           for n from 8 downto 1
-          do (format t "~a~%" (concatenate 'string (cons (digit-char n) (cons #\| (interpose #\space row))))))))
+          do (format t "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space row)))))))
