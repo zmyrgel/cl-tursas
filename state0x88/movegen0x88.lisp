@@ -261,9 +261,11 @@
    Needed to handle promotions."
   (make-move from to
              (cond ((and (= player +white+)
-                         (= (row to) #x70)) +white-queen+)
+                         (= (row to) #x70))
+                    +white-queen+)
                    ((and (= player +black+)
-                         (= (row to) #x00)) +black-queen+)
+                         (= (row to) #x00))
+                    +black-queen+)
                    (t 0))))
 
 (defun list-pawn-normal-moves (player board index)
