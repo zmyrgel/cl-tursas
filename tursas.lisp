@@ -271,9 +271,8 @@
 
 (defun list-cecp-supported-features ()
   "Prints the default features of the engine."
-  (mapcar (lambda (option)
-            (format nil "feature ~a=~a" option (rest (assoc option +cecp-supported-features+))))
-          (mapcar #'car +cecp-supported-features+)))
+  (loop for (key . value) in +cecp-supported-features+
+        collect (format nil "feature ~a=~a" key value)))
 
 (defun cecp-draw (state)
   "Offer draw to opponent."
