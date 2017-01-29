@@ -105,7 +105,7 @@
   "Gets a list of all board indexes containing
    player's pieces in given board."
   (loop for x in (pmap-get state player)
-        collect (car x)))
+        collect (first x)))
 
 (defun castlingp (piece move)
   "Checks given move is castling move."
