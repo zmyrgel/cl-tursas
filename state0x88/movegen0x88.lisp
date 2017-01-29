@@ -34,15 +34,13 @@
 
 (defun pmap-add! (state player index piece)
   "Add piece to player piece-map store on the board."
-  (if (= player +white+)
-      (push (cons index piece) (State0x88-white-pieces state))
-      (push (cons index piece) (State0x88-black-pieces state))))
+  (let ((pieces (pmap-get state player)))
+    (setf pieces (push (cons index piece) pieces))))
 
 (defun pmap-remove! (state player index)
   "Remove piece from player piece-map store on the board."
-  (delete index (pmap-get state player)
-          :test (lambda (x y)
-                  (= x (car y)))))
+  (let ((pieces (pmap-get state player)))
+    (setf pieces (delete index pieces :key #'first))))
 
 (defun pmap-get (state player)
   "Returns the players piece-map from board."
