@@ -92,8 +92,8 @@
           (values +white-rook+ +white-king+ '(#x00 #x07) '(#x03 #x05))
           (values +black-rook+ +black-king+ '(#x70 #x77) '(#x73 #x75)))
     (let ((castling-side (if (= (column (Move0x88-to move)) 2)
-                             #'car
-                             #'cadr)))
+                             #'first
+                             #'second)))
       (remove-piece! state (Move0x88-from move))
       (remove-piece! state (funcall castling-side from))
       (add-piece! state (Move0x88-to move) king)
