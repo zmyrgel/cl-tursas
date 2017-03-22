@@ -134,7 +134,7 @@
 
 * Known issues
 
-  None currently.
+** Perft calculation is incorrect
 
 * License
 
