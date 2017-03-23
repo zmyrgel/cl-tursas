@@ -120,7 +120,8 @@
  1| R N B Q K B N R
  -+----------------
   | a b c d e f g h"
-  (with-output-to-string (*STANDARD-OUTPUT*)
+  (with-output-to-string (s)
     (loop for row in (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8)
           for n from 8 downto 1
-          do (format t "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space row)))))))
+          do (format s "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space row)))))
+    (format s "~{~a~%~}" (list  "-+----------------"  "| a b c d e f g h"))))
