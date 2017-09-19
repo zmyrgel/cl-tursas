@@ -65,7 +65,12 @@
   "Utility function to help in converting given FEN-STRING to 0x88 board."
   (loop for row in (reverse
                     (split-sequence
-                     #\/ (expand-digits #\E (map 'list #'identity fen-string))))
+                     #\/
+                     (loop for c across fen-string
+                           if (digit-char-p c)
+                             nconc (make-list (digit-char-p c) :initial-element #\E)
+                           else
+                             collect c)))
         nconc (nconc row (make-list 8 :initial-element #\E))))
 
 (defun fen-board->0x88board (fen-board)
