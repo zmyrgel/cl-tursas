@@ -43,11 +43,13 @@
 
   Version 0.3
     - Convert rest of the code to more idiomatic Common Lisp
-    - Repetition rule for draws and making AI avoid it
+    - Switch to using Prove for unit tests and fix tests
+    - Add option to choose sides and have 2 human players
 
   Version 0.4
     - Iterative deepening
     - Quiescence search
+    - Repetition rule for draws and making AI avoid it
 
   Version 0.5
     - NPS command
@@ -135,10 +137,15 @@
 * Known issues
 
 ** Perft calculation is incorrect
+** AI promotes always to queen
+** Can't switch players, AI is always black
+** Unoptimized code paths so slow move generation
+** Move generation doesn't check for leaving game to check if threatening a
+   another piece
 
 * License
 
-  Copyright (c) 2012 Timo Myyrä
+  Copyright (c) 2018 Timo Myyrä
 
   Permission to use, copy, modify, and/or distribute this software for
   any purpose with or without fee is hereby granted, provided that the
