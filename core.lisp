@@ -163,7 +163,7 @@
       "variant VARIANT - change to use VARIANT rules. Only 'normal' supported"
       "force - Disable engine AI"
       "go - Enable engine AI"
-      ;;"playother - Tell AI to switch sides"
+      "playother - Tell AI to switch sides"
       ;;"level MPS BASE INC - set time controls"
       ;;"st TIME - set time controls"
       "sd DEPTH - set search depth to DEPTH"
@@ -205,7 +205,9 @@
                                (:cecp-protocol-version . 2)
                                (:debug . nil)
                                (:ponder . nil)
-                               (:ponder-output . nil)))
+                               (:ponder-output . nil)
+                               (:white-fn . nil)
+                               (:black-fn . nil)))
 
 (defun current-game-state ()
   "Utility to return current game state or nil."
@@ -365,17 +367,17 @@
   "Toggles the value of given boolean game option."
   (set-option! option (not (get-option option))))
 
-(defun make-ai-move! (state)
-  "Tell engine to make an move in current game state."
+(defun choose-move (state)
+  "Tell engine to choose an move in current game state."
   (multiple-value-bind (score best-state)
       (funcall *search-fn* state)
     (declare (ignore score))
-    (add-game-state! best-state))
-  (concatenate 'string "move "
-               (move->coord (last-move (current-game-state)))))
+    (concatenate 'string "move "
+                 (move->coord (last-move best-state)))))
 
-(defun make-human-move! (state s)
-  "If given string represents chess move, apply it to current game."
+(defun make-chess-move! (state s)
+  "Apply given chess move S to game STATE. If move is invalid return
+nil, otherwise returns t."
   (when (and (user-move-p s)
              (allowedp state (coord->move s)))
     (when-let ((new-state (apply-move state (coord->move s))))
@@ -393,17 +395,12 @@
     (otherwise nil)))
 
 (defun user-move (state s)
-  "Helper function to handle user and ai moves.
+  "Helper function to handle chess moves.
    State arg included to avoid user moves when game is not set."
-  (if (null (make-human-move! state s))
+  (if (null (make-chess-move! state s))
       (concatenate 'string "Illegal move: " s)
       (if (game-end-p (current-game-state))
-          (game-result (current-game-state))
-          (when (get-option :ai-mode)
-            (let ((move (make-ai-move! (current-game-state))))
-              (if (game-end-p (current-game-state))
-                  (format nil "~a~%~a" move (game-result (current-game-state)))
-                  move))))))
+          (game-result (current-game-state)))))
 
 (defun undo-move! (&optional (n 1))
   "Undo last move or if N given, N last moves."
@@ -455,7 +452,9 @@
          nil)
         ((scan "^new$" cmd)
          (set-game! "startpos")
-         (set-option! :ai-mode t))
+         (set-option! :ai-mode t)
+         (set-option! :white-fn #'read-line)
+         (set-option! :black-fn #'choose-move))
         ((register-groups-bind ((#'parse-integer arg))
              ("^variant\\s(\\w+)$" cmd)
            (set-variant arg)))
@@ -464,7 +463,9 @@
         ((scan "^go$" cmd)
          (set-option! :ai-mode t))
         ((scan "^playother$" cmd)
-         (unsupported-command cmd))
+         (rotatef (cdr (assoc :black-fn *game-options*))
+                  (cdr (assoc :white-fn *game-options*)))
+         t)
         ((scan "^level\\s\\d+\\s[0-9:]+\\s\\d+$" cmd)
          (unsupported-command cmd))
         ((scan "^st\\s\\d+$" cmd)
@@ -588,13 +589,22 @@
         (t
          (concatenate 'string "Error (Invalid command): " cmd))))
 
+(defun poll-command ()
+  "Polls command to process."
+  (cond ((eq (turn state) :white)
+         (funcall (get-option :white-fn)))
+        ((eq (turn state) :black)
+         (funcall (get-option :black-fn)))
+        (t (read-line))))
+
 (defun main (&rest args)
   "Starts the engine repl for input handling."
   (declare (ignore args))
   (format t "~{~a~%~}"
           '("# Welcome to Tursas Chess Engine!"
             "# Type 'help' to get list of supported commands"))
-  (loop for command = (read-line) then (read-line)
+  (loop for command = (read-line)
+          then (poll-command)
         until (string= command "quit")
         do (let ((output (process-command command)))
              (typecase output
