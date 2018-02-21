@@ -305,14 +305,6 @@
   "Display FEN of currect game state."
   (state->fen state))
 
-(defun perft (state depth)
-  (if (zerop depth)
-      1
-      (apply #'+ (mapcar (lambda (st)
-                           (perft st (1- depth)))
-                         (when state
-                           (legal-states state))))))
-
 (defun display-perft (state depth)
   "Display Perft of given depth."
   (perft state depth))
