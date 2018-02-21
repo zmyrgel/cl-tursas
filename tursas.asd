@@ -26,7 +26,8 @@
   :license "ISC license"
   :depends-on (:cl-ppcre :alexandria :cl-utilities :prove)
   :serial t
-  :components ((:module "state0x88"
+  :components ((:file "utils")
+               (:module "state0x88"
                 :serial t
                 :components ((:file "package")
                              (:file "common0x88")
@@ -36,11 +37,11 @@
                              (:file "movegen0x88")
                              (:file "fen0x88")
                              (:file "state0x88")))
-               (:file "utils")
-               (:file "tursas")
-               (:module "t"
-                :serial t
-                :components ((:file "utils")
-                             (:file "tursas")
-                             (:file "state0x88")
-                             (:file "tests")))))
+               (:file "core")
+               ;; (:module "t"
+               ;;  :serial t
+               ;;  :components ((:file "utils")
+               ;;               (:file "tursas")
+               ;;               (:file "state0x88")
+               ;;               (:file "tests")))
+               ))
