@@ -23,7 +23,7 @@
   :maintainer "Timo Myyrä <timo.myyra@iki.fi>"
   :description "Tursas"
   :long-description "a simple chess engine which uses XBoard protocol."
-  :licence "ISC license"
+  :license "ISC license"
   :depends-on (:cl-ppcre :alexandria :cl-utilities :fiveam)
   :serial t
   :components ((:module "utils"
