@@ -368,12 +368,12 @@
   "Toggles the value of given boolean game option."
   (set-option! option (not (get-option option))))
 
-(defun choose-move (state)
+(defun choose-move ()
   "Tell engine to choose an move in current game state."
   (multiple-value-bind (score best-state)
-      (funcall *search-fn* state)
+      (funcall *search-fn* (current-game-state))
     (declare (ignore score))
-    (concatenate 'string "move "
+    (concatenate 'string "usermove "
                  (move->coord (last-move best-state)))))
 
 (defun make-chess-move! (state s)
@@ -400,8 +400,9 @@ nil, otherwise returns t."
    State arg included to avoid user moves when game is not set."
   (if (null (make-chess-move! state s))
       (concatenate 'string "Illegal move: " s)
-      (if (game-end-p (current-game-state))
-          (game-result (current-game-state)))))
+      (when (game-end-p (current-game-state))
+        (set-option! :game-running nil)
+        (game-result (current-game-state)))))
 
 (defun undo-move! (&optional (n 1))
   "Undo last move or if N given, N last moves."
@@ -576,7 +577,7 @@ nil, otherwise returns t."
         ((scan "^gs$" cmd)
          (tursas-cmd "Can't calculate score from empty state." #'get-score))
         ((scan "^cp$" cmd)
-         (tursas-cmd "Can't make AI move on empty board!" #'make-ai-move!)
+         (tursas-cmd "Can't make AI move on empty board!" #'choose-move)
          (tursas-cmd "Can't print empty board!" #'display-board))
         ((scan "^es$" cmd)
          (tursas-cmd "Can't eval empty game state!" #'eval-current-state))
