@@ -24,13 +24,9 @@
   :description "Tursas"
   :long-description "a simple chess engine which uses XBoard protocol."
   :license "ISC license"
-  :depends-on (:cl-ppcre :alexandria :cl-utilities :fiveam)
+  :depends-on (:cl-ppcre :alexandria :cl-utilities :prove)
   :serial t
-  :components ((:module "utils"
-                :serial t
-                :components ((:file "package")
-                             (:file "utils")))
-               (:module "state0x88"
+  :components ((:module "state0x88"
                 :serial t
                 :components ((:file "package")
                              (:file "common0x88")
@@ -40,14 +36,11 @@
                              (:file "movegen0x88")
                              (:file "fen0x88")
                              (:file "state0x88")))
-               (:file "package")
-               (:file "protocols")
-               (:file "search")
+               (:file "utils")
                (:file "tursas")
-               (:module "tests"
+               (:module "t"
                 :serial t
-                :components ((:file "package")
-                             (:file "utils")
+                :components ((:file "utils")
                              (:file "tursas")
                              (:file "state0x88")
                              (:file "tests")))))
