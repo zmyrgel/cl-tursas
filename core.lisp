@@ -220,7 +220,7 @@
 
 (defun get-option (option)
   "Returns value of given game option"
-  (assoc option *game-options*))
+  (cdr (assoc option *game-options*)))
 
 (defun save-game ()
   "Saves the current game by writing game-state to file."
