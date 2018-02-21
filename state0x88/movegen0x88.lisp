@@ -323,8 +323,8 @@
            (error "invalid piece value!")))))
 
 (defun pseudo-moves (player state)
-  "Lists all pseudo-moves for player in state.
-   Note: moves generated can leave player in check, hence pseudo-moves."
+  "Function returns a list of all pseudo-moves for PLAYER in given STATE.
+   Pseudo moves can include moves which leave PLAYER in check."
   (loop for (index . piece) in (pmap-get state player)
         nconc (piece-moves (State0x88-board state) player index piece)))
 
