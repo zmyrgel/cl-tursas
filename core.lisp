@@ -206,6 +206,7 @@
                                (:debug . nil)
                                (:ponder . nil)
                                (:ponder-output . nil)
+                               (:game-running . nil)
                                (:white-fn . nil)
                                (:black-fn . nil)))
 
@@ -452,6 +453,7 @@ nil, otherwise returns t."
          nil)
         ((scan "^new$" cmd)
          (set-game! "startpos")
+         (set-option! :game-running t)
          (set-option! :ai-mode t)
          (set-option! :white-fn #'read-line)
          (set-option! :black-fn #'choose-move))
