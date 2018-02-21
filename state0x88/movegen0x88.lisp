@@ -158,12 +158,12 @@
         when (ray-to-pieces-p board index direction pieces) do
           (return t)))
 
-(defun threaten-by-king-p (board index opp)
-  "Can the piece in index on board be captured by opponents king.
+(defun threaten-by-king-p (board index opponent)
+  "Can the piece in INDEX on BOARD be captured by OPPONENTs king.
    Checks this by looking for a king within next squares and then
    checking if it can move to index and not be threatened instead."
   (multiple-value-bind (player king opp-king)
-      (if (= opp +white+)
+      (if (= opponent +white+)
           (values +black+ +black-king+ +white-king+)
           (values +white+ +white-king+ +black-king+))
     (let ((opp-king-idx (king-index board opp)))
