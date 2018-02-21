@@ -166,7 +166,7 @@
       (if (= opponent +white+)
           (values +black+ +black-king+ +white-king+)
           (values +white+ +white-king+ +black-king+))
-    (let ((opp-king-idx (king-index board opp)))
+    (let ((opp-king-idx (king-index board opponent)))
       (when (loop for move in +king-movement+
                   when (= opp-king-idx (+ index move)) do
                     (return t))
