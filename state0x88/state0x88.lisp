@@ -310,7 +310,7 @@
                    piece
                    0))))
 
-(defmethod perft (state (depth integer))
+(defmethod perft ((state State0x88) (depth integer))
   (if (zerop depth)
       1
       (apply #'+ (mapcar (lambda (st)
