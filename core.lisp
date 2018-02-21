@@ -413,9 +413,10 @@ nil, otherwise returns t."
   (loop for (key . value) in +cecp-supported-features+
         collect (format nil "feature ~a=~a" key value)))
 
+;; TODO: actually implement logic to accept or rejectf draw offers
 (defun cecp-draw (state)
   "Offer draw to opponent."
-  (when (get-option 'ai-mode)
+  (when (get-option :ai-mode)
     (concatenate 'string "1/2-1/2 {" (if (eq (turn state) :white)
                                          "WHITE"
                                          "BLACK")
