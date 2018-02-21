@@ -591,11 +591,25 @@ nil, otherwise returns t."
 
 (defun poll-command ()
   "Polls command to process."
-  (cond ((eq (turn state) :white)
+  (cond ((eq (turn (current-game-state)) :white)
          (funcall (get-option :white-fn)))
-        ((eq (turn state) :black)
+        ((eq (turn (current-game-state)) :black)
          (funcall (get-option :black-fn)))
         (t (read-line))))
+
+(defun init-engine ()
+  "Function resets engine variables to default values."
+  (setf *protocol* 'general)
+  (setf *game-state* nil)
+  (setf *game-options* (copy-tree '((:depth-limit . 4)
+                                    (:ai-mode . nil)
+                                    (:cecp-protocol-version . 2)
+                                    (:debug . nil)
+                                    (:ponder . nil)
+                                    (:ponder-output . nil)
+                                    (:game-running . nil)
+                                    (:white-fn . nil)
+                                    (:black-fn . nil)))))
 
 (defun main (&rest args)
   "Starts the engine repl for input handling."
@@ -603,8 +617,11 @@ nil, otherwise returns t."
   (format t "~{~a~%~}"
           '("# Welcome to Tursas Chess Engine!"
             "# Type 'help' to get list of supported commands"))
+  (init-engine)
   (loop for command = (read-line)
-          then (poll-command)
+          then (if (get-option :game-running)
+                   (poll-command)
+                   (read-line))
         until (string= command "quit")
         do (let ((output (process-command command)))
              (typecase output
