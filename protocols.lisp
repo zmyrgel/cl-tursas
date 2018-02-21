@@ -1,3 +1,6 @@
+;;;; protocols lists generic functions available when working with
+;;;; different chess board representations.
+
 (in-package :tursas)
 
 ;; Move protocol
