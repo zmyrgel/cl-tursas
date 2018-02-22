@@ -1,7 +1,7 @@
 ;;;; global tursas engine definitions
 (in-package :cl-user)
 (defpackage tursas.core
-  (:documentation "Main package of Tursas.")
+  (:documentation "Core of Tursas chess engine.")
   (:use :cl)
   (:import-from :tursas.utils
    :valid-coord-p :split-move :coordinate-string-p
