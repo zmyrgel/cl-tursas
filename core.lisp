@@ -254,13 +254,6 @@
                (f children (first children) alpha (1- depth))
                (f nil nil (funcall (the function eval-fn) state) 0))))))
 
-(defparameter *search-fn*
-  (lambda (state)
-    (alpha-beta most-negative-fixnum most-positive-fixnum (get-option :depth-limit) #'evaluate state)))
-(defparameter *shallow-search-fn*
-  (lambda (state)
-    (alpha-beta most-negative-fixnum most-positive-fixnum 2 #'evaluate state)))
-
 (defun load-game ()
   "Loads the game-state from file to resume the previous game."
   (with-open-file (stream "saved-game.txt")
@@ -316,7 +309,7 @@
 (defun get-score (state)
   "Calculates state's score by checking child states
    to certain depth using alpha-beta algorithm."
-  (funcall *search-fn* state))
+  (alpha-beta most-negative-fixnum most-positive-fixnum (get-option :search-depth) #'evaluate state))
 
 (defun eval-current-state (state)
   "Evaluates the current state and returns its score."
@@ -325,7 +318,7 @@
 (defun get-hint (state)
   "Evaluates all states and chooses one from top five moves at random."
   (multiple-value-bind (score best-state)
-      (funcall *shallow-search-fn* state)
+      (alpha-beta most-negative-fixnum most-positive-fixnum 2 #'evaluate state)
     (declare (ignore score))
     (move->coord (last-move best-state))))
 
@@ -376,7 +369,7 @@
 (defun choose-move (state)
   "Tell engine to choose an best state it can from current game state."
   (multiple-value-bind (score best-state)
-      (funcall *search-fn* state)
+      (alpha-beta most-negative-fixnum most-positive-fixnum (get-option :search-depth) #'evaluate state)
     (declare (ignore score))
     (move->coord (last-move best-state))))
 
