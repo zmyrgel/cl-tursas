@@ -112,7 +112,7 @@
  -+----------------
   | a b c d e f g h"
   (with-output-to-string (s)
-    (loop for row in (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8)
+    (loop for rank in (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8)
           for n from 8 downto 1
-          do (format s "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space row)))))
+          do (format s "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space rank)))))
     (format s "~{~a~%~}" (list  "-+----------------"  "| a b c d e f g h"))))

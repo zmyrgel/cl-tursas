@@ -51,7 +51,7 @@
 
 (defun fen-board-parse (fen-string)
   "Utility function to help in converting given FEN-STRING to 0x88 board."
-  (loop for row in (reverse
+  (loop for rank in (reverse
                     (split-sequence
                      #\/
                      (loop for c across fen-string
@@ -59,7 +59,7 @@
                              nconc (make-list (digit-char-p c) :initial-element #\E)
                            else
                              collect c)))
-        nconc (nconc row (make-list 8 :initial-element #\E))))
+        nconc (nconc rank (make-list 8 :initial-element #\E))))
 
 (defun fen-board->0x88board (fen-board)
   "Converts FEN-BOARD string to a 0x88 board representation."
@@ -69,11 +69,11 @@
         do (fill-square! board index (piece-value piece))
         finally (return board)))
 
-(defun make-fen-row (board row)
+(defun make-fen-row (board rank)
   "Builds single fen row from given board and row index."
   (concatenate 'string
                (compact-item #\E (loop for n below 8
-                                       collect (piece-name (board-ref board (+ row n)))))))
+                                       collect (piece-name (board-ref board (+ rank n)))))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."

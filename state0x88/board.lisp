@@ -9,10 +9,10 @@
                  opponent
                  promotionp
                  board-index-p
-                 column
-                 row
-                 same-column-p
-                 same-row-p
+                 file
+                 rank
+                 same-file-p
+                 same-rank-p
                  square-color
                  same-color-p
                  board-occupied-p
@@ -56,9 +56,9 @@
 (defun promotionp (piece move)
   "Checks if given move is pawn promotion."
   (or (and (= piece +white-pawn+)
-           (= (row (Move0x88-to move)) 7))
+           (= (rank (Move0x88-to move)) 7))
       (and (= piece +black-pawn+)
-           (= (row (Move0x88-to move)) 0))))
+           (= (rank (Move0x88-to move)) 0))))
 
 (defun piece-name (piece)
   "Gives piece character representation from its board value."
@@ -101,23 +101,23 @@
   "Checks if given index on board is empty."
   (zerop (board-ref board index)))
 
-(defun column (index)
-  "Get the board column of the given square index.
-   Columns start at 0 and go up to 7."
+(defun file (index)
+  "Get the board file of the given square INDEX.
+   Files start at 0 and go up to 7."
   (logand index 7))
 
-(defun row (index)
-  "Get the board row of the given square index.
-   Rows start at 0 and they go up to 7."
+(defun rank (index)
+  "Get the board rank of the given square INDEX.
+   Ranks start at 0 and they go up to 7."
   (ash index -4))
 
-(defun same-column-p (x y)
-  "Determines if both given square indexes x and x are on the same column."
-  (= (column x) (column y)))
+(defun same-file-p (x y)
+  "Determines if both given square indexes x and x are on the same file."
+  (= (file x) (file y)))
 
-(defun same-row-p (x y)
-  "Determines if both given square indexes x and y are on the same row."
-  (= (row x) (row y)))
+(defun same-rank-p (x y)
+  "Determines if both given square indexes x and y are on the same rank."
+  (= (rank x) (rank y)))
 
 (defun square-color (sq)
   "Returns the color of given square."

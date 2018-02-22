@@ -26,8 +26,8 @@
     "Utility to make full 0x88 vector board out of score list"
     (make-array 128
                 :element-type 'board-value
-                :initial-contents (loop for row in (group score-list 8)
-                                        append (append row (make-list 8 :initial-element 0))))))
+                :initial-contents (loop for rank in (group score-list 8)
+                                        append (append rank (make-list 8 :initial-element 0))))))
 
 (define-constant +white-pawn-table+
     (make-table '(0   0   0   0   0   0   0   0

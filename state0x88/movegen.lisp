@@ -79,7 +79,7 @@
       (if (= player +white+)
           (values +white-rook+ +white-king+ '(#x00 #x07) '(#x03 #x05))
           (values +black-rook+ +black-king+ '(#x70 #x77) '(#x73 #x75)))
-    (let ((castling-side (if (= (column (Move0x88-to move)) 2)
+    (let ((castling-side (if (= (file (Move0x88-to move)) 2)
                              #'first
                              #'second)))
       (remove-piece! state (Move0x88-from move))
@@ -247,10 +247,10 @@
    Needed to handle promotions."
   (make-move from to
              (cond ((and (= player +white+)
-                         (= (row to) #x70))
+                         (= (rank to) #x70))
                     +white-queen+)
                    ((and (= player +black+)
-                         (= (row to) #x00))
+                         (= (rank to) #x00))
                     +black-queen+)
                    (t 0))))
 
@@ -264,9 +264,9 @@
       (if (and (board-index-p (+ move-index dir))
                (empty-square-p board (+ move-index dir))
                (or (and (= player +white+)
-                        (same-row-p index #x10))
+                        (same-rank-p index #x10))
                    (and (= player +black+)
-                        (same-row-p index #x60))))
+                        (same-rank-p index #x60))))
           (list (make-pawn-move player index move-index)
                 (make-pawn-move player index (+ move-index dir)))
           (list (make-pawn-move player index move-index))))))
