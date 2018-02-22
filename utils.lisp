@@ -1,10 +1,6 @@
-;;;; utils provide generic utilities used by tursas chess
-;;;; engine. Utilities are not specific to any chess board
-;;;; representation.
-
 (in-package :cl-user)
 (defpackage tursas.utils
-  (:documentation "Utilities used by Tursas.")
+  (:documentation "provide generic utilities used by tursas chess engine. Utilities are not specific to any chess board representation.")
   (:use :cl)
   (:import-from :alexandria :define-constant :when-let)
   (:import-from :cl-utilities :split-sequence)
