@@ -207,8 +207,8 @@
                                (:ponder . nil)
                                (:ponder-output . nil)
                                (:game-running . nil)
-                               (:white-fn . nil)
-                               (:black-fn . nil)))
+                               (:white-player . nil)
+                               (:black-player . nil)))
 
 (defun current-game-state ()
   "Utility to return current game state or nil."
@@ -360,13 +360,25 @@
   "Toggles the value of given boolean game option."
   (set-option! option (not (get-option option))))
 
-(defun choose-move ()
-  "Tell engine to choose an move in current game state."
+(defun current-player-type ()
+  "Returns the type of player whose turn it is."
+  (let ((current-player (turn (current-game-state))))
+    (if (eq current-player :white)
+        (get-option :white-player)
+        (get-option :black-player))))
+
+(defun make-ai-move! (state)
+  "Function instructs chess engine to choose move for active player."
+  (let ((move (choose-move state)))
+    (process-command move)
+    (concatenate 'string "move " move)))
+
+(defun choose-move (state)
+  "Tell engine to choose an best state it can from current game state."
   (multiple-value-bind (score best-state)
-      (funcall *search-fn* (current-game-state))
+      (funcall *search-fn* state)
     (declare (ignore score))
-    (concatenate 'string "usermove "
-                 (move->coord (last-move best-state)))))
+    (move->coord (last-move best-state))))
 
 (defun make-chess-move! (state s)
   "Apply given chess move S to game STATE. If move is invalid return
@@ -387,9 +399,12 @@ nil, otherwise returns t."
     (:mate-for-white "1-0 {White mates}")
     (otherwise nil)))
 
-(defun user-move (state s)
+(defun apply-chess-move (state s)
   "Helper function to handle chess moves.
    State arg included to avoid user moves when game is not set."
+  ;; TODO: stop the opponent's clock
+  ;; start the engine's clock, start
+  ;; thinking, and eventually make a move.
   (if (null (make-chess-move! state s))
       (concatenate 'string "Illegal move: " s)
       (when (game-end-p (current-game-state))
@@ -405,7 +420,7 @@ nil, otherwise returns t."
   (loop for (key . value) in +cecp-supported-features+
         collect (format nil "feature ~a=~a" key value)))
 
-;; TODO: actually implement logic to accept or rejectf draw offers
+;; TODO: actually implement logic to accept or reject draw offers
 (defun cecp-draw (state)
   "Offer draw to opponent."
   (when (get-option :ai-mode)
@@ -604,8 +619,8 @@ nil, otherwise returns t."
                                     (:ponder . nil)
                                     (:ponder-output . nil)
                                     (:game-running . nil)
-                                    (:white-fn . nil)
-                                    (:black-fn . nil)))))
+                                    (:white-player . nil)
+                                    (:black-player . nil)))))
 
 (defun main (&rest args)
   "Starts the engine repl for input handling."
@@ -614,12 +629,15 @@ nil, otherwise returns t."
           '("# Welcome to Tursas Chess Engine!"
             "# Type 'help' to get list of supported commands"))
   (init-engine)
-  (loop for command = (read-line)
-          then (if (get-option :game-running)
-                   (poll-command)
+  (loop for ai-turn = (ai-turn-p)
+        for command = (read-line)
+          then (if ai-turn
+                   (make-ai-move! (current-game-state))
                    (read-line))
         until (string= command "quit")
-        do (let ((output (process-command command)))
+        do (let ((output (if ai-turn
+                             command
+                             (process-command command))))
              (typecase output
                (list (format t "~{~a~%~}" output))
                (string (format t "~a~%" output))
