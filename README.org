@@ -133,12 +133,13 @@
 
 * Known issues
 
-** Perft calculation is incorrect
-** AI promotes always to queen
-** Can't switch players, AI is always black
-** Unoptimized code paths so slow move generation
-** Move generation doesn't check for leaving game to check if threatening a
-   another piece
+  The engine has few known issues that I'll try to sort out in due time:
+
+- Perft calculation is incorrect
+- AI promotes always to queen
+- Can't switch players, AI is always black
+- Unoptimized code paths so slow move generation
+- Move generation doesn't check for leaving game to check if threatening a another piece
 
 * License
 
