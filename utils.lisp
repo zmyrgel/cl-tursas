@@ -24,9 +24,10 @@
 (defun split-move (algebraic)
   "Partitions chess move given in coordinate notation to pair of coordinates
    and possible promotion character."
-  (values (subseq algebraic 0 2)
-          (subseq algebraic 2 4)
-          (subseq algebraic 4)))
+  (and (<= 4 (length algebraic) 5)
+       (values (subseq algebraic 0 2)
+               (subseq algebraic 2 4)
+               (subseq algebraic 4))))
 
 (defun coordinate-string-p (s)
   "Predicate to detect valid move strings in
