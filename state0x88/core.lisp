@@ -46,7 +46,7 @@
            +white-queen+)
           ((and (zerop piece) (= player +black+))
            +black-queen+)
-          ((= player white)
+          ((= player +white+)
            (- piece))
           (t
            piece))))
