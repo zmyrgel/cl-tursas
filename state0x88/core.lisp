@@ -255,8 +255,12 @@
   (= (the bit (board-ref (State0x88-board state) +check-store+)) 1))
 
 (defmethod matep ((state State0x88))
-  (and (checkp state)
-       (null (legal-states state))))
+  ;; a bit weird to say to say game is in check-mate when checkp
+  ;; function returns nil but this can happend when generating state
+  ;; from fen string and current player is in check/mate. To fix such
+  ;; situation and the test here to `or' instead of `and'.
+  (or (checkp state)
+      (null (legal-states state))))
 
 (defmethod drawp ((state State0x88))
   (or (fifty-move-rule-p state)
@@ -337,6 +341,9 @@
 (defmethod game-score ((state State0x88))
   (end-score state))
 
+;; XXX: fails if given FEN string is already in check/mate situation
+;; for current player.
+;; then check bit won't get added
 (defun fen->state (fen)
   "Convert given FEN to state representation."
   (update-opponent-check (parse-fen fen (make-State0x88))))

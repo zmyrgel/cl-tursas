@@ -115,4 +115,4 @@
     (loop for rank in (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8)
           for n from 8 downto 1
           do (format s "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space rank)))))
-    (format s "~{~a~%~}" (list  "-+----------------"  "| a b c d e f g h"))))
+    (format s "~{~a~%~}" (list  "-+---------------"  "| a b c d e f g h"))))

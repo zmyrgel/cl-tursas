@@ -35,8 +35,9 @@
                              (:file "fen")
                              (:file "core")))
                (:file "core")
-               ;; (:module "t"
-               ;;  :serial t
-               ;;  :components ((:file "utils")
-               ;;               (:file "state0x88")))
-               ))
+               (:module "t"
+                :serial t
+                :components ((:file "utils")
+                             (:file "state0x88"))))
+  :perform (test-op (op c) (symbol-call :prove-asdf :run-test-system c))
+  )
