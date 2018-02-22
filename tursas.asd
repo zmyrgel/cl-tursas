@@ -41,7 +41,5 @@
                ;; (:module "t"
                ;;  :serial t
                ;;  :components ((:file "utils")
-               ;;               (:file "tursas")
-               ;;               (:file "state0x88")
-               ;;               (:file "tests")))
+               ;;               (:file "state0x88")))
                ))
