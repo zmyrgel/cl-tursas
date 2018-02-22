@@ -1,7 +1,7 @@
 * CL-Tursas
 
   CL-Tursas is port of my Clojure chess engine to Common Lisp. This is my first
-  project using Common Lisp so some questionable design choices might be present
+  project using Common Lisp so some questionable design choices might be found
   in the code. The engine shows its Clojure roots but its slowly being converted
   to more idiomatic Common Lisp code.
 
@@ -14,10 +14,7 @@
   planning to add full XBoard protocol support to Tursas eventually.
 
   The engine itself uses alphabeta algorithm to search moves and uses 0x88 as
-  board representation. The move generation is still problematic as it generates
-  all the moves eagerly instead of using laziness. Laziness would help making
-  few constructs easier in the code but I haven't yet figured out a way to get
-  to work in a good way.
+  board representation.
 
 * ChangeLog:
 
@@ -47,9 +44,7 @@
     - Add option to choose sides and have 2 human players
 
   Version 0.4
-    - Iterative deepening
-    - Quiescence search
-    - Repetition rule for draws and making AI avoid it
+    - Time controls
 
   Version 0.5
     - NPS command
@@ -62,10 +57,12 @@
     - AI Pondering mode
 
   Version 0.8
-    - Time controls
+    - Core/Mem limits for engine
+    - Repetition rule for draws and making AI avoid it
 
   Version 0.9
-    - Core/Mem limits for engine
+    - Iterative deepening
+    - Quiescence search
 
   Version 1.0
     - Type declarations and optimizations
