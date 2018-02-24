@@ -77,11 +77,17 @@
 * Installation
 
   The Tursas can be installed by following.
-  - Checkout the code and change to cl-tursas
-  - run command: sbcl --eval "(asdf:operate 'asdf:load-op 'tursas)"
-  - (sb-ext:save-lisp-and-die :toplevel #'tursas.main :executable t)
+  - Checkout the code:
+    git checkout https://github.com/zmyrgel/cl-tursas.git
+  - change current directory to cl-tursas
+    cd cl-tursas
+  - load and compile tursas with SBCL:
+    sbcl --eval "(asdf:operate 'asdf:load-op 'tursas)"
+  - Use SBCL REPL to dump executable file:
+    (sb-ext:save-lisp-and-die "tursas" :toplevel #'tursas.core:main :executable t)
 
-  The above commands will compile the code and dump executable core file.
+  The above commands will compile the code and dump executable core file named
+  tursas to cl-tursas directory.
 
 * Running
 
