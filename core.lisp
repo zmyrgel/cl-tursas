@@ -163,7 +163,7 @@
       "variant VARIANT - change to use VARIANT rules. Only 'normal' supported"
       "force - Disable engine AI"
       "go - Enable engine AI"
-      "playother - Tell AI to switch sides"
+      "playother - Tell engine to switch sides"
       ;;"level MPS BASE INC - set time controls"
       ;;"st TIME - set time controls"
       "sd DEPTH - set search depth to DEPTH"
