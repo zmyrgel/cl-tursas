@@ -21,11 +21,19 @@
   I'll try to update here the major points in each version of the chess
   engine. For detailed list check the [[https://github.com/zmyrgel/cl-tursas/commits/][commits]].
 
+*** Version 0.3
+
+    - Converted the code to a more idiomatic Common Lisp style
+    - Switched to using Prove for unit tests and fixed the tests
+    - Added playother option to switch sides
+
 *** Version 0.2
+
     - Added some unit tests, more to come
-    - Error detection in game repl via cl-ppcre
+    - Added more error detection in game repl via cl-ppcre
 
 *** Version 0.1
+
     - Subset of Chess Engine Communication Protocol implemented so engine can be played.
     - Working alphabeta algorithm
     - Game state representation with 0x88 board
@@ -38,13 +46,9 @@
   I'm not planning to blindly follow these but I think it gives nice rough
   idea what to except and in what point.
 
-  Version 0.3
-    - Convert rest of the code to more idiomatic Common Lisp
-    - Switch to using Prove for unit tests and fix tests
-    - Add option to choose sides and have 2 human players
-
   Version 0.4
     - Time controls
+    - Core/Mem limits for engine
 
   Version 0.5
     - NPS command
@@ -57,7 +61,6 @@
     - AI Pondering mode
 
   Version 0.8
-    - Core/Mem limits for engine
     - Repetition rule for draws and making AI avoid it
 
   Version 0.9

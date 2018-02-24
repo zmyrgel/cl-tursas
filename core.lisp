@@ -139,7 +139,7 @@
       (sigterm . 0)
       (reuse . 0)
       (analyse . 0)
-      (myname . "\"Tursas 0.2\"")
+      (myname . "\"Tursas 0.3\"")
       (variants . "\"normal\"")
       (colors . 0)
       (ics . 0)
