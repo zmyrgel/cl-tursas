@@ -21,7 +21,7 @@
           (setf (fill-pointer seq) (read-sequence seq stream))
           seq)))
   :license "ISC license"
-  :depends-on (:cl-ppcre :alexandria :cl-utilities :prove)
+  :depends-on (:cl-ppcre :alexandria :cl-utilities :prove :unix-opts)
   :serial t
   :components ((:file "utils")
                (:module "state0x88"
@@ -39,5 +39,4 @@
                 :serial t
                 :components ((:file "utils")
                              (:file "state0x88"))))
-  :perform (test-op (op c) (symbol-call :prove-asdf :run-test-system c))
-  )
+  :perform (test-op (op c) (symbol-call :prove-asdf :run-test-system c)))
