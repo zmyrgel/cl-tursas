@@ -229,13 +229,6 @@
   "Returns value of given game option"
   (cdr (assoc option *game-options*)))
 
-(defun save-game ()
-  "Saves the current game by writing game-state to file."
-  (with-open-file (s "saved-game.txt" :direction :output :if-exists :supersede)
-    (with-standard-io-syntax
-      (princ *game-state* s))
-    nil))
-
 (defun alpha-beta (alpha beta depth eval-fn state)
   "Find the best state, from initial state by searching to given depth
    and backing up values using cutoff whenever possible.
@@ -253,13 +246,22 @@
                (f children (first children) alpha (1- depth))
                (f nil nil (funcall eval-fn state) 0))))))
 
+(defun save-game ()
+  "Saves the current game by writing game-state to file."
+  (with-open-file (s "saved-game.txt" :direction :output :if-exists :supersede)
+    (with-standard-io-syntax
+      (princ *game-state* s))
+    nil))
+
 (defun load-game ()
   "Loads the game-state from file to resume the previous game."
-  (with-open-file (stream "saved-game.txt")
+  (with-open-file (stream "saved-game.txt" :if-does-not-exist nil)
     (with-standard-io-syntax
-      (loop for form = (read stream nil 'eof)
-            until (eq form 'eof)
-            do (setf *game-state* form)))))
+      (if (null stream)
+          "failed to load game, no file found!"
+          (loop for form = (read stream nil 'eof)
+                until (eq form 'eof)
+                do (setf *game-state* form))))))
 
 (defun get-protocol ()
   "Returns currently active reader protocol"
