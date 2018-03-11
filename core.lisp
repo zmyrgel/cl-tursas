@@ -672,10 +672,6 @@ nil, otherwise returns t."
 
 (defun run-engine ()
   "Run the chess engine."
-  (format t "~{~a~%~}"
-          '("# Welcome to Tursas Chess Engine!"
-            "# Type 'help' to get list of supported commands"))
-  (init-engine)
   (loop for ai-turn = (ai-turn-p)
         for command = (read-line)
           then (if ai-turn
@@ -707,4 +703,16 @@ nil, otherwise returns t."
       (opts:get-opts)
     (when (getf options :debug)
       (setf *debug-file* (getf options :debug))))
-  (run-engine))
+  (format t "~{~a~%~}"
+          '("# Welcome to Tursas Chess Engine!"
+            "# Type 'help' to get list of supported commands"))
+  (init-engine)
+  (handler-case
+      (run-engine)
+    (#+sbcl sb-sys:interactive-interrupt
+     #+ccl  ccl:interrupt-signal-condition
+     #+clisp system::simple-interrupt-condition
+     #+ecl ext:interactive-interrupt
+     #+allegro excl:interrupt-signal
+     ()
+      (run-engine))))
