@@ -409,8 +409,9 @@ nil, otherwise returns t."
 
 (defun list-cecp-supported-features ()
   "Prints the default features of the engine."
-  (loop for (key . value) in +cecp-supported-features+
-        collect (format nil "feature ~a=~a" key value)))
+  (format nil "feature ~{~a ~}~%"
+          (loop for (key . value) in +cecp-supported-features+
+                collect (format nil "~a=~a" (string-downcase key) value))))
 
 ;; TODO: actually implement logic to accept or reject draw offers
 (defun cecp-draw (state)
