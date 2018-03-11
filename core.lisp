@@ -422,6 +422,14 @@ nil, otherwise returns t."
                                          "BLACK")
                  " offered a draw!}")))
 
+(defun cecp-accept-feature (feature)
+  "Instructs the engine that given FEATURE is accepted."
+  t)
+
+(defun cecp-reject-feature (feature)
+  "Instructs the engine that given FEATURE is rejected."
+  t)
+
 (defun cecp-parse-option (option)
   "Wrapper to parse options from string and set them."
   (destructuring-bind (key &optional value)
@@ -447,10 +455,12 @@ nil, otherwise returns t."
              ("^protover\\s(\\d)$" cmd)
            (set-option! :cecp-protocol-version arg)
            (list-cecp-supported-features)))
-        ((string= "accepted" cmd)
-         nil)
-        ((string= "rejected" cmd)
-         nil)
+        ((register-groups-bind (feature)
+             ("^accepted\\s(\\w+)$" cmd)
+           (cecp-accept-feature feature)))
+        ((register-groups-bind (feature)
+             ("^rejected\\s(\\w+)$" cmd)
+           (cecp-reject-feature feature)))
         ((string= "random" cmd)
          nil)
         ((string= "new" cmd)
