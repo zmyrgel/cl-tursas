@@ -200,7 +200,9 @@
       "option NAME[=VALUE] - tell engine to use new option")
   :test 'equal)
 
-(defparameter *debug-file* nil)
+(defvar *debug-output* nil)
+(defvar *engine-output* nil)
+(defvar *engine-input* nil)
 
 (defparameter *protocol* 'general)
 (defparameter *game-state* nil)
@@ -686,58 +688,49 @@ nil, otherwise returns t."
                                     (:white-player . nil)
                                     (:black-player . nil)))))
 
-(defun write-debug (message)
-  "Writes debug MESSAGE to debug file."
-  (when *debug-file*
-    (with-open-file (str *debug-file*
-                       :direction :output
-                       :if-exists :append
-                       :if-does-not-exist :create)
-    (format str "~a~%" message))))
-
 (defun run-engine ()
   "Run the chess engine."
   (loop for ai-turn = (ai-turn-p)
-        for command = (read-line)
+        for command = (read-line *engine-input*)
           then (if ai-turn
                    (make-ai-move! (current-game-state))
-                   (read-line))
+                   (read-line *engine-input*))
         until (string= command "quit")
         do (progn
-             (write-debug (format nil "INPUT: ~a~%" command))
-             (let ((output (if ai-turn
+             (format *debug-output* "INPUT: ~a~%" command)
+             (let ((result (if ai-turn
                                command
                                (process-command command))))
-               (write-debug (format nil "OUTPUT: ~a~%" output))
-               (typecase output
-                 (list (format t "~{~a~%~}" output))
-                 (string (format t "~a~%" output))
-                 (number (format t "~a~%" output)))))))
+               ;; skip printing on boolean values
+               (typecase result
+                 (list (format *engine-output* "~{~a~%~}" result))
+                 (string (format *engine-output* "~a~%" result))
+                 (number (format *engine-output* "~a~%" result)))))))
 
 (defun main (&rest args)
   "Starts the engine repl for input handling."
   (declare (ignore args))
-  (opts:define-opts
-  (:name :debug
-   :description "output debug information to file FILE"
-   :short #\d
-   :long "debug"
-   :arg-parser #'identity
-   :meta-var "FILE"))
-  (multiple-value-bind (options free-args)
-      (opts:get-opts)
-    (when (getf options :debug)
-      (setf *debug-file* (getf options :debug))))
   (format t "~{~a~%~}"
           '("# Welcome to Tursas Chess Engine!"
             "# Type 'help' to get list of supported commands"))
-  (init-engine)
-  (handler-case
-      (run-engine)
-    (#+sbcl sb-sys:interactive-interrupt
-     #+ccl  ccl:interrupt-signal-condition
-     #+clisp system::simple-interrupt-condition
-     #+ecl ext:interactive-interrupt
-     #+allegro excl:interrupt-signal
-     ()
-      (run-engine))))
+  (opts:define-opts
+      (:name :debug
+       :description "output debug information to file FILE"
+       :short #\d
+       :long "debug"
+       :arg-parser #'identity
+       :meta-var "FILE"))
+  (multiple-value-bind (options free-args)
+      (opts:get-opts)
+    (init-engine options))
+  (unwind-protect
+       (handler-case
+           (run-engine)
+         (#+sbcl sb-sys:interactive-interrupt
+          #+ccl  ccl:interrupt-signal-condition
+          #+clisp system::simple-interrupt-condition
+          #+ecl ext:interactive-interrupt
+          #+allegro excl:interrupt-signal
+          ()
+           (run-engine)))
+    (close *debug-output*)))
