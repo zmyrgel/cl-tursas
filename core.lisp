@@ -3,6 +3,8 @@
 (defpackage tursas.core
   (:documentation "Core of Tursas chess engine.")
   (:use :cl)
+  (:import-from :uiop/utility
+   :strcat)
   (:import-from :tursas.utils
    :valid-coord-p :split-move :coordinate-string-p
    :san-string-p :move-string-p :fen->ascii
@@ -274,7 +276,7 @@
 (defun tursas-cmd (msg f &rest args)
   "Wrapper for commands which use current game state."
   (if (null (current-game-state))
-      (concatenate 'string "Error (" msg ")")
+      (strcat "Error (" msg ")")
       (apply f (current-game-state) args)))
 
 (defun add-game-state! (new-state)
@@ -284,16 +286,16 @@
 
 (defun display-board (state)
   "Displays the current chess board in ASCII."
-  (concatenate 'string
-               (fen->ascii (state->fen state))
-               (if (eq (turn state) :white) "  WHITE" "  BLACK")
-               " TO MOVE"
-               (cond ((matep state) (if (eq (turn state) :white)
-                                        ", WHITE IN MATE!"
-                                        ", BLACK IN MATE!"))
-                     ((checkp state) (if (eq (turn state) :white)
-                                         ", WHITE IN CHECK!"
-                                         ", BLACK IN CHECK!")))))
+  (strcat
+   (fen->ascii (state->fen state))
+   (if (eq (turn state) :white) "  WHITE" "  BLACK")
+   " TO MOVE"
+   (cond ((matep state) (if (eq (turn state) :white)
+                            ", WHITE IN MATE!"
+                            ", BLACK IN MATE!"))
+         ((checkp state) (if (eq (turn state) :white)
+                             ", WHITE IN CHECK!"
+                             ", BLACK IN CHECK!")))))
 
 (defun display-fen (state)
   "Display FEN of currect game state."
@@ -314,7 +316,7 @@
 
 (defun eval-current-state (state)
   "Evaluates the current state and returns its score."
-  (concatenate 'string (evaluate state)))
+  (strcat (evaluate state)))
 
 (defun get-hint (state)
   "Evaluates all states and chooses one from top five moves at random."
@@ -348,7 +350,7 @@
                         (t (when (fenp s)
                              s)))))
       (add-game-state! (fen->state fen))
-      (concatenate 'string "Error (Invalid setboard command): " s))))
+      (strcat "Error (Invalid setboard command): " s))))
 
 (defun toggle-option! (option)
   "Toggles the value of given boolean game option."
@@ -365,7 +367,7 @@
   "Function instructs chess engine to choose move for active player."
   (let ((move (choose-move state)))
     (process-command move)
-    (concatenate 'string "move " move)))
+    (strcat "move " move)))
 
 (defun choose-move (state)
   "Tell engine to choose an best state it can from current game state."
@@ -400,7 +402,7 @@ nil, otherwise returns t."
   ;; start the engine's clock, start
   ;; thinking, and eventually make a move.
   (if (null (make-chess-move! state s))
-      (concatenate 'string "Illegal move: " s)
+      (strcat "Illegal move: " s)
       (when (game-end-p (current-game-state))
         (set-option! :game-running nil)
         (game-result (current-game-state)))))
@@ -419,7 +421,7 @@ nil, otherwise returns t."
 (defun cecp-draw (state)
   "Offer draw to opponent."
   (when (get-option :ai-mode)
-    (concatenate 'string "1/2-1/2 {" (if (eq (turn state) :white)
+    (strcat "1/2-1/2 {" (if (eq (turn state) :white)
                                          "WHITE"
                                          "BLACK")
                  " offered a draw!}")))
@@ -440,12 +442,12 @@ nil, otherwise returns t."
 
 (defun unsupported-command (cmd)
   "Utility to return error message for unsupported commands."
-  (concatenate 'string "Error (Unsupported command): " cmd))
+  (strcat "Error (Unsupported command): " cmd))
 
 (defun set-variant (variant)
   (if (string= variant "normal")
       (set-option! :variant "normal")
-      (concatenate 'string "Error (unsupported variant given): " variant)))
+      (strcat "Error (unsupported variant given): " variant)))
 
 (defun user-move-p (s)
   "Predicate to check if given string S represents user move."
@@ -546,7 +548,7 @@ nil, otherwise returns t."
         ((string= "?" cmd) (unsupported-command cmd))
         ((register-groups-bind ((#'parse-integer arg))
              ("^ping\\s(\\d+)$" cmd)
-           (concatenate 'string "pong " (write-to-string arg))))
+           (strcat "pong " (write-to-string arg))))
         ((string= "draw" cmd)
          (tursas-cmd "Can't offer draw to empty board!" #'cecp-draw))
         ((register-groups-bind (comment)
@@ -597,7 +599,7 @@ nil, otherwise returns t."
              ("^option\\s\\w=\".+\"|\\d+$" cmd)
            (cecp-parse-option args)))
         (t
-         (concatenate 'string "Error (Invalid command): " cmd))))
+         (strcat "Error (Invalid command): " cmd))))
 
 (defun usage ()
   "Prints the available commands of the repl."
@@ -650,15 +652,23 @@ nil, otherwise returns t."
         ((eq (get-protocol) :cecp)
          (process-cecp-command cmd))
         (t
-         (concatenate 'string "Error (Invalid command): " cmd))))
+         (strcat "Error (Invalid command): " cmd))))
 
 (defun ai-turn-p ()
   "Predicate to check if its engines turn to make move."
   (and (get-option :game-running)
        (eq (current-player-type) :ai)))
 
-(defun init-engine ()
-  "Function resets engine variables to default values."
+(defun init-engine (options)
+  "Function sets engine variables to correct values based on given OPTIONS."
+  (if-let ((debug-filepath (getf options :debug)))
+    (setf *debug-output* (open debug-filepath :direction :output :if-exists :supersede))
+    (setf *debug-output* (make-broadcast-stream)))
+  (setf *engine-output* (make-broadcast-stream
+                         *debug-output*
+                         (make-synonym-stream '*standard-output*)))
+  (setf *engine-input* (make-synonym-stream '*standard-input*))
+
   (setf *protocol* 'general)
   (setf *game-state* nil)
   (setf *game-options* (copy-tree '((:search-depth . 0)
