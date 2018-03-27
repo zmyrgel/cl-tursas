@@ -140,7 +140,7 @@
       (sigint . 0)
       (sigterm . 0)
       (reuse . 0)
-      (analyse . 0)
+      (analyze . 0)
       (myname . "\"Tursas 0.3\"")
       (variants . "\"normal\"")
       (colors . 0)
@@ -187,7 +187,7 @@
       ;;"easy - tell engine to ponder only during its turn"
       ;;"post - tell engine to send ponder output"
       ;;"nopost - tell engine not to send ponder output"
-      ;;"analyse - tell engine to engage analyse mode"
+      ;;"analyze - tell engine to engage analyze mode"
       "name X - tell engine its opponents name"
       "rating - ask engine its rating"
       ;;"ics - tell engine its engaging in ICS game"
@@ -574,7 +574,7 @@ nil, otherwise returns t."
          (unsupported-command cmd))
         ((string= "nopost" cmd)
          (unsupported-command cmd))
-        ((string= "analyse" cmd)
+        ((string= "analyze" cmd)
          (unsupported-command cmd))
         ((register-groups-bind (arg)
              ("^name\\s(\\w+)$" cmd)
