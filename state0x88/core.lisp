@@ -47,9 +47,9 @@
           ((and (zerop piece) (= player +black+))
            +black-queen+)
           ((= player +white+)
-           (- piece))
+           piece)
           (t
-           piece))))
+           (- piece)))))
 
 (defun fifty-move-rule-p (state)
   "Checks if state is draw according to 50-move rule."
