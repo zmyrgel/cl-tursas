@@ -413,7 +413,7 @@ nil, otherwise returns t."
 
 (defun list-cecp-supported-features ()
   "Prints the default features of the engine."
-  (format nil "feature ~{~a ~}~%"
+  (format nil "feature ~{~a~^ ~}"
           (loop for (key . value) in +cecp-supported-features+
                 collect (format nil "~a=~a" (string-downcase key) value))))
 
