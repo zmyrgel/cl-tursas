@@ -4,6 +4,8 @@
   (:import-from :cl-utilities :split-sequence)
   (:import-from :alexandria
    :define-constant :when-let :if-let)
+  (:import-from :uiop/utility
+   :strcat)
   (:import-from :tursas.utils
    :valid-coord-p :split-move :coordinate-string-p
    :san-string-p :move-string-p :fen->ascii

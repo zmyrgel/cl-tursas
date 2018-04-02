@@ -21,7 +21,7 @@
   (if (zerop castling)
       "-"
       (reduce (lambda (x y)
-                (concatenate 'string x y))
+                (strcat x y))
               (mapcar (lambda (pair)
                         (when (plusp (logand castling (first pair)))
                           (string (rest pair))))
@@ -71,9 +71,8 @@
 
 (defun make-fen-row (board rank)
   "Builds single fen row from given board and row index."
-  (concatenate 'string
-               (compact-item #\E (loop for n below 8
-                                       collect (piece-name (board-ref board (+ rank n)))))))
+  (strcat (compact-item #\E (loop for n below 8
+                                  collect (piece-name (board-ref board (+ rank n)))))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
@@ -82,12 +81,13 @@
 
 (defun add-pieces (state)
   "Adds all pieces from board to piece-map."
-  (do-board (let ((piece (board-ref (State0x88-board state) it)))
-              (cond ((black-piece-p piece)
-                     (push (cons it piece) (State0x88-black-pieces state)))
-                    ((white-piece-p piece)
-                     (push (cons it piece) (State0x88-white-pieces state)))
-                    (t nil)))))
+  (do-board
+      (let ((piece (board-ref (State0x88-board state) it)))
+        (cond ((black-piece-p piece)
+               (push (cons it piece) (State0x88-black-pieces state)))
+              ((white-piece-p piece)
+               (push (cons it piece) (State0x88-white-pieces state)))
+              (t nil)))))
 
 (defun add-king-indexes (state)
   "Adds king indexes to state."
