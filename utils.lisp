@@ -4,6 +4,7 @@
   (:use :cl)
   (:import-from :alexandria :define-constant :when-let)
   (:import-from :cl-utilities :split-sequence)
+  (:import-from :uiop/utility :strcat)
   (:export :valid-coord-p :split-move :coordinate-string-p
    :san-string-p :move-string-p :fen->ascii
    :split-on :expand-digits :compact-item :string-indexed))
@@ -118,5 +119,5 @@
   (with-output-to-string (s)
     (loop for rank in (group (expand-digits #\- (delete #\/ (fen-board->string fen))) 8)
           for n from 8 downto 1
-          do (format s "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space rank)))))
+          do (format s "~a~%" (strcat (list* (digit-char n) #\| (interpose #\space rank)))))
     (format s "~{~a~%~}" (list  "-+---------------"  "| a b c d e f g h"))))
