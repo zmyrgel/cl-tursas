@@ -3,7 +3,7 @@
   (:use :cl :prove))
 (in-package :tursas.t.state0x88)
 
-(plan 54)
+(plan 56)
 
 ;;; FEN conversion tests ;;;
 ;; test fen->state
@@ -11,6 +11,7 @@
 
 ;; move generation tests
 ;; given known positions, calculate correct moves
+;; add bunch of known difficult cases so those get tested, castling while square threatened, en-passants with check etc.
 
 ;;; MOVE TESTS
 (let ((state (tursas.state0x88::fen->state "r3k3/pp1qpppr/n1ppbn1p/8/2B5/BP1Q1P1N/P1P1P1PP/RN2K2R w KQq - 4 7")))
@@ -41,6 +42,18 @@
                            (tursas.state0x88::legal-moves state))
            :test 'string=)
    "c7c8Q should be valid promotion move to make"))
+
+(let ((state (tursas.state0x88::fen->state "rnbqkbn1/pPpp3r/4pppp/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 6")))
+  (ok
+   (member "b7c8" (mapcar #'tursas.state0x88::move->coord
+                          (tursas.state0x88::legal-moves state))
+           :test 'string=)
+   "Pawn promotion should be listed as allowed move.")
+  (ok
+   (member "b7a8" (mapcar #'tursas.state0x88::move->coord
+                          (tursas.state0x88::legal-moves state))
+           :test 'string=)
+   "Pawn promotion should be listed as allowed move."))
 
 ;; (test en-passant-tests
 ;;       (let ((state (fen->state "rnbqkb1r/pppppppp/7n/P7/8/8/1PPPPPPP/RNBQKBNR b KQkq - 0 2")))
