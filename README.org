@@ -146,9 +146,11 @@
 
 - Perft calculation is incorrect
 - AI promotes always to queen
-- Can't switch players, AI is always black
 - Unoptimized code paths so slow move generation
-- Move generation doesn't check for leaving game to check if threatening a another piece
+- Move generation doesn't check for leaving game to check if threatening a
+  another piece
+- When using with XBoard the engine ceases to function after few moves
+- When player promotes as black, it seems the engine things the piece is his
 
 * License
 
