@@ -98,6 +98,10 @@
         for n from 0
         collect (cons n i)))
 
+(defun fen-board->string (fen)
+  "Returns the board representation from full FEN string as a list of characters."
+  (concatenate 'list (first (split-sequence #\space fen))))
+
 (defun fen->ascii (fen)
   "Return printable string for the board from FEN string.
 
@@ -112,7 +116,7 @@
  -+----------------
   | a b c d e f g h"
   (with-output-to-string (s)
-    (loop for rank in (group (expand-digits #\- (delete #\/ (concatenate 'list (first (split-sequence #\space fen))))) 8)
+    (loop for rank in (group (expand-digits #\- (delete #\/ (fen-board->string fen))) 8)
           for n from 8 downto 1
           do (format s "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space rank)))))
     (format s "~{~a~%~}" (list  "-+---------------"  "| a b c d e f g h"))))
