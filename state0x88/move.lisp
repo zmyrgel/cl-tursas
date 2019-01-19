@@ -39,11 +39,11 @@
                      0)))))
 
 (defmethod move->coord ((move Move0x88))
-  (strcat (index->coord (Move0x88-from move))
-          (index->coord (Move0x88-to move))
-          (let ((piece (piece-name (Move0x88-promotion move))))
-            (unless (eql piece #\E)
-              (string piece)))))
+  (str:concat (index->coord (Move0x88-from move))
+              (index->coord (Move0x88-to move))
+              (let ((piece (piece-name (Move0x88-promotion move))))
+                (unless (eql piece #\E)
+                  (string piece)))))
 
 (defmethod from ((move Move0x88))
   (index->coord (Move0x88-from move)))

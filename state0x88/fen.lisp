@@ -21,7 +21,7 @@
   (if (zerop castling)
       "-"
       (reduce (lambda (x y)
-                (strcat x y))
+                (str:concat x y))
               (mapcar (lambda (pair)
                         (when (plusp (logand castling (first pair)))
                           (string (rest pair))))
@@ -52,13 +52,13 @@
 (defun fen-board-parse (fen-string)
   "Utility function to help in converting given FEN-STRING to 0x88 board."
   (loop for rank in (reverse
-                    (split-sequence
-                     #\/
-                     (loop for c across fen-string
-                           if (digit-char-p c)
-                             nconc (make-list (digit-char-p c) :initial-element #\E)
-                           else
-                             collect c)))
+                     (str:split
+                      #\/
+                      (loop for c across fen-string
+                            if (digit-char-p c)
+                              nconc (make-list (digit-char-p c) :initial-element #\E)
+                            else
+                              collect c)))
         nconc (nconc rank (make-list 8 :initial-element #\E))))
 
 (defun fen-board->0x88board (fen-board)
@@ -71,13 +71,13 @@
 
 (defun make-fen-row (board rank)
   "Builds single fen row from given board and row index."
-  (strcat (compact-item #\E (loop for n below 8
-                                  collect (piece-name (board-ref board (+ rank n)))))))
+  (str:concat (compact-item #\E (loop for n below 8
+                                      collect (piece-name (board-ref board (+ rank n)))))))
 
 (defun board->fen-board (board)
   "Convert the given state's board to fen board field."
   (format nil "~{~A~^/~}" (loop for i from #x70 downto #x0 by #x10
-                               collect (make-fen-row board i))))
+                                collect (make-fen-row board i))))
 
 (defun add-pieces (state)
   "Adds all pieces from board to piece-map."
@@ -107,7 +107,7 @@
 (defun parse-fen (s state)
   "Parses information from given FEN and applies it to given state."
   (destructuring-bind (board turn cast en-pass half full)
-      (split-sequence #\space s)
+      (str:split #\space s)
     (let ((game-board (fen-board->0x88board board)))
       (fill-square! game-board +turn-store+ (if (string= turn "w") +white+ +black+))
       (fill-square! game-board +castling-store+ (castling->value cast))

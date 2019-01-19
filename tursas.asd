@@ -21,7 +21,7 @@
           (setf (fill-pointer seq) (read-sequence seq stream))
           seq)))
   :license "ISC license"
-  :depends-on (:cl-ppcre :alexandria :cl-utilities :prove :unix-opts)
+  :depends-on (:cl-ppcre :alexandria :str :prove :unix-opts)
   :serial t
   :components ((:file "utils")
                (:module "state0x88"

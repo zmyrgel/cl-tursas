@@ -3,8 +3,6 @@
   (:documentation "provide generic utilities used by tursas chess engine. Utilities are not specific to any chess board representation.")
   (:use :cl)
   (:import-from :alexandria :define-constant :when-let)
-  (:import-from :cl-utilities :split-sequence)
-  (:import-from :uiop/utility :strcat)
   (:export :valid-coord-p :split-move :coordinate-string-p
    :san-string-p :move-string-p :fen->ascii
    :split-on :expand-digits :compact-item :string-indexed))
@@ -101,7 +99,7 @@
 
 (defun fen-board->string (fen)
   "Returns the board representation from full FEN string as a list of characters."
-  (concatenate 'list (first (split-sequence #\space fen))))
+  (concatenate 'list (first (str:split #\space fen))))
 
 (defun fen->ascii (fen)
   "Return printable string for the board from FEN string.
@@ -119,5 +117,5 @@
   (with-output-to-string (s)
     (loop for rank in (group (expand-digits #\- (delete #\/ (fen-board->string fen))) 8)
           for n from 8 downto 1
-          do (format s "~a~%" (concatenate 'string (list* (digit-char n) #\| (interpose #\space rank)))))
+          do (format s "~a~%" (str:concat (list* (digit-char n) #\| (interpose #\space rank)))))
     (format s "~{~a~%~}" (list  "-+---------------"  "| a b c d e f g h"))))
