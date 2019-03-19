@@ -36,7 +36,8 @@
     (and (valid-coord-p from)
          (valid-coord-p to)
          (or (string= promotion "")
-             (find (coerce promotion 'character) "rnbq")))))
+             (when (find (coerce promotion 'character) "rnbq")
+               t)))))
 
 (defun san-string-p (s)
   "Predicate to see if given string represents chess move in SAN notation."
