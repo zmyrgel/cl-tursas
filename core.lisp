@@ -303,6 +303,12 @@
   "Display Perft of given depth."
   (perft state depth))
 
+(defun show-clocks ()
+  "Show each players clock values, useful for debugging."
+  (format nil "White clock ~a cs, black clock ~a cs"
+          (get-option :white-clock)
+          (get-option :black-clock)))
+
 (defun list-moves (state)
   "List all available moves from currect state."
   (mapcar #'move->coord (legal-moves state)))
@@ -612,6 +618,7 @@ nil, otherwise returns t."
                  ;;"gs - calculates score for the current game state"
                  ;;"es - evaluates current game state"
                  ;;"pf n - calculate perft score to depth of n"
+                 ;;"sc - show clocks of each player"
                  "xboard - enable CECP mode"
                  "quit - quit the Tursas engine")
                (when (eq (get-protocol) :cecp)
@@ -645,6 +652,8 @@ nil, otherwise returns t."
              ("^pf\\s(\\d+)$" cmd)
            (tursas-cmd "Can't calculate perft from empty game-state!"
                        #'display-perft arg)))
+        ((string= "sc" cmd)
+         (show-clocks))
         ((string= "xboard" cmd)
          (set-protocol! :cecp))
         ((eq (get-protocol) :cecp)
