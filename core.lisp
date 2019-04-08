@@ -227,7 +227,7 @@
 
 (defun get-option (option)
   "Returns value of given game option"
-  (cdr (assoc option *game-options*)))
+  (rest (assoc option *game-options*)))
 
 (defun alpha-beta (alpha beta depth eval-fn state)
   "Find the best state, from initial state by searching to given depth
