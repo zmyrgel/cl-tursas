@@ -511,8 +511,8 @@ nil, otherwise returns t."
          ;; on move. Start the engine's clock.
          t)
         ((string= "playother" cmd)
-         (rotatef (cdr (assoc :black-player *game-options*))
-                  (cdr (assoc :white-player *game-options*)))
+         (rotatef (rest (assoc :black-player *game-options*))
+                  (rest (assoc :white-player *game-options*)))
          t)
         ((register-groups-bind ((#'parse-integer mps) base (#'parse-integer inc))
              ("^level\\s(\\d+)\\s([0-9:]+)\\s(\\d+)$" cmd)
