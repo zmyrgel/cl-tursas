@@ -707,6 +707,9 @@ nil, otherwise returns t."
         for start-time = (get-universal-time)
         for command = (read-line *engine-input*)
           then (if ai-turn
+                   ;; TODO: AI moves should make move in engine and
+                   ;; send output to engine-output about the chosen
+                   ;; move
                    (str:concat "move " (choose-move (current-game-state)))
                    (read-line *engine-input*))
         until (string= command "quit")
