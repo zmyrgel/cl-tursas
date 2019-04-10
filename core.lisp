@@ -388,6 +388,14 @@ nil, otherwise returns t."
     (when-let ((new-state (apply-move state (coord->move s))))
       (add-game-state! new-state))))
 
+(defun update-player-clock! (start-time)
+  "Update current players clock"
+  (let ((player-clock (if (eq (turn (current-game-state)) :white)
+                          :white-clock
+                          :black-clock))
+        (clock-diff-in-cs (* 100 (- (get-universal-time) start-time))))
+    (set-option! player-clock (+ clock-diff-in-cs (get-option player-clock)))))
+
 (defun game-result (state)
   "Returns string representation for game result."
   (case (result state)
@@ -696,16 +704,19 @@ nil, otherwise returns t."
 (defun run-engine ()
   "Run the chess engine."
   (loop for ai-turn = (ai-turn-p)
+        for start-time = (get-universal-time)
         for command = (read-line *engine-input*)
           then (if ai-turn
-                   (make-ai-move! (current-game-state))
+                   (str:concat "move " (choose-move (current-game-state)))
                    (read-line *engine-input*))
         until (string= command "quit")
         do (progn
+             ;; update player clock when game is running
+             (when (and (get-option :game-running)
+                        (user-move-p command))
+               (update-player-clock! start-time))
              (format *debug-output* "INPUT: ~a~%" command)
-             (let ((result (if ai-turn
-                               command
-                               (process-command command))))
+             (let ((result (process-command command)))
                ;; skip printing on boolean values
                (typecase result
                  (list (format *engine-output* "~{~a~%~}" result))
