@@ -303,11 +303,23 @@
   "Display Perft of given depth."
   (perft state depth))
 
+(defun clock-diff (time-in-cs)
+  "Calculate clock difference in cs compared to current time"
+  (- (* 100 (get-universal-time)) time-in-cs))
+
 (defun show-clocks ()
   "Show each players clock values, useful for debugging."
-  (format nil "White clock ~a cs, black clock ~a cs"
-          (get-option :white-clock)
-          (get-option :black-clock)))
+  (when (current-game-state)
+    (let ((current-player (turn (current-game-state)))
+          (white-clock (get-option :white-clock))
+          (black-clock (get-option :black-clock)))
+      (format nil "White clock ~a cs, black clock ~a cs"
+              (if (eq current-player :white)
+                  (clock-diff white-clock)
+                  white-clock)
+              (if (eq current-player :black)
+                  (clock-diff black-clock)
+                  black-clock)))))
 
 (defun list-moves (state)
   "List all available moves from currect state."
@@ -386,15 +398,15 @@ nil, otherwise returns t."
   (when (and (user-move-p s)
              (allowedp state (coord->move s)))
     (when-let ((new-state (apply-move state (coord->move s))))
+      ;; TODO: update clock
       (add-game-state! new-state))))
 
 (defun update-player-clock! (start-time)
   "Update current players clock"
   (let ((player-clock (if (eq (turn (current-game-state)) :white)
                           :white-clock
-                          :black-clock))
-        (clock-diff-in-cs (* 100 (- (get-universal-time) start-time))))
-    (set-option! player-clock (+ clock-diff-in-cs (get-option player-clock)))))
+                          :black-clock)))
+    (set-option! player-clock (clock-diff (get-option player-clock)))))
 
 (defun game-result (state)
   "Returns string representation for game result."
