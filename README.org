@@ -151,6 +151,26 @@
   another piece
 - When using with XBoard the engine ceases to function after few moves
 - When player promotes as black, it seems the engine things the piece is his
+- engine loops over ai move strings and gets stuck as follows:
+
+bd
+8|- - Q q k b - -
+7|- - p - n - - r
+6|p - - p p p p p
+5|- - - - - - - -
+4|- - - - - - - -
+3|- - - - - - - -
+2|- P P P P P P P
+1|R N B Q K B N R
+-+---------------
+| a b c d e f g h
+  WHITE TO MOVE
+
+a1a6
+move h8g8
+move h8g8
+move h8g8
+...
 
 * License
 
