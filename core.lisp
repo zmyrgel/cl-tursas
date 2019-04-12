@@ -367,7 +367,7 @@
         (get-option :white-player)
         (get-option :black-player))))
 
-(defun make-ai-move! (state)
+(defun make-engine-move! (state)
   "Function instructs chess engine to choose move for active player."
   (let ((move (choose-move state)))
     (process-command move)
@@ -652,7 +652,7 @@ nil, otherwise returns t."
         ((string= "gs" cmd)
          (tursas-cmd "Can't calculate score from empty state." #'get-score))
         ((string= "cp" cmd)
-         (tursas-cmd "Can't make AI move on empty board!" #'make-ai-move!)
+         (tursas-cmd "Can't make AI move on empty board!" #'make-engine-move!)
          (tursas-cmd "Can't print empty board!" #'display-board))
         ((string= "es" cmd)
          (tursas-cmd "Can't eval empty game state!" #'eval-current-state))
@@ -669,7 +669,7 @@ nil, otherwise returns t."
         (t
          (str:concat "Error (Invalid command): " cmd))))
 
-(defun ai-turn-p ()
+(defun engine-turn-p ()
   "Predicate to check if its engines turn to make move."
   (and (get-option :game-running)
        (eq (current-player-type) :ai)))
@@ -703,15 +703,11 @@ nil, otherwise returns t."
 
 (defun run-engine ()
   "Run the chess engine."
-  (loop for ai-turn = (ai-turn-p)
+  (loop for engine-turn = (engine-turn-p)
         for start-time = (get-universal-time)
         for command = (read-line *engine-input*)
-          then (if ai-turn
-                   ;; TODO: AI moves should make move in engine and
-                   ;; send output to engine-output about the chosen
-                   ;; move
-                   (str:concat "move " (choose-move (current-game-state)))
-                   (read-line *engine-input*))
+          then (when (not engine-turn)
+                 (read-line *engine-input*))
         until (string= command "quit")
         do (progn
              ;; update player clock when game is running
@@ -719,7 +715,9 @@ nil, otherwise returns t."
                         (user-move-p command))
                (update-player-clock! start-time))
              (format *debug-output* "INPUT: ~a~%" command)
-             (let ((result (process-command command)))
+             (let ((result (if engine-turn
+                               (make-engine-move! (current-game-state))
+                               (process-command command))))
                ;; skip printing on boolean values
                (typecase result
                  (list (format *engine-output* "~{~a~%~}" result))
