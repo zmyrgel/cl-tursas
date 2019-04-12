@@ -383,6 +383,7 @@
   "Function instructs chess engine to choose move for active player."
   (let ((move (choose-move state)))
     (process-command move)
+    (update-player-clock!)
     (str:concat "move " move)))
 
 (defun choose-move (state)
@@ -398,10 +399,10 @@ nil, otherwise returns t."
   (when (and (user-move-p s)
              (allowedp state (coord->move s)))
     (when-let ((new-state (apply-move state (coord->move s))))
-      ;; TODO: update clock
+      (update-player-clock!)
       (add-game-state! new-state))))
 
-(defun update-player-clock! (start-time)
+(defun update-player-clock! ()
   "Update current players clock"
   (let ((player-clock (if (eq (turn (current-game-state)) :white)
                           :white-clock
@@ -723,9 +724,6 @@ nil, otherwise returns t."
         until (string= command "quit")
         do (progn
              ;; update player clock when game is running
-             (when (and (get-option :game-running)
-                        (user-move-p command))
-               (update-player-clock! start-time))
              (format *debug-output* "INPUT: ~a~%" command)
              (let ((result (if engine-turn
                                (make-engine-move! (current-game-state))
