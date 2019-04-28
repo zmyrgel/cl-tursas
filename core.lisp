@@ -426,10 +426,12 @@ nil, otherwise returns t."
 
 (defun cecp-accept-feature (feature)
   "Instructs the engine that given FEATURE is accepted."
+  (declare (ignore feature))
   t)
 
 (defun cecp-reject-feature (feature)
   "Instructs the engine that given FEATURE is rejected."
+  (declare (ignore feature))
   t)
 
 (defun cecp-parse-option (option)
@@ -551,6 +553,7 @@ nil, otherwise returns t."
          (tursas-cmd "Can't offer draw to empty board!" #'cecp-draw))
         ((register-groups-bind (comment)
              ("^result\\s(.+)$" cmd)
+           (declare (ignore comment))
            (set-option! :game-running nil)
            t))
         ((register-groups-bind (arg)
@@ -718,6 +721,7 @@ nil, otherwise returns t."
        :meta-var "FILE"))
   (multiple-value-bind (options free-args)
       (opts:get-opts)
+    (declare (ignore free-args))
     (init-engine options))
   (unwind-protect
        (handler-case
