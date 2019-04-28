@@ -21,7 +21,7 @@
           (setf (fill-pointer seq) (read-sequence seq stream))
           seq)))
   :license "ISC license"
-  :depends-on (:cl-ppcre :alexandria :str :prove :unix-opts)
+  :depends-on ("cl-ppcre" "alexandria" "str" "unix-opts")
   :serial t
   :components ((:file "utils")
                (:module "state0x88"
@@ -34,9 +34,22 @@
                              (:file "movegen")
                              (:file "fen")
                              (:file "core")))
-               (:file "core")
-               (:module "t"
-                :serial t
+               (:file "core"))
+  :in-order-to ((test-op (test-op "tursas/tests"))))
+
+(defsystem "tursas/tests"
+  :name "tursas/tests"
+  :version "0.2"
+  :author "Timo Myyrä <timo.myyra@iki.fi>"
+  :maintainer "Timo Myyrä <timo.myyra@iki.fi>"
+  :description "Tests for the Tursas chess engine"
+  :license "ISC license"
+  :depends-on ("tursas" "prove")
+  :serial t
+  :components ((:module "t"
                 :components ((:file "utils")
                              (:file "state0x88"))))
-  :perform (test-op (op c) (symbol-call :prove-asdf :run-test-system c)))
+  :perform (test-op (op c)
+                    (funcall (read-from-string "prove:run")
+                             (system-relative-pathname "tursas-tests" "t/")
+                             :reporter :fiveam)))
