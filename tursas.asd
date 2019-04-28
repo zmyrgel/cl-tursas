@@ -44,12 +44,11 @@
   :maintainer "Timo Myyrä <timo.myyra@iki.fi>"
   :description "Tests for the Tursas chess engine"
   :license "ISC license"
-  :depends-on ("tursas" "prove")
+  :depends-on ("tursas" "rove")
   :serial t
   :components ((:module "t"
                 :components ((:file "utils")
                              (:file "state0x88"))))
   :perform (test-op (op c)
-                    (funcall (read-from-string "prove:run")
-                             (system-relative-pathname "tursas-tests" "t/")
-                             :reporter :fiveam)))
+                    (funcall (read-from-string "rove:run")
+                             :tursas/tests :style :spec)))
