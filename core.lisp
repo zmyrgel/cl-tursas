@@ -310,7 +310,10 @@
 (defun get-score (state)
   "Calculates state's score by checking child states
    to certain depth using alpha-beta algorithm."
-  (alpha-beta most-negative-fixnum most-positive-fixnum (get-option :search-depth) #'evaluate state))
+  (alpha-beta most-negative-fixnum
+              most-positive-fixnum
+              (get-option :search-depth)
+              #'evaluate state))
 
 (defun eval-current-state (state)
   "Evaluates the current state and returns its score."
@@ -370,7 +373,10 @@
 (defun choose-move (state)
   "Tell engine to choose an best state it can from current game state."
   (multiple-value-bind (score best-state)
-      (alpha-beta most-negative-fixnum most-positive-fixnum (get-option :search-depth) #'evaluate state)
+      (alpha-beta most-negative-fixnum
+                  most-positive-fixnum
+                  (get-option :search-depth)
+                  #'evaluate state)
     (declare (ignore score))
     (move->coord (last-move best-state))))
 

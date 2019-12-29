@@ -273,7 +273,7 @@
 
 (defun pawn-capture (player board index place)
   "Utility function to generate pawn capture moves.
-   If pawn of index can capture piece in place, generate the move
+   If PLAYERS pawn from given INDEX can capture piece in PLACE, generate the move
    otherwise return nil."
   (when (or (and (board-index-p place)
                  (= (board-ref board +en-passant-store+) place))

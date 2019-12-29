@@ -70,7 +70,7 @@
         finally (return board)))
 
 (defun make-fen-row (board rank)
-  "Builds single fen row from given board and row index."
+  "Returns RANK row contents from given BOARD in FEN notation."
   (str:concat (compact-item #\E (loop for n below 8
                                       collect (piece-name (board-ref board (+ rank n)))))))
 
@@ -98,7 +98,7 @@
     (update-king-index! board white-king +white+)))
 
 (defun add-full-moves (board moves)
-  "Helper funtion to add full moves to board.
+  "Helper function to add full moves to board.
    Needed to workaround the byte limitation of the board."
   (let ((n-moves (truncate (/ moves 128))))
     (fill-square! board +full-move-n-store+ n-moves)
