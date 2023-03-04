@@ -50,14 +50,14 @@
   (testing "white promotion with promotion char"
     (let ((state (tursas.state0x88::fen->state "rnbqkbn1/pPpp3r/4pppp/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 6")))
       (ok
-       (member "b7c8" (mapcar #'tursas.state0x88::move->coord
-                              (tursas.state0x88::legal-moves state))
-               :test 'string=)
+       (some (lambda (s) (= (mismatch s "b7c8")))
+             (mapcar #'tursas.state0x88::move->coord
+                     (tursas.state0x88::legal-moves state)))
        "Pawn promotion should be listed as allowed move.")
       (ok
-       (member "b7a8" (mapcar #'tursas.state0x88::move->coord
-                              (tursas.state0x88::legal-moves state))
-               :test 'string=)
+       (some (lambda (s) (= (mismatch s "b7a8")))
+             (mapcar #'tursas.state0x88::move->coord
+                     (tursas.state0x88::legal-moves state)))
        "Pawn promotion should be listed as allowed move."))))
 
 ;; (test en-passant-tests
