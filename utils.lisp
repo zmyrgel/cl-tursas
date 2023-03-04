@@ -9,20 +9,19 @@
 
 (in-package :tursas.utils)
 
-(define-constant valid-coords
-    (loop for x across "abcdefgh"
-          nconc (loop for y below 8 collect (format nil "~a~a" x (1+ y))))
-  :test 'equal
-  :documentation "List of valid chess coordinate strings.")
-
-(defun valid-coord-p (s)
-  "Checks if given string s is a valid chess board coordinate."
-  (some (lambda (coord)
-          (equalp coord s)) valid-coords))
+(let ((valid-coords
+       (loop for x across "abcdefgh"
+             nconc (loop for y below 8
+                         collect (format nil "~a~a" x (1+ y))))))
+  (defun valid-coord-p (s)
+    "Check if given string S is a valid chess board coordinate."
+    (some (lambda (coord)
+            (equalp coord s))
+          valid-coords)))
 
 (defun split-move (algebraic)
-  "Partitions chess move given in coordinate notation to pair of coordinates
-   and possible promotion character."
+  "Partition chess move given in ALGEBRAIC coordinate notation to pair of
+coordinates and possible promotion character."
   (and (<= 4 (length algebraic) 5)
        (values (subseq algebraic 0 2)
                (subseq algebraic 2 4)
