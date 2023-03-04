@@ -87,11 +87,6 @@
                     (f (cons (first items) result) (rest items) found)))))
     (f nil list 0)))
 
-(defun interpose (sep list)
-  "Returns a list with SEP interposed with given LIST."
-  (rest (loop for item in list
-              nconc (list sep item))))
-
 (defun string-indexed (s)
   "Return an alist of offset / character pairs for string S."
   (loop for i across s
@@ -118,5 +113,5 @@
   (with-output-to-string (s)
     (loop for rank in (group (expand-digits #\- (delete #\/ (fen-board->string fen))) 8)
           for n from 8 downto 1
-          do (format s "~a~%" (str:concat (list* (digit-char n) #\| (interpose #\space rank)))))
-    (format s "~{~a~%~}" (list  "-+---------------"  "| a b c d e f g h"))))
+          do (format s "~a| ~{~a~^ ~}~%" n rank))
+    (format s "~{~a~%~}" '("-+----------------"  " | a b c d e f g h"))))
