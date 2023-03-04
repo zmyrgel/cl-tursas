@@ -88,8 +88,8 @@
                                                      (= +white-knight+ p))
                                                    pieces)))
                       (let ((bishops (remove-if (lambda (i)
-                                                  (or (= +black-bishop+ (cdr (assoc i piece-list)))
-                                                      (= +white-bishop+ (cdr (assoc i piece-list)))))
+                                                  (or (= +black-bishop+ (rest (assoc i piece-list)))
+                                                      (= +white-bishop+ (rest (assoc i piece-list)))))
                                                 indexes)))
                         (unless (< (list-length bishops) 2)
                           (same-color-p (first (loop for x in bishops collect (first x)))
@@ -187,14 +187,14 @@
     state))
 
 (defun update-full-moves (state)
-  "Updates full move count on board."
+  "Update the full move counter of given game STATE."
   (let ((board (State0x88-board state)))
     (when (= (board-ref board +turn-store+) +black+)
       (inc-full-moves! board))
     state))
 
 (defun update-opponent-check (state)
-  "Updates opponents check status bit on the state.
+  "Update opponent check status bit on the given STATE.
    Enables check bit in state if opponents king is threatened."
   (let* ((board (State0x88-board state))
          (player (board-ref board +turn-store+)))
@@ -207,14 +207,15 @@
     state))
 
 (defun update-turn (state)
-  "Updates player turn value on board."
+  "Update player turn value on the given game STATE."
   (let ((board (State0x88-board state)))
     (fill-square! board +turn-store+ (opponent (board-ref board +turn-store+)))
     state))
 
 (defun update-state (state move)
-  "Updates game state to reflect changes from move.
-   If game state is not legal, will return a nil value."
+  "Update game STATE to reflect changes done from executing given MOVE.
+If game STATE is not legal, the function will return a nil value,
+otherwise the changed STATE is returned."
   (let ((new-state (copy-state state)))
     (update-move new-state move)
     (update-half-moves new-state move)
@@ -227,7 +228,7 @@
       (update-turn new-state))))
 
 (defun check-situation (state)
-  "Checks which situation, opening, middle or end-game the game is."
+  "Return the game situation of given game STATE, either `opening', `middle' or `end-game'."
   (let ((pieces (append (State0x88-white-pieces state)
                         (State0x88-black-pieces state))))
     (cond ((< (list-length (mapcar #'car pieces)) 15) +end-game+)
