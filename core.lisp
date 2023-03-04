@@ -193,7 +193,7 @@
       ;;"memory N - specify how much engine can use memory"
       ;;"cores N - tell engine how many cpu cores it can use"
       ;;"egtpath PATH - tell engine to use end-game tables from PATH"
-      "option NAME[=VALUE] - tell engine to use new option")
+      "option NAME[=VALUE] - tell engine to set the engine feature NAME to VALUE")
   :test 'equal)
 
 (defvar *debug-output* nil)
@@ -215,7 +215,8 @@
                                (:seconds-per-time-control . nil)
                                (:clock-increment . nil)
                                (:white-player . nil)
-                               (:black-player . nil)))
+                               (:black-player . nil)
+                               (:options . nil)))
 
 (defun current-game-state ()
   "Utility to return current game state or nil."
@@ -459,6 +460,11 @@ nil, otherwise returns t."
   "Predicate to check if given string S represents user move."
   (scan "^[a-h]{1}[1-8]{1}[a-h]{1}[1-8]{1}[rnbq]?$" s))
 
+(defun cecp-process-option (option)
+  "Sets the given OPTION in the engine."
+  (declare (ignore option))
+  nil)
+
 (defun process-cecp-command (cmd)
   "Processes command in cecp mode."
   (cond ((register-groups-bind ((#'parse-integer arg))
@@ -602,9 +608,8 @@ nil, otherwise returns t."
          (unsupported-command cmd))
         ((scan "^egtpath\\s[\\w\\/]+$" cmd)
          (unsupported-command cmd))
-        ((register-groups-bind (args)
-             ("^option\\s\\w=\".+\"|\\d+$" cmd)
-           (cecp-parse-option args)))
+        ((and (str:starts-with-p "option " cmd)
+              (cecp-process-option (str:split #\= (subseq cmd 7)))))
         (t
          (str:concat "Error (Invalid command): " cmd))))
 
@@ -691,7 +696,8 @@ nil, otherwise returns t."
                                     (:seconds-per-time-control . nil)
                                     (:clock-increment . nil)
                                     (:white-player . nil)
-                                    (:black-player . nil)))))
+                                    (:black-player . nil)
+                                    (:options . nil)))))
 
 (defun run-engine ()
   "Run the chess engine."
