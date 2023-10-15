@@ -4,7 +4,7 @@
 
 (defsystem "tursas"
   :name "tursas"
-  :version "0.2"
+  :version "0.3"
   :author "Timo Myyrä <timo.myyra@iki.fi>"
   :maintainer "Timo Myyrä <timo.myyra@iki.fi>"
   :description "Tursas - a simple chess engine which uses XBoard protocol."
