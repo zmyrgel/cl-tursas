@@ -20,12 +20,12 @@
                   :test 'string=)
           "e1g1 castling move should be valid move to make."))))
 
-
 ;; test that check is detected and is fixed by protecting king.
-;; XXX: broken test
-;; (let ((state (tursas.state0x88::fen->state "r1backbone/ppp1ppp1/n6p/1Q1p4/8/2P5/PP1PPPPP/RNB1KBNR b KQkq - 0 5")))
-;;   (ok (tursas.state0x88::checkp state))
-;;   (ok (not (tursas.state0x88::checkp (tursas.state0x88::apply-move state (tursas.state0x88::coord->move "d8d7"))))))
+(deftest check-tests
+  (testing "testing if checks are resolved")
+  (let ((state (tursas.state0x88::fen->state "r1bqk1nb/ppp1ppp1/n6p/1Q1p4/8/2P5/PP1PPPPP/RNB1KBNR b KQkq - 0 5")))
+    (ok (tursas.state0x88::checkp state))
+    (ok (not (tursas.state0x88::checkp (tursas.state0x88::apply-move state (tursas.state0x88::coord->move "d8d7")))))))
 
 (deftest mate-tests
   (testing "testing if mate results are noticed"
