@@ -347,7 +347,7 @@ otherwise the changed STATE is returned."
 ;; then check bit won't get added
 (defun fen->state (fen)
   "Convert given FEN to state representation."
-  (update-opponent-check (parse-fen fen (make-State0x88))))
+  (make-state fen))
 
 (defmethod copy-state ((state State0x88))
   "Returns copy of given state."
